@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="base.css">
+    </head>
+    <body>
+        <div id="menu-container">
+            <a href="#" id="mute">SHUT UP</a>
+        </div>
+        <div id="synth" class="container">
+            <h1>synthesizer</h1>
+            <div class="node" id="kick">
+                <p>kick</p>
+                <div class="section">
+                    <p>mixer</p>
+                    <div>
+                        <input type="text" value="0.8" id="kick-level">
+                    </div>
+                </div>
+                <div class="section">
+                    <p>osc</p>
+                    <select name="kick-wave" id="kick-wave">
+                        <option>sine</option>
+                        <option>square</option>
+                        <option>sawtooth</option>
+                        <option>triangle</option>
+                    </select>
+                    <div>
+                        <input type="text" value="200" id="kick-freq">
+                    </div>
+                    <div>
+                        <input type="text" value="0" id="kick-mod-amount">
+                    </div>
+                    <div>
+                        <input type="text" value="0.1" id="kick-mod-rate">
+                    </div>
+                </div>
+                <div class="section">
+                    <p>noise</p>
+                </div>
+            </div>
+            <div class="node" id="snare">
+                <p>snare</p>
+                <input type="text" value="0.8" id="snare-level">
+            </div>
+            <div class="node" id="hat">
+                <p>hat</p>
+                <input type="text" value="0.8" id="hat-level">
+            </div>
+        </div>
+        <div id="sequencer" class="container">
+            <h1>sequencer</h1>
+            <ul id="kick-seq" class="sequence">
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="snare-seq" class="sequence">
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="hat-seq" class="sequence">
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+                <li class="on">
+                    <div class="light-outer">
+                        <div class="light-inner"></div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="indicator-seq" class="sequence">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+
+            <input type="range" id="tempo" min="1" max="300" value="120" step="1">
+        </div>
+
+        <!--<script src="dom.jsPlumb-1.7.5-min.js"></script>-->
+        <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="jquery.knob.min.js"></script>
+        <script src="dist/app.js"></script>
+    </body>
+</html>
