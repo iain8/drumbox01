@@ -1,16 +1,19 @@
 ///<reference path="Channel.ts"/>
+///<reference path="Sequencer.ts"/>
 
 declare var webkitAudioContext: {
     new (): AudioContext;
 }
     
 var audioContext: any = new (AudioContext || webkitAudioContext)();
-var tempo: number = 120;
+var tempo: number = 80;
 
-var channel: Channel = new Channel(audioContext);
-channel.start();
+var channels = {};
+channels['kick'] = new Channel(audioContext);
 
-// also jquery
+var sequencer = new Sequencer(channels, 80);
+sequencer.start();
+
 // then jq knobs
 // namespaces
 // gui code

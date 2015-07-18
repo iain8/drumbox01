@@ -1,9 +1,14 @@
-class Noise {
+///<reference path="BaseModule.ts"/>
+
+class Noise extends BaseModule {
 	channels: number = 2;
 	noise: AudioBufferSourceNode;
 	input: AudioBufferSourceNode;
+	output: AudioBufferSourceNode;
 	
 	constructor(context: AudioContext) {
+		super();
+		
 		var size: number = 2 * context.sampleRate;
 		var buffer: AudioBuffer = context.createBuffer(this.channels, size, context.sampleRate);
 		var output: number[] = buffer.getChannelData(0);
@@ -16,16 +21,8 @@ class Noise {
 		this.noise = context.createBufferSource();
 		this.noise.buffer = buffer;
 		this.noise.loop = true;
-		this.noise.start();
 		
 		this.input = this.noise;
-	}
-	
-	connect(node: any) {
-		if (node.hasOwnProperty('input')) {
-			this.noise.connect(node.input);
-		} else {
-			this.noise.connect(node);
-		}
+		this.output = this.noise;
 	}
 }
