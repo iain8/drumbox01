@@ -2,6 +2,7 @@ class Osc {
 	oscillator: OscillatorNode;
 	context: AudioContext;
 	input: OscillatorNode;
+	output: OscillatorNode;
 	
 	constructor(context: AudioContext, type: string, frequency: number) {
 		this.context = context;
@@ -9,13 +10,14 @@ class Osc {
 		this.oscillator.type = type;
 		this.oscillator.frequency.value = frequency;
 		this.input = this.oscillator;
+		this.output = this.oscillator;
 	}
 	
-	connect(node) {
+	connect(node: any) {
 		if (node.hasOwnProperty('input')) {
-			this.oscillator.connect(node.input);
+			this.output.connect(node.input);
 		} else {
-			this.oscillator.connect(node);
+			this.output.connect(node);
 		}
 	}
 }
