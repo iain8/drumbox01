@@ -6,13 +6,17 @@ class Amp extends BaseModule {
 	input: GainNode;
 	output: GainNode;
 	
-	constructor(context: AudioContext, level: number = 0) {
+	constructor(context: AudioContext) {
 		super();
 		
 		this._gain = context.createGain();
-		this._gain.gain.value = level;
+		this._gain.gain.value = 0;
 		this.amplitude = this._gain.gain;
 		this.input = this._gain;
 		this.output = this._gain;
+	}
+	
+	set level(level: number) {
+		this.amplitude.value = level;
 	}
 }

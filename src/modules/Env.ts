@@ -6,12 +6,12 @@ class Env {
 	param: AudioParam;
 	context: AudioContext;
 	
-	constructor(context: AudioContext, attack: number = 0.01, decay: number = 0.1, max: number = 1, min: number = 0) {
+	constructor(context: AudioContext) {
 		this.context = context;
-		this.attack = attack;
-		this.decay = decay;
-		this.max = max;
-		this.min = min;
+		this.attack = 0.01;
+		this.decay = 0.5;
+		this.max = 1;
+		this.min = 0;
 	}
 	
 	trigger() {

@@ -1,19 +1,31 @@
 ///<reference path="BaseModule.ts"/>
 
 class Osc extends BaseModule {
-	oscillator: OscillatorNode;
-	context: AudioContext;
+	private _oscillator: OscillatorNode;
 	input: OscillatorNode;
 	output: OscillatorNode;
+	frequency: AudioParam;
 	
-	constructor(context: AudioContext, type: string, frequency: number) {
+	constructor(context: AudioContext) {
 		super();
 		
-		this.context = context;
-		this.oscillator = context.createOscillator();
-		this.oscillator.type = type;
-		this.oscillator.frequency.value = frequency;
-		this.input = this.oscillator;
-		this.output = this.oscillator;
+		this._oscillator = context.createOscillator();
+		this._oscillator.type = 'sine';
+		this._oscillator.frequency.value = 440;
+		this.input = this._oscillator;
+		this.output = this._oscillator;
+		this.frequency = this._oscillator.frequency;
+	}
+	
+	start() {
+		this._oscillator.start();
+	}
+	
+	set type(type: string) {
+		this._oscillator.type = type;
+	}
+	
+	set frequencyValue(frequency: number) {
+		this.frequency.value = frequency;
 	}
 }

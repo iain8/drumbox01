@@ -16,8 +16,10 @@ class Sequencer {
 	}
 	
 	loop() {
-		var $beat = this._beat;	// this (har) sucks
-		var $channels = this._channels;
+		// can we just do the active thing on the indicator?
+		// also be nice to add a glowy effect
+		
+		$('.sequence li').removeClass('active');
 		
 		$('.sequence').each((i, sequence) => {
 			var $sequence = $(sequence);
