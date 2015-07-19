@@ -43,6 +43,10 @@ class Sequencer {
 		this._interval = setInterval(() => { this.loop(); }, this.bpmToMs(this._tempo));
 	}
 	
+	stop() {
+		clearInterval(this._interval);
+	}
+	
 	setTempo(tempo: number) {
 		this._tempo = tempo;
 		
@@ -52,5 +56,9 @@ class Sequencer {
 	
 	bpmToMs(bpm: number) {
 		return (60000 / bpm) / 2;
+	}
+	
+	get length() {
+		return this._length;
 	}
 }

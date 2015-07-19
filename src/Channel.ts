@@ -40,7 +40,6 @@ class Channel {
 		this._osc.frequencyValue = options.frequency || 440;
 		
 		this._oscAmp = new Amp(context);
-		this._oscAmp.level = options.oscLevel || 1.0;
 		
 		this._oscPitchEnv = new Env(context);
 		this._oscPitchEnv.attack = options.oscPitchAttack || 0.1;
@@ -55,7 +54,6 @@ class Channel {
 		this._noise = new Noise(context);
 		
 		this._noiseAmp = new Amp(context);
-		this._noiseAmp.level = options.noiseLevel || 1.0;
 		
 		this._noiseAmpEnv = new Env(context);
 		this._noiseAmpEnv.attack = options.noiseAmpAttack || 0.1;
@@ -87,6 +85,10 @@ class Channel {
 	
 	set wave(type: string) {
 		this._osc.type = type;
+	}
+	
+	get frequency() {
+		return this._osc.frequencyValue;
 	}
 	
 	set frequency(frequency: number) {

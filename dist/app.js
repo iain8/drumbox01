@@ -40,6 +40,9 @@ var Osc = (function (_super) {
         configurable: true
     });
     Object.defineProperty(Osc.prototype, "frequencyValue", {
+        get: function () {
+            return this.frequency.value;
+        },
         set: function (frequency) {
             this.frequency.value = frequency;
         },
@@ -139,7 +142,6 @@ var Channel = (function () {
         this._osc.type = options.type || 'sine';
         this._osc.frequencyValue = options.frequency || 440;
         this._oscAmp = new Amp(context);
-        this._oscAmp.level = options.oscLevel || 1.0;
         this._oscPitchEnv = new Env(context);
         this._oscPitchEnv.attack = options.oscPitchAttack || 0.1;
         this._oscPitchEnv.decay = options.oscPitchDecay || 0.5;
@@ -150,7 +152,6 @@ var Channel = (function () {
         this._oscAmpEnv.max = options.oscLevel || 1.0;
         this._noise = new Noise(context);
         this._noiseAmp = new Amp(context);
-        this._noiseAmp.level = options.noiseLevel || 1.0;
         this._noiseAmpEnv = new Env(context);
         this._noiseAmpEnv.attack = options.noiseAmpAttack || 0.1;
         this._noiseAmpEnv.decay = options.noiseAmpDecay || 0.5;
@@ -183,6 +184,9 @@ var Channel = (function () {
         configurable: true
     });
     Object.defineProperty(Channel.prototype, "frequency", {
+        get: function () {
+            return this._osc.frequencyValue;
+        },
         set: function (frequency) {
             this._osc.frequencyValue = frequency;
         },
@@ -233,6 +237,9 @@ var Sequencer = (function () {
         });
         this._interval = setInterval(function () { _this.loop(); }, this.bpmToMs(this._tempo));
     };
+    Sequencer.prototype.stop = function () {
+        clearInterval(this._interval);
+    };
     Sequencer.prototype.setTempo = function (tempo) {
         this._tempo = tempo;
         clearInterval(this._interval);
@@ -241,20 +248,104 @@ var Sequencer = (function () {
     Sequencer.prototype.bpmToMs = function (bpm) {
         return (60000 / bpm) / 2;
     };
+    Object.defineProperty(Sequencer.prototype, "length", {
+        get: function () {
+            return this._length;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Sequencer;
 })();
+///<reference path="jquery.d.ts"/>
+///<reference path="jquery.knob.d.ts"/>
+///<reference path="Channel.ts"/>
+var UI = (function () {
+    function UI() {
+    }
+    UI.addChannel = function (name, channel, length) {
+        this._panel(name, channel);
+        this._sequence(name, channel, length);
+    };
+    UI.removeChannel = function () {
+        // delete it all
+    };
+    UI._panel = function (name, channel) {
+        var $panel = $('<div class="node"></div>');
+        $panel.append("<p>" + name + "</p>");
+        var $mixer = $('<div class="section"><p>mixer</p></div>');
+        $mixer.append(this._knob('level', channel.level));
+        var $osc = $('<div class="section"><p>osc</p></div>');
+        $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._typeSelect + "</select>");
+        $osc.append(this._knob('frequency', channel.frequency));
+        var $noise = $('<div class="section"><p>noise</p></div>');
+        $panel.append($mixer);
+        $panel.append($osc);
+        $panel.append($noise);
+        $('#synth').append($panel);
+        $('.knob').knob(this._knobDefaults);
+    };
+    UI._sequence = function (name, channel, length) {
+        // do sequences here instead of in sequencer
+        var $sequence = $('<ul class="sequence"></ul>');
+        $sequence.attr('data-channel', name);
+        for (var i = 0; i < length; ++i) {
+            $sequence.append('<li><div class="light-outer"><div class="light-inner"></div></div></li>');
+        }
+        $('#sequencer-title').after($sequence);
+    };
+    UI._knob = function (type, value) {
+        return "<div><input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\"></div>";
+    };
+    UI._knobDefaults = {
+        'angleOffset': -160,
+        'angleArc': 320,
+        'thickness': 0.1,
+        'width': 50,
+        'height': 50,
+        'fgColor': '#0f0'
+    };
+    UI._typeSelect = "<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
+    return UI;
+})();
+///<reference path="jquery.d.ts"/>
 ///<reference path="Channel.ts"/>
 ///<reference path="Sequencer.ts"/>
+///<reference path="UI.ts"/>
 var audioContext = new (AudioContext || webkitAudioContext)();
 var tempo = 80;
-var channels = {};
-channels['kick'] = new Channel(audioContext, {
-    frequency: 200,
-    noiseLevel: 0.001,
-    oscLevel: 0.9,
-    type: 'sine'
-});
+var channels = {
+    'kick': new Channel(audioContext, {
+        frequency: 200,
+        noiseLevel: 0.001,
+        oscLevel: 0.9
+    }),
+    'snare': new Channel(audioContext, {
+        frequency: 800,
+        noiseLevel: 0.7,
+        oscLevel: 0.3
+    }),
+    'hat': new Channel(audioContext, {
+        frequency: 1500,
+        noiseLevel: 0.7,
+        oscLevel: 0.3
+    }),
+    'thing': new Channel(audioContext, {
+        frequency: 1000,
+        noiseLevel: 0.0,
+        oscLevel: 0.3
+    })
+};
 var sequencer = new Sequencer(channels, 80);
+$.each(channels, function (name, channel) {
+    UI.addChannel(name, channel, sequencer.length);
+});
+$('.sequence li').click(function () {
+    $(this).toggleClass('on');
+});
+$('#mute').click(function () {
+    sequencer.stop();
+});
 sequencer.start();
 // then jq knobs
 // namespaces

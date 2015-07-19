@@ -25,6 +25,10 @@ class Osc extends BaseModule {
 		this._oscillator.type = type;
 	}
 	
+	get frequencyValue() {
+		return this.frequency.value;
+	}
+	
 	set frequencyValue(frequency: number) {
 		this.frequency.value = frequency;
 	}
