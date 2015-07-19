@@ -1,5 +1,5 @@
 // Type definitions for jQuery Knob 1.2.11
-// Project:
+// Project: http://anthonyterrien.com/knob/
 // Definitions by: Iain Buchanan <https://github.com/iain8/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
@@ -100,7 +100,7 @@ declare module JQueryKnob {
 		/**
 		 * triggered on [esc] keydown
 		 */
-		escape?: () => void;
+		cancel?: () => void;
 		/**
 		 * allows to format output (add unit %, ms...)
 		 */

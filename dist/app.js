@@ -189,6 +189,7 @@ var Channel = (function () {
         },
         set: function (frequency) {
             this._osc.frequencyValue = frequency;
+            this._oscPitchEnv.max = frequency;
         },
         enumerable: true,
         configurable: true
@@ -199,6 +200,46 @@ var Channel = (function () {
         },
         set: function (level) {
             this._output.amplitude.value = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "oscAttack", {
+        get: function () {
+            return this._oscAmpEnv.attack;
+        },
+        set: function (value) {
+            this._oscAmpEnv.attack = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "oscDecay", {
+        get: function () {
+            return this._oscAmpEnv.decay;
+        },
+        set: function (value) {
+            this._oscAmpEnv.decay = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "pitchAttack", {
+        get: function () {
+            return this._oscPitchEnv.attack;
+        },
+        set: function (value) {
+            this._oscPitchEnv.attack = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "pitchDecay", {
+        get: function () {
+            return this._oscPitchEnv.decay;
+        },
+        set: function (value) {
+            this._oscPitchEnv.decay = value;
         },
         enumerable: true,
         configurable: true
@@ -271,19 +312,85 @@ var UI = (function () {
         // delete it all
     };
     UI._panel = function (name, channel) {
-        var $panel = $('<div class="node"></div>');
+        var $panel = $("<div class=\"node\" id=\"" + name + "\"></div>");
         $panel.append("<p>" + name + "</p>");
         var $mixer = $('<div class="section"><p>mixer</p></div>');
-        $mixer.append(this._knob('level', channel.level));
+        $mixer.append(this._knob('level', channel.level * 100));
         var $osc = $('<div class="section"><p>osc</p></div>');
         $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._typeSelect + "</select>");
         $osc.append(this._knob('frequency', channel.frequency));
+        $osc.append(this._knob('oscAttack', channel.oscAttack));
+        $osc.append(this._knob('oscDecay', channel.oscDecay));
+        $osc.append(this._knob('pitchAttack', channel.pitchAttack));
+        $osc.append(this._knob('pitchDecay', channel.pitchDecay));
         var $noise = $('<div class="section"><p>noise</p></div>');
         $panel.append($mixer);
         $panel.append($osc);
         $panel.append($noise);
         $('#synth').append($panel);
-        $('.knob').knob(this._knobDefaults);
+        $("#" + name + " .level").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 100,
+            change: function (value) {
+                channel.level = value / 100;
+            },
+            format: function () {
+                return 'level';
+            }
+        }));
+        $("#" + name + " .wave").change(function () {
+            channel.wave = $(this).val();
+        });
+        $("#" + name + " .frequency").knob($.extend({}, this._knobDefaults, {
+            min: 20,
+            max: 2000,
+            change: function (value) {
+                channel.frequency = value * 1; // idk why
+            },
+            format: function () {
+                return 'freq';
+            }
+        }));
+        $("#" + name + " .oscAttack").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 10000,
+            change: function (value) {
+                channel.oscAttack = value / 1000;
+            },
+            format: function () {
+                return 'attack';
+            }
+        }));
+        $("#" + name + " .oscDecay").knob($.extend({}, this._knobDefaults, {
+            min: 10,
+            max: 10000,
+            change: function (value) {
+                channel.oscDecay = value / 1000;
+            },
+            format: function () {
+                return 'decay';
+            }
+        }));
+        $("#" + name + " .pitchAttack").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 10000,
+            change: function (value) {
+                channel.pitchAttack = value / 1000;
+            },
+            format: function () {
+                return 'attack';
+            }
+        }));
+        $("#" + name + " .pitchDecay").knob($.extend({}, this._knobDefaults, {
+            min: 10,
+            max: 10000,
+            change: function (value) {
+                channel.pitchDecay = value / 1000;
+            },
+            format: function () {
+                return 'decay';
+            }
+        }));
     };
     UI._sequence = function (name, channel, length) {
         // do sequences here instead of in sequencer
@@ -295,7 +402,7 @@ var UI = (function () {
         $('#sequencer-title').after($sequence);
     };
     UI._knob = function (type, value) {
-        return "<div><input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\"></div>";
+        return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\">\n\t\t</div>";
     };
     UI._knobDefaults = {
         'angleOffset': -160,

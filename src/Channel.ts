@@ -93,6 +93,7 @@ class Channel {
 	
 	set frequency(frequency: number) {
 		this._osc.frequencyValue = frequency;
+		this._oscPitchEnv.max = frequency;
 	}
 	
 	get level(): number {
@@ -101,6 +102,54 @@ class Channel {
 	
 	set level(level: number) {
 		this._output.amplitude.value = level;
+	}
+	
+	get oscAttack(): number {
+		return this._oscAmpEnv.attack;
+	}
+	
+	set oscAttack(value: number) {
+		this._oscAmpEnv.attack = value;
+	}
+	
+	get oscDecay(): number {
+		return this._oscAmpEnv.decay;
+	}
+	
+	set oscDecay(value: number) {
+		this._oscAmpEnv.decay = value;
+	}
+	
+	get pitchAttack(): number {
+		return this._oscPitchEnv.attack;
+	}
+	
+	set pitchAttack(value: number) {
+		this._oscPitchEnv.attack = value;
+	}
+	
+	get pitchDecay(): number {
+		return this._oscPitchEnv.decay;
+	}
+	
+	set pitchDecay(value: number) {
+		this._oscPitchEnv.decay = value;
+	}
+	
+	get noiseAttack(): number {
+		return this._noiseAmpEnv.attack;
+	}
+	
+	set noiseAttack(value: number) {
+		this._noiseAmpEnv.attack = value;
+	}
+	
+	get noiseDecay(): number {
+		return this._noiseAmpEnv.decay;
+	}
+	
+	set noiseDecay(value: number) {
+		this._noiseAmpEnv.decay = value;
 	}
 	
 	// changing osc/noise individual levels must change env max also!

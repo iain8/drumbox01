@@ -28,16 +28,19 @@ class UI {
 	}
 	
 	private static _panel(name: string, channel: Channel) {
-		var $panel = $('<div class="node"></div>');
+		var $panel = $(`<div class="node" id="${name}"></div>`);
 		$panel.append(`<p>${name}</p>`);
 		
 		var $mixer = $('<div class="section"><p>mixer</p></div>');
-		$mixer.append(this._knob('level', channel.level));
+		$mixer.append(this._knob('level', channel.level * 100));
 		
 		var $osc = $('<div class="section"><p>osc</p></div>');
 		$osc.append(`<select name="${name}-wave" class="wave">${this._typeSelect}</select>`);
 		$osc.append(this._knob('frequency', channel.frequency));
-		
+		$osc.append(this._knob('oscAttack', channel.oscAttack));
+		$osc.append(this._knob('oscDecay', channel.oscDecay));
+		$osc.append(this._knob('pitchAttack', channel.pitchAttack));
+		$osc.append(this._knob('pitchDecay', channel.pitchDecay));
 		
 		var $noise = $('<div class="section"><p>noise</p></div>');
 		
@@ -47,7 +50,75 @@ class UI {
 		
 		$('#synth').append($panel);
 		
-		$('.knob').knob(this._knobDefaults);
+		$(`#${name} .level`).knob($.extend({}, this._knobDefaults, {
+			min: 0,
+			max: 100,
+			change: function(value) {
+				channel.level = value / 100;
+			},
+			format: function() {
+				return 'level';
+			}
+		}));
+		
+		$(`#${name} .wave`).change(function() {
+			channel.wave = $(this).val();
+		});
+		
+		$(`#${name} .frequency`).knob($.extend({}, this._knobDefaults, {
+			min: 20,
+			max: 2000,
+			change: function(value) {
+				channel.frequency = value * 1; // idk why
+			},
+			format: function() {
+				return 'freq';
+			}
+		}));
+		
+		$(`#${name} .oscAttack`).knob($.extend({}, this._knobDefaults, {
+			min: 0,
+			max: 10000,
+			change: function(value) {
+				channel.oscAttack = value / 1000;
+			},
+			format: function() {
+				return 'attack';
+			}
+		}));
+		
+		$(`#${name} .oscDecay`).knob($.extend({}, this._knobDefaults, {
+			min: 10,
+			max: 10000,
+			change: function(value) {
+				channel.oscDecay = value / 1000;
+			},
+			format: function() {
+				return 'decay';
+			}
+		}));
+		
+		$(`#${name} .pitchAttack`).knob($.extend({}, this._knobDefaults, {
+			min: 0,
+			max: 10000,
+			change: function(value) {
+				channel.pitchAttack = value / 1000;
+			},
+			format: function() {
+				return 'attack';
+			}
+		}));
+		
+		$(`#${name} .pitchDecay`).knob($.extend({}, this._knobDefaults, {
+			min: 10,
+			max: 10000,
+			change: function(value) {
+				channel.pitchDecay = value / 1000;
+			},
+			format: function() {
+				return 'decay';
+			}
+		}));
 	}
 	
 	private static _sequence(name: string, channel: Channel, length: number) {
@@ -63,6 +134,8 @@ class UI {
 	}
 	
 	private static _knob(type: string, value: number) {
-		return `<div><input type="text" class="knob ${type}" value="${value}"></div>`;
+		return `<div>
+			<input type="text" class="knob ${type}" value="${value}">
+		</div>`;
 	}
 }
