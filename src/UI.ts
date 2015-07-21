@@ -18,9 +18,9 @@ class UI {
 	    <option>triangle</option>
 	`;
 	
-	static addChannel(name: string, channel: Channel, length: number) {
+	static addChannel(name: string, channel: Channel, length: number, pattern: string = '0000000000000000') {
 		this._panel(name, channel);
-		this._sequence(name, channel, length);
+		this._sequence(name, channel, length, pattern);
 	}
 	
 	static removeChannel() {
@@ -179,7 +179,7 @@ class UI {
 		}));
 	}
 	
-	private static _sequence(name: string, channel: Channel, length: number) {
+	private static _sequence(name: string, channel: Channel, length: number, pattern: string) {
 		// do sequences here instead of in sequencer
 		var $sequence = $('<ul class="sequence"></ul>');
 		$sequence.attr('data-channel', name);
@@ -187,8 +187,12 @@ class UI {
 		$sequence.append(`<li class="sequence-label">${name}</li>`);
 		
 		for (var i = 0; i < length; ++i) {
-			$sequence.append('<li class="beat"><div class="light-outer"><div class="light-inner"></div></div></li>');
+			var cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
+			
+			$sequence.append(`<li class="${cssClass}"><div class="light-outer"><div class="light-inner"></div></div></li>`);
 		}
+		
+		$sequence.append(`<li><a href="#" class="clear-sequence">clear</a></li>`);
 		
 		$('#sequencer-title').after($sequence);
 	}

@@ -341,9 +341,10 @@ var Sequencer = (function () {
 var UI = (function () {
     function UI() {
     }
-    UI.addChannel = function (name, channel, length) {
+    UI.addChannel = function (name, channel, length, pattern) {
+        if (pattern === void 0) { pattern = '0000000000000000'; }
         this._panel(name, channel);
-        this._sequence(name, channel, length);
+        this._sequence(name, channel, length, pattern);
     };
     UI.removeChannel = function () {
         // delete it all
@@ -480,13 +481,14 @@ var UI = (function () {
             }
         }));
     };
-    UI._sequence = function (name, channel, length) {
+    UI._sequence = function (name, channel, length, pattern) {
         // do sequences here instead of in sequencer
         var $sequence = $('<ul class="sequence"></ul>');
         $sequence.attr('data-channel', name);
         $sequence.append("<li class=\"sequence-label\">" + name + "</li>");
         for (var i = 0; i < length; ++i) {
-            $sequence.append('<li class="beat"><div class="light-outer"><div class="light-inner"></div></div></li>');
+            var cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
+            $sequence.append("<li class=\"" + cssClass + "\"><div class=\"light-outer\"><div class=\"light-inner\"></div></div></li>");
         }
         $('#sequencer-title').after($sequence);
     };
@@ -534,7 +536,7 @@ var channels = {
     }),
     'hat': new Channel(audioContext, {
         frequency: 1500,
-        noiseLevel: 0.7,
+        noiseLevel: 0.3,
         oscLevel: 0.3
     }),
     'thing': new Channel(audioContext, {
@@ -543,9 +545,15 @@ var channels = {
         oscLevel: 0.3
     })
 };
+// there's some encoding to be done here
+var patterns = {
+    kick: '1010101010101010',
+    snare: '0010001000100010',
+    hat: '0101010101010101'
+};
 var sequencer = new Sequencer(channels, 80);
 $.each(channels, function (name, channel) {
-    UI.addChannel(name, channel, sequencer.length);
+    UI.addChannel(name, channel, sequencer.length, patterns[name]);
 });
 UI.indicator(sequencer.length);
 // put these things in the UI class
