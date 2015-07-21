@@ -96,7 +96,7 @@ var Noise = (function (_super) {
     __extends(Noise, _super);
     function Noise(context) {
         _super.call(this);
-        this.channels = 2;
+        this.channels = 1;
         var size = 2 * context.sampleRate;
         var buffer = context.createBuffer(this.channels, size, context.sampleRate);
         var output = buffer.getChannelData(0);
@@ -137,25 +137,25 @@ var Channel = (function () {
     function Channel(context, options) {
         if (options === void 0) { options = {}; }
         this._output = new Amp(context);
-        this._output.level = options.outputLevel || 1.0;
+        this._output.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
         this._osc = new Osc(context);
-        this._osc.type = options.type || 'sine';
-        this._osc.frequencyValue = options.frequency || 440;
+        this._osc.type = options.hasOwnProperty('type') ? options.type : 'sine';
+        this._osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
         this._oscAmp = new Amp(context);
         this._oscPitchEnv = new Env(context);
-        this._oscPitchEnv.attack = options.oscPitchAttack || 0.1;
-        this._oscPitchEnv.decay = options.oscPitchDecay || 0.5;
-        this._oscPitchEnv.max = options.frequency || 440;
+        this._oscPitchEnv.attack = options.hasOwnProperty('oscPitchAttack') ? options.oscPitchAttack : 0.1;
+        this._oscPitchEnv.decay = options.hasOwnProperty('oscPitchDecay') ? options.oscPitchDecay : 0.5;
+        this._oscPitchEnv.max = options.hasOwnProperty('frequency') ? options.frequency : 440;
         this._oscAmpEnv = new Env(context);
-        this._oscAmpEnv.attack = options.oscAmpAttack || 0.2;
-        this._oscAmpEnv.decay = options.oscAmpDecay || 0.8;
-        this._oscAmpEnv.max = options.oscLevel || 1.0;
+        this._oscAmpEnv.attack = options.hasOwnProperty('oscAmpAttack') ? options.oscAmpAttack : 0.2;
+        this._oscAmpEnv.decay = options.hasOwnProperty('oscAmpDecay') ? options.oscAmpDecay : 0.8;
+        this._oscAmpEnv.max = options.hasOwnProperty('oscLevel') ? options.oscLevel : 1.0;
         this._noise = new Noise(context);
         this._noiseAmp = new Amp(context);
         this._noiseAmpEnv = new Env(context);
-        this._noiseAmpEnv.attack = options.noiseAmpAttack || 0.1;
-        this._noiseAmpEnv.decay = options.noiseAmpDecay || 0.5;
-        this._noiseAmpEnv.max = options.noiseLevel || 1.0;
+        this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAmpAttack') ? options.noiseAmpAttack : 0.1;
+        this._noiseAmpEnv.decay = options.hasOwnProperty('noiseAmpDecay') ? options.noiseAmpDecay : 0.5;
+        this._noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
         // wiring!
         this._osc.connect(this._oscAmp);
         this._oscPitchEnv.connect(this._osc.frequency);
@@ -165,17 +165,44 @@ var Channel = (function () {
         this._noiseAmpEnv.connect(this._noiseAmp.amplitude);
         this._noiseAmp.connect(this._output);
         this._output.connect(context.destination);
-    }
-    Channel.prototype.start = function () {
         this._osc.start();
         this._noise.noise.start();
-        // may end up redundant as nodes have to be renewed if stopped
-    };
+    }
     Channel.prototype.trigger = function () {
         this._oscAmpEnv.trigger();
         this._oscPitchEnv.trigger();
         this._noiseAmpEnv.trigger();
     };
+    Object.defineProperty(Channel.prototype, "level", {
+        get: function () {
+            return this._output.amplitude.value;
+        },
+        set: function (level) {
+            this._output.amplitude.value = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "oscLevel", {
+        get: function () {
+            return this._oscAmpEnv.max;
+        },
+        set: function (level) {
+            this._oscAmpEnv.max = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "noiseLevel", {
+        get: function () {
+            return this._noiseAmpEnv.max;
+        },
+        set: function (level) {
+            this._noiseAmpEnv.max = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Channel.prototype, "wave", {
         set: function (type) {
             this._osc.type = type;
@@ -190,16 +217,6 @@ var Channel = (function () {
         set: function (frequency) {
             this._osc.frequencyValue = frequency;
             this._oscPitchEnv.max = frequency;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "level", {
-        get: function () {
-            return this._output.amplitude.value;
-        },
-        set: function (level) {
-            this._output.amplitude.value = level;
         },
         enumerable: true,
         configurable: true
@@ -244,6 +261,26 @@ var Channel = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Channel.prototype, "noiseAttack", {
+        get: function () {
+            return this._noiseAmpEnv.attack;
+        },
+        set: function (value) {
+            this._noiseAmpEnv.attack = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "noiseDecay", {
+        get: function () {
+            return this._noiseAmpEnv.decay;
+        },
+        set: function (value) {
+            this._noiseAmpEnv.decay = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Channel;
 })();
 ///<reference path="jquery.d.ts"/>
@@ -255,6 +292,7 @@ var Sequencer = (function () {
         this._length = 16;
         this._channels = channels;
         this._tempo = tempo;
+        this.started = false;
     }
     Sequencer.prototype.loop = function () {
         // can we just do the active thing on the indicator?
@@ -263,7 +301,7 @@ var Sequencer = (function () {
         $('.sequence li').removeClass('active');
         $('.sequence').each(function (i, sequence) {
             var $sequence = $(sequence);
-            var $current = $($sequence.children('li')[_this._beat]);
+            var $current = $($sequence.children('.beat')[_this._beat]);
             if ($current.hasClass('on') && $sequence.data('channel') !== 'indicator') {
                 _this._channels[$sequence.data('channel')].trigger();
             }
@@ -273,12 +311,11 @@ var Sequencer = (function () {
     };
     Sequencer.prototype.start = function () {
         var _this = this;
-        $.each(this._channels, function () {
-            this.start();
-        });
+        this.started = true;
         this._interval = setInterval(function () { _this.loop(); }, this.bpmToMs(this._tempo));
     };
     Sequencer.prototype.stop = function () {
+        this.started = false;
         clearInterval(this._interval);
     };
     Sequencer.prototype.setTempo = function (tempo) {
@@ -311,19 +348,30 @@ var UI = (function () {
     UI.removeChannel = function () {
         // delete it all
     };
+    UI.indicator = function (length) {
+        var $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
+        for (var i = 0; i < length; ++i) {
+            $sequence.append('<li class="beat"></li>');
+        }
+        $('#sequencer').append($sequence);
+    };
     UI._panel = function (name, channel) {
         var $panel = $("<div class=\"node\" id=\"" + name + "\"></div>");
         $panel.append("<p>" + name + "</p>");
         var $mixer = $('<div class="section"><p>mixer</p></div>');
         $mixer.append(this._knob('level', channel.level * 100));
+        $mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
+        $mixer.append(this._knob('noiseLevel', channel.noiseLevel * 100));
         var $osc = $('<div class="section"><p>osc</p></div>');
         $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._typeSelect + "</select>");
         $osc.append(this._knob('frequency', channel.frequency));
-        $osc.append(this._knob('oscAttack', channel.oscAttack));
-        $osc.append(this._knob('oscDecay', channel.oscDecay));
-        $osc.append(this._knob('pitchAttack', channel.pitchAttack));
-        $osc.append(this._knob('pitchDecay', channel.pitchDecay));
+        $osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
+        $osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
+        $osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
+        $osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
         var $noise = $('<div class="section"><p>noise</p></div>');
+        $noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));
+        $noise.append(this._knob('noiseDecay', channel.noiseDecay * 1000));
         $panel.append($mixer);
         $panel.append($osc);
         $panel.append($noise);
@@ -334,8 +382,28 @@ var UI = (function () {
             change: function (value) {
                 channel.level = value / 100;
             },
-            format: function () {
-                return 'level';
+            format: function (value) {
+                return value; //'level';
+            }
+        }));
+        $("#" + name + " .oscLevel").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 100,
+            change: function (value) {
+                channel.oscLevel = value / 100;
+            },
+            format: function (value) {
+                return value;
+            }
+        }));
+        $("#" + name + " .noiseLevel").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 100,
+            change: function (value) {
+                channel.noiseLevel = value / 100;
+            },
+            format: function (value) {
+                return value;
             }
         }));
         $("#" + name + " .wave").change(function () {
@@ -347,8 +415,8 @@ var UI = (function () {
             change: function (value) {
                 channel.frequency = value * 1; // idk why
             },
-            format: function () {
-                return 'freq';
+            format: function (value) {
+                return value;
             }
         }));
         $("#" + name + " .oscAttack").knob($.extend({}, this._knobDefaults, {
@@ -357,8 +425,8 @@ var UI = (function () {
             change: function (value) {
                 channel.oscAttack = value / 1000;
             },
-            format: function () {
-                return 'attack';
+            format: function (value) {
+                return value;
             }
         }));
         $("#" + name + " .oscDecay").knob($.extend({}, this._knobDefaults, {
@@ -367,8 +435,8 @@ var UI = (function () {
             change: function (value) {
                 channel.oscDecay = value / 1000;
             },
-            format: function () {
-                return 'decay';
+            format: function (value) {
+                return value;
             }
         }));
         $("#" + name + " .pitchAttack").knob($.extend({}, this._knobDefaults, {
@@ -377,8 +445,8 @@ var UI = (function () {
             change: function (value) {
                 channel.pitchAttack = value / 1000;
             },
-            format: function () {
-                return 'attack';
+            format: function (value) {
+                return value;
             }
         }));
         $("#" + name + " .pitchDecay").knob($.extend({}, this._knobDefaults, {
@@ -387,8 +455,28 @@ var UI = (function () {
             change: function (value) {
                 channel.pitchDecay = value / 1000;
             },
-            format: function () {
-                return 'decay';
+            format: function (value) {
+                return value;
+            }
+        }));
+        $("#" + name + " .noiseAttack").knob($.extend({}, this._knobDefaults, {
+            min: 0,
+            max: 10000,
+            change: function (value) {
+                channel.noiseAttack = value / 1000;
+            },
+            format: function (value) {
+                return value;
+            }
+        }));
+        $("#" + name + " .noiseDecay").knob($.extend({}, this._knobDefaults, {
+            min: 10,
+            max: 10000,
+            change: function (value) {
+                channel.noiseDecay = value / 1000;
+            },
+            format: function (value) {
+                return value;
             }
         }));
     };
@@ -396,8 +484,9 @@ var UI = (function () {
         // do sequences here instead of in sequencer
         var $sequence = $('<ul class="sequence"></ul>');
         $sequence.attr('data-channel', name);
+        $sequence.append("<li class=\"sequence-label\">" + name + "</li>");
         for (var i = 0; i < length; ++i) {
-            $sequence.append('<li><div class="light-outer"><div class="light-inner"></div></div></li>');
+            $sequence.append('<li class="beat"><div class="light-outer"><div class="light-inner"></div></div></li>');
         }
         $('#sequencer-title').after($sequence);
     };
@@ -419,18 +508,29 @@ var UI = (function () {
 ///<reference path="Channel.ts"/>
 ///<reference path="Sequencer.ts"/>
 ///<reference path="UI.ts"/>
+///<reference path="jquery.knob.d.ts"/>
 var audioContext = new (AudioContext || webkitAudioContext)();
-var tempo = 80;
+var tempo = 120;
 var channels = {
+    // better but still clicky
     'kick': new Channel(audioContext, {
-        frequency: 200,
+        frequency: 105,
+        oscAmpAttack: 0,
+        oscAmpDecay: 0.630,
+        oscPitchAttack: 0,
+        oscPitchDecay: 0.380,
         noiseLevel: 0.001,
-        oscLevel: 0.9
+        oscLevel: 1.0,
+        level: 0.8
     }),
+    // need to tailor noise level (it is V LOUD)
     'snare': new Channel(audioContext, {
         frequency: 800,
-        noiseLevel: 0.7,
-        oscLevel: 0.3
+        noiseLevel: 0.35,
+        noiseAmpAttack: 0,
+        noiseAmpDecay: 0.37,
+        oscLevel: 0,
+        level: 0.8
     }),
     'hat': new Channel(audioContext, {
         frequency: 1500,
@@ -447,14 +547,26 @@ var sequencer = new Sequencer(channels, 80);
 $.each(channels, function (name, channel) {
     UI.addChannel(name, channel, sequencer.length);
 });
+UI.indicator(sequencer.length);
+// put these things in the UI class
 $('.sequence li').click(function () {
     $(this).toggleClass('on');
 });
 $('#mute').click(function () {
-    sequencer.stop();
+    if (sequencer.started) {
+        sequencer.stop();
+    }
+    else {
+        sequencer.start();
+    }
+    return false;
+});
+$('#tempo').knob({
+    min: 1,
+    max: 300,
+    change: function (value) {
+        sequencer.setTempo(value);
+    }
 });
 sequencer.start();
-// then jq knobs
-// namespaces
-// gui code 
 //# sourceMappingURL=app.js.map

@@ -7,12 +7,14 @@ class Sequencer {
 	private _length: number;
 	private _channels; // what is it
 	private _interval;	// what is it
+	started: boolean;
 	
 	constructor(channels, tempo: number = 120) {
 		this._beat = 0;
 		this._length = 16;
 		this._channels = channels;
 		this._tempo = tempo;
+		this.started = false;
 	}
 	
 	loop() {
@@ -23,7 +25,7 @@ class Sequencer {
 		
 		$('.sequence').each((i, sequence) => {
 			var $sequence = $(sequence);
-			var $current = $($sequence.children('li')[this._beat]);
+			var $current = $($sequence.children('.beat')[this._beat]);
 			
 			if ($current.hasClass('on') && $sequence.data('channel') !== 'indicator') {
 				this._channels[$sequence.data('channel')].trigger();
@@ -36,14 +38,13 @@ class Sequencer {
 	}
 	
 	start() {
-		$.each(this._channels, function() {
-			this.start();
-		});
+		this.started = true;
 		
 		this._interval = setInterval(() => { this.loop(); }, this.bpmToMs(this._tempo));
 	}
 	
 	stop() {
+		this.started = false;
 		clearInterval(this._interval);
 	}
 	

@@ -10,26 +10,31 @@ a {
 
 .container {
     border: 1px solid #eee;
-    height: 500px;
-    width: 600px;
-    position: relative;
-    float: left;
-    padding: 0 20px;
+    padding: 0 20px 20px;
+    margin-bottom: 10px;
+}
+
+#channels {
+  display: inline-block;
 }
 
 #sequencer {
-    margin-left: 20px;
+
 }
 
-.sequence {
-    
+.sequence-label {
+    width: 100px;
 }
 
 .sequence li {
     display: inline-block;
-    width: 22px;
-    height: 50px;
-    border: 1px solid #eee;
+    
+}
+
+.beat {
+  height: 50px;
+  width: 22px;
+  border: 1px solid #eee;
 }
 
 #indicator-seq li {

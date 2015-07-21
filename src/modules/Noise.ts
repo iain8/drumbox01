@@ -1,7 +1,7 @@
 ///<reference path="BaseModule.ts"/>
 
 class Noise extends BaseModule {
-	channels: number = 2;
+	channels: number = 1;
 	noise: AudioBufferSourceNode;
 	input: AudioBufferSourceNode;
 	output: AudioBufferSourceNode;
