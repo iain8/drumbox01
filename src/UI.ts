@@ -45,6 +45,8 @@ class UI {
 		$mixer.append(this._knob('level', channel.level * 100));
 		$mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
 		$mixer.append(this._knob('noiseLevel', channel.noiseLevel * 100));
+		$mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
+		$mixer.append(this._knob('filterGain', channel.channelFilterGain));
 		
 		var $osc = $('<div class="section"><p>osc</p></div>');
 		$osc.append(`<select name="${name}-wave" class="wave">${this._typeSelect}</select>`);
@@ -71,10 +73,11 @@ class UI {
 				channel.level = value / 100;
 			},
 			format: function(value) {
-				return value; //'level';
+				return 'level';
 			}
 		}));
 		
+		// TODO: combine this and next into 50:50 knob
 		$(`#${name} .oscLevel`).knob($.extend({}, this._knobDefaults, {
 			min: 0,
 			max: 100,
@@ -82,7 +85,7 @@ class UI {
 				channel.oscLevel = value / 100;
 			},
 			format: function(value) {
-				return value;
+				return 'osc';
 			}
 		}));
 		
@@ -93,7 +96,29 @@ class UI {
 				channel.noiseLevel = value / 100;
 			},
 			format: function(value) {
-				return value;
+				return 'noise';
+			}
+		}));
+		
+		$(`#${name} .filterGain`).knob($.extend({}, this._knobDefaults, {
+			min: -40,
+			max: 40,
+			change: function(value) {
+				channel.channelFilterGain = value;
+			},
+			format: function(value) {
+				return 'fltr gain';
+			}
+		}));
+		
+		$(`#${name} .filterFreq`).knob($.extend({}, this._knobDefaults, {
+			min: 10,
+			max: 22500, // TODO: calculate this
+			change: function(value) {
+				channel.channelFilterFreq = value;
+			},
+			format: function(value) {
+				return 'fltr freq';
 			}
 		}));
 		

@@ -37,8 +37,15 @@ a {
   border: 1px solid #eee;
 }
 
+#indicator-seq {
+  display: inline-block;
+  padding: 10px;
+  vertical-align: 16%;
+}
+
 #indicator-seq li {
     height: 10px;
+    transition: background 0.3s ease-in;
 }
 
 #indicator-seq li.active {
@@ -87,6 +94,63 @@ li.active {
     background: rgba(0, 255, 0, 0.5);
 }
 
+.sequencer-control {
+  position: relative;
+  padding: 0.6em;
+  border-radius: 10em;
+  border: 0 solid rgba(0, 255, 0, 0.5);
+  width: 3em;
+  height: 3em;
+  background-color: black; /* for now */
+}
+
+#tempo {
+  width: 35px;
+  vertical-align: 30%;
+  color: rgba(0, 255, 0, 0.5);
+  background: black;
+  border: 1px solid rgba(0, 255, 0, 0.5);
+}
+
+#stop:before {
+  z-index: 2;
+  top: 0.84em;
+  left: 0.84em;
+  width: 1.41em;
+  height: 1.41em;
+  background: rgba(0, 255, 0, 0.5);
+  position: absolute;
+  content: " ";
+}
+
+#start:before {
+  z-index: 2;
+  top: 0.66em;
+  left: 1.08em;
+  width: 0;
+  height: 0;
+  border: 0.95em solid transparent;
+  border-left-color: rgba(0, 255, 0, 0.5);
+  border-left-width: 1.6em;
+  position: absolute;
+  content: " ";
+}
+
+.sequencer-control:after {
+  position: absolute;
+  content: " ";
+}
+
+#stop.active {
+  background: rgba(0, 255, 0, 1.0);
+}
+
+#start.active {
+  border-left-color: rgba(0, 255, 0, 1.0);
+}
+
+
+/* all the slider stuff */
 input[type=range] {
   -webkit-appearance: none;
   width: 100%;

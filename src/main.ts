@@ -64,22 +64,40 @@ $('.sequence li').click(function() {
 	$(this).toggleClass('on');
 });
 
-$('#mute').click(() => {
-    if (sequencer.started) {
-        sequencer.stop();
-    } else {
+$('#start').click(() => {
+    if (!sequencer.started) {
         sequencer.start();
+        
+        $('#start').toggleClass('active');
     }
     
     return false;
 });
 
-$('#tempo').knob({
-    min: 1,
-    max: 300,
-    change: function(value) {
-        sequencer.setTempo(value);
+$('#stop').click(() => {
+    if (sequencer.started) {
+        sequencer.stop();
+        
+        $('#stop').toggleClass('active');
     }
+    
+    return false;
+});
+
+$('#tempo').change(function() {
+    sequencer.setTempo($(this).val());
+});
+
+$('#tempo').keyup(function() {
+    sequencer.setTempo($(this).val());
+});
+
+$('.clear-sequence').click(function() {
+    $(this).closest('ul')
+        .children('li')
+        .removeClass('on');
+    
+    return false;
 });
 
 sequencer.start();

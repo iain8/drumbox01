@@ -112,12 +112,50 @@ var Noise = (function (_super) {
     }
     return Noise;
 })(BaseModule);
+///<reference path="BaseModule.ts"/>
+var Filter = (function (_super) {
+    __extends(Filter, _super);
+    function Filter(context) {
+        _super.call(this);
+        this._filter = context.createBiquadFilter();
+        this.input = this._filter;
+        this.output = this._filter;
+    }
+    Object.defineProperty(Filter.prototype, "gain", {
+        get: function () {
+            return this._filter.gain.value;
+        },
+        set: function (value) {
+            this._filter.gain.value = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Filter.prototype, "frequency", {
+        get: function () {
+            return this._filter.frequency.value;
+        },
+        set: function (value) {
+            this._filter.frequency.value = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Filter.prototype, "type", {
+        set: function (value) {
+            this._filter.type = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Filter;
+})(BaseModule);
 ///<reference path="modules/Osc.ts"/>
 ///<reference path="modules/Amp.ts"/>
 ///<reference path="modules/Env.ts"/>
 ///<reference path="modules/Noise.ts"/>
+///<reference path="modules/Filter.ts"/>
 var Channel = (function () {
-    // amp or summing buss
     // LFO?
     /**
      * options = {
@@ -136,8 +174,10 @@ var Channel = (function () {
      */
     function Channel(context, options) {
         if (options === void 0) { options = {}; }
-        this._output = new Amp(context);
-        this._output.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
+        this._preOutput = new Amp(context);
+        this._preOutput.level = 1.0;
+        this._postOutput = new Amp(context);
+        this._postOutput.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
         this._osc = new Osc(context);
         this._osc.type = options.hasOwnProperty('type') ? options.type : 'sine';
         this._osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
@@ -156,15 +196,23 @@ var Channel = (function () {
         this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAmpAttack') ? options.noiseAmpAttack : 0.1;
         this._noiseAmpEnv.decay = options.hasOwnProperty('noiseAmpDecay') ? options.noiseAmpDecay : 0.5;
         this._noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
+        // single peak filter for channel
+        this._channelFilter = new Filter(context);
+        this._channelFilter.frequency = 500;
+        this._channelFilter.type = 'peaking';
+        this._channelFilter.gain = 0;
+        // choice of high/mid/low pass for noise
         // wiring!
         this._osc.connect(this._oscAmp);
         this._oscPitchEnv.connect(this._osc.frequency);
         this._oscAmpEnv.connect(this._oscAmp.amplitude);
-        this._oscAmp.connect(this._output);
+        this._oscAmp.connect(this._preOutput);
         this._noise.connect(this._noiseAmp);
         this._noiseAmpEnv.connect(this._noiseAmp.amplitude);
-        this._noiseAmp.connect(this._output);
-        this._output.connect(context.destination);
+        this._noiseAmp.connect(this._preOutput);
+        this._preOutput.connect(this._channelFilter);
+        this._channelFilter.connect(this._postOutput);
+        this._postOutput.connect(context.destination);
         this._osc.start();
         this._noise.noise.start();
     }
@@ -174,11 +222,12 @@ var Channel = (function () {
         this._noiseAmpEnv.trigger();
     };
     Object.defineProperty(Channel.prototype, "level", {
+        // this sure seems like it sucks
         get: function () {
-            return this._output.amplitude.value;
+            return this._preOutput.amplitude.value;
         },
         set: function (level) {
-            this._output.amplitude.value = level;
+            this._preOutput.amplitude.value = level;
         },
         enumerable: true,
         configurable: true
@@ -281,6 +330,26 @@ var Channel = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Channel.prototype, "channelFilterGain", {
+        get: function () {
+            return this._channelFilter.gain;
+        },
+        set: function (value) {
+            this._channelFilter.gain = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "channelFilterFreq", {
+        get: function () {
+            return this._channelFilter.frequency;
+        },
+        set: function (value) {
+            this._channelFilter.frequency = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Channel;
 })();
 ///<reference path="jquery.d.ts"/>
@@ -363,6 +432,8 @@ var UI = (function () {
         $mixer.append(this._knob('level', channel.level * 100));
         $mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
         $mixer.append(this._knob('noiseLevel', channel.noiseLevel * 100));
+        $mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
+        $mixer.append(this._knob('filterGain', channel.channelFilterGain));
         var $osc = $('<div class="section"><p>osc</p></div>');
         $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._typeSelect + "</select>");
         $osc.append(this._knob('frequency', channel.frequency));
@@ -384,9 +455,10 @@ var UI = (function () {
                 channel.level = value / 100;
             },
             format: function (value) {
-                return value; //'level';
+                return 'level';
             }
         }));
+        // TODO: combine this and next into 50:50 knob
         $("#" + name + " .oscLevel").knob($.extend({}, this._knobDefaults, {
             min: 0,
             max: 100,
@@ -394,7 +466,7 @@ var UI = (function () {
                 channel.oscLevel = value / 100;
             },
             format: function (value) {
-                return value;
+                return 'osc';
             }
         }));
         $("#" + name + " .noiseLevel").knob($.extend({}, this._knobDefaults, {
@@ -404,7 +476,27 @@ var UI = (function () {
                 channel.noiseLevel = value / 100;
             },
             format: function (value) {
-                return value;
+                return 'noise';
+            }
+        }));
+        $("#" + name + " .filterGain").knob($.extend({}, this._knobDefaults, {
+            min: -40,
+            max: 40,
+            change: function (value) {
+                channel.channelFilterGain = value;
+            },
+            format: function (value) {
+                return 'fltr gain';
+            }
+        }));
+        $("#" + name + " .filterFreq").knob($.extend({}, this._knobDefaults, {
+            min: 10,
+            max: 22500,
+            change: function (value) {
+                channel.channelFilterFreq = value;
+            },
+            format: function (value) {
+                return 'fltr freq';
             }
         }));
         $("#" + name + " .wave").change(function () {
@@ -490,6 +582,7 @@ var UI = (function () {
             var cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
             $sequence.append("<li class=\"" + cssClass + "\"><div class=\"light-outer\"><div class=\"light-inner\"></div></div></li>");
         }
+        $sequence.append("<li><a href=\"#\" class=\"clear-sequence\">clear</a></li>");
         $('#sequencer-title').after($sequence);
     };
     UI._knob = function (type, value) {
@@ -521,7 +614,7 @@ var channels = {
         oscAmpDecay: 0.630,
         oscPitchAttack: 0,
         oscPitchDecay: 0.380,
-        noiseLevel: 0.001,
+        noiseLevel: 0,
         oscLevel: 1.0,
         level: 0.8
     }),
@@ -560,21 +653,31 @@ UI.indicator(sequencer.length);
 $('.sequence li').click(function () {
     $(this).toggleClass('on');
 });
-$('#mute').click(function () {
-    if (sequencer.started) {
-        sequencer.stop();
-    }
-    else {
+$('#start').click(function () {
+    if (!sequencer.started) {
         sequencer.start();
+        $('#start').toggleClass('active');
     }
     return false;
 });
-$('#tempo').knob({
-    min: 1,
-    max: 300,
-    change: function (value) {
-        sequencer.setTempo(value);
+$('#stop').click(function () {
+    if (sequencer.started) {
+        sequencer.stop();
+        $('#stop').toggleClass('active');
     }
+    return false;
+});
+$('#tempo').change(function () {
+    sequencer.setTempo($(this).val());
+});
+$('#tempo').keyup(function () {
+    sequencer.setTempo($(this).val());
+});
+$('.clear-sequence').click(function () {
+    $(this).closest('ul')
+        .children('li')
+        .removeClass('on');
+    return false;
 });
 sequencer.start();
 //# sourceMappingURL=app.js.map
