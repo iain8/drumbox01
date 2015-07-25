@@ -27,17 +27,17 @@ var channels = {
     'snare': new Channel(audioContext, {
         frequency: 800,
         noiseLevel: 0.35,
-        noiseAmpAttack: 0,
-        noiseAmpDecay: 0.37,
+        noiseAttack: 0,
+        noiseDecay: 0.37,
         oscLevel: 0,
         level: 0.8
     }),
     'hat': new Channel(audioContext, {
         frequency: 1500,
         noiseLevel: 0.3,
-        oscLevel: 0.3,
-        noiseAmpAttack: 0,
-        noiseAmpDecay: 0.15
+        oscLevel: 0,
+        noiseAttack: 0,
+        noiseDecay: 0.15
     }),
     'thing': new Channel(audioContext, {
         frequency: 1000,
@@ -48,12 +48,12 @@ var channels = {
 
 // there's some encoding to be done here
 var patterns = {
-    kick: '1010101010101010',
-    snare: '0010001000100010',
-    hat: '0101010101010101'
+    kick: '1100001011000010',
+    snare: '0000100000001000',
+    hat: '0010010100110101'
 };
 
-var sequencer = new Sequencer(channels, 80);
+var sequencer = new Sequencer(channels, tempo);
 
 $.each(channels, (name, channel) => {
     UI.addChannel(name, channel, sequencer.length, patterns[name]);

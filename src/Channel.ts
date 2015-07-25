@@ -65,8 +65,8 @@ class Channel {
 		this._noiseAmp = new Amp(context);
 		
 		this._noiseAmpEnv = new Env(context);
-		this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAmpAttack') ? options.noiseAmpAttack : 0.1;
-		this._noiseAmpEnv.decay = options.hasOwnProperty('noiseAmpDecay') ? options.noiseAmpDecay : 0.5;
+		this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAttack') ? options.noiseAttack : 0.1;
+		this._noiseAmpEnv.decay = options.hasOwnProperty('noiseDecay') ? options.noiseDecay : 0.5;
 		this._noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
 		
 		// single peak filter for channel

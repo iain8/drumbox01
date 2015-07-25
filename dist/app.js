@@ -193,8 +193,8 @@ var Channel = (function () {
         this._noise = new Noise(context);
         this._noiseAmp = new Amp(context);
         this._noiseAmpEnv = new Env(context);
-        this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAmpAttack') ? options.noiseAmpAttack : 0.1;
-        this._noiseAmpEnv.decay = options.hasOwnProperty('noiseAmpDecay') ? options.noiseAmpDecay : 0.5;
+        this._noiseAmpEnv.attack = options.hasOwnProperty('noiseAttack') ? options.noiseAttack : 0.1;
+        this._noiseAmpEnv.decay = options.hasOwnProperty('noiseDecay') ? options.noiseDecay : 0.5;
         this._noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
         // single peak filter for channel
         this._channelFilter = new Filter(context);
@@ -435,7 +435,7 @@ var UI = (function () {
         $mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
         $mixer.append(this._knob('filterGain', channel.channelFilterGain));
         var $osc = $('<div class="section"><p>osc</p></div>');
-        $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._typeSelect + "</select>");
+        $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._oscTypeSelect + "</select>");
         $osc.append(this._knob('frequency', channel.frequency));
         $osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
         $osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
@@ -596,7 +596,8 @@ var UI = (function () {
         'height': 50,
         'fgColor': '#0f0'
     };
-    UI._typeSelect = "<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
+    UI._oscTypeSelect = "\n\t\t<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
+    UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";
     return UI;
 })();
 ///<reference path="jquery.d.ts"/>
@@ -622,15 +623,17 @@ var channels = {
     'snare': new Channel(audioContext, {
         frequency: 800,
         noiseLevel: 0.35,
-        noiseAmpAttack: 0,
-        noiseAmpDecay: 0.37,
+        noiseAttack: 0,
+        noiseDecay: 0.37,
         oscLevel: 0,
         level: 0.8
     }),
     'hat': new Channel(audioContext, {
         frequency: 1500,
         noiseLevel: 0.3,
-        oscLevel: 0.3
+        oscLevel: 0,
+        noiseAttack: 0,
+        noiseDecay: 0.15
     }),
     'thing': new Channel(audioContext, {
         frequency: 1000,
@@ -640,11 +643,11 @@ var channels = {
 };
 // there's some encoding to be done here
 var patterns = {
-    kick: '1010101010101010',
-    snare: '0010001000100010',
-    hat: '0101010101010101'
+    kick: '1100001011000010',
+    snare: '0000100000001000',
+    hat: '0010010100110101'
 };
-var sequencer = new Sequencer(channels, 80);
+var sequencer = new Sequencer(channels, tempo);
 $.each(channels, function (name, channel) {
     UI.addChannel(name, channel, sequencer.length, patterns[name]);
 });
