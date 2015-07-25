@@ -12,10 +12,17 @@ class UI {
 	    'fgColor': '#0f0'
 	};
 	
-	private static _typeSelect = `<option>sine</option>
+	private static _oscTypeSelect = `
+		<option>sine</option>
         <option>square</option>
         <option>sawtooth</option>
 	    <option>triangle</option>
+	`;
+	
+	private static _filterTypeSelect = `
+		<option>lowpass</option>
+		<option>bandpass</option>
+		<option>highpass</option>
 	`;
 	
 	static addChannel(name: string, channel: Channel, length: number, pattern: string = '0000000000000000') {
@@ -49,7 +56,7 @@ class UI {
 		$mixer.append(this._knob('filterGain', channel.channelFilterGain));
 		
 		var $osc = $('<div class="section"><p>osc</p></div>');
-		$osc.append(`<select name="${name}-wave" class="wave">${this._typeSelect}</select>`);
+		$osc.append(`<select name="${name}-wave" class="wave">${this._oscTypeSelect}</select>`);
 		$osc.append(this._knob('frequency', channel.frequency));
 		$osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
 		$osc.append(this._knob('oscDecay', channel.oscDecay * 1000));

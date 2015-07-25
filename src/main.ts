@@ -35,7 +35,9 @@ var channels = {
     'hat': new Channel(audioContext, {
         frequency: 1500,
         noiseLevel: 0.3,
-        oscLevel: 0.3
+        oscLevel: 0.3,
+        noiseAmpAttack: 0,
+        noiseAmpDecay: 0.15
     }),
     'thing': new Channel(audioContext, {
         frequency: 1000,
