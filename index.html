@@ -4,26 +4,23 @@
         <link rel="stylesheet" type="text/css" href="base.css">
     </head>
     <body>
-        <div id="master" class="container">
-            <p>master</p>
-
-            <div>
-                <input type="number" id="tempo" value="120">
+        <div id="main-panel">
+            <div id="synth" class="container">
+                <ul id="channel-headers">
+                    
+                </ul>
             </div>
-
-            <button id="start" class="sequencer-control active"></button>
-            <button id="stop" class="sequencer-control"></button>
-        </div>
-        <div id="synth" class="container">
-            <ul id="channel-headers">
-                
-            </ul>
-        </div>
-        <div id="sequencer" class="container">
-            
+            <div id="divider" class="container"></div>
+            <div id="sequencer" class="container">
+                <div>
+                    <input type="number" id="tempo" value="120">
+                    <button id="start" class="sequencer-control active"></button>
+                    <button id="stop" class="sequencer-control"></button>
+                </div>
+                <h3>a drum machine <small>v0.whatever</small></h3>
+            </div>
         </div>
 
-        <!--<script src="dom.jsPlumb-1.7.5-min.js"></script>-->
         <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="lib/jquery.knob.min.js"></script>
         <script src="dist/app.js"></script>

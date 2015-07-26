@@ -423,7 +423,7 @@ var UI = (function () {
         for (var i = 0; i < length; ++i) {
             $sequence.append('<li class="beat"></li>');
         }
-        $('#sequencer').append($sequence);
+        $('#sequencer').prepend($sequence);
     };
     UI._header = function (name) {
         var $header = $("<li><a href=\"#\" data-name=\"" + name + "\">" + name + "</a></li>");

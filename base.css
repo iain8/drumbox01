@@ -8,15 +8,24 @@ a {
     text-decoration: none;
 }
 
-.container {
-    border: 1px solid #EDE0C5;
+#main-panel {
+  border: 1px solid #EDE0C5;
     border-radius: 4px;
+    background-color: #ECE5D6;
+    width: 840px;
+}
+
+#divider {
+  border: 2px solid #fff;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.container {
     padding: 0 20px 20px;
-    margin-bottom: 10px;
     display: inline-block;
     vertical-align: top;
     height: 408px;
-    background-color: #ECE5D6;
 }
 
 .sequence-label {

@@ -42,7 +42,7 @@ class UI {
 			$sequence.append('<li class="beat"></li>');
 		}
 		
-		$('#sequencer').append($sequence);
+		$('#sequencer').prepend($sequence);
 	}
 	
 	private static _header(name: string) {
