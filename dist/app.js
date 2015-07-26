@@ -587,7 +587,7 @@ var UI = (function () {
             $sequence.append("<li class=\"" + cssClass + "\"><div class=\"light-outer\"><div class=\"light-inner\"></div></div></li>");
         }
         $sequence.append("<li><a href=\"#\" class=\"clear-sequence\">clear</a></li>");
-        $('#sequencer-title').after($sequence);
+        $('#sequencer').prepend($sequence);
     };
     UI._knob = function (type, value) {
         return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\">\n\t\t</div>";

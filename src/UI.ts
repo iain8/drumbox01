@@ -231,7 +231,7 @@ class UI {
 		
 		$sequence.append(`<li><a href="#" class="clear-sequence">clear</a></li>`);
 		
-		$('#sequencer-title').after($sequence);
+		$('#sequencer').prepend($sequence);
 	}
 	
 	private static _knob(type: string, value: number) {
