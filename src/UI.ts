@@ -9,7 +9,7 @@ class UI {
 	    'thickness': 0.1,
 	    'width': 50,
 	    'height': 50,
-	    'fgColor': '#0f0'
+	    'fgColor': '#363439'
 	};
 	
 	private static _oscTypeSelect = `
@@ -221,15 +221,13 @@ class UI {
 		var $sequence = $('<ul class="sequence"></ul>');
 		$sequence.attr('data-channel', name);
 		
-		$sequence.append(`<li class="sequence-label">${name}</li>`);
-		
 		for (var i = 0; i < length; ++i) {
 			var cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
 			
-			$sequence.append(`<li class="${cssClass}"><div class="light-outer"><div class="light-inner"></div></div></li>`);
+			$sequence.append(`<li class="${cssClass}"></li>`);
 		}
 		
-		$sequence.append(`<li><a href="#" class="clear-sequence">clear</a></li>`);
+		$sequence.append(`<li><a href="#" class="clear-sequence"></a></li>`);
 		
 		$('#sequencer').prepend($sequence);
 	}

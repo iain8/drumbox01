@@ -81,9 +81,10 @@ $('#channel-headers li a').click(function() {
 $('#start').click(() => {
     if (!sequencer.started) {
         sequencer.start();
-        
-        $('#start').toggleClass('active');
     }
+    
+    $('#start').toggleClass('active');
+    $('#stop').toggleClass('active');
     
     return false;
 });
@@ -91,9 +92,10 @@ $('#start').click(() => {
 $('#stop').click(() => {
     if (sequencer.started) {
         sequencer.stop();
-        
-        $('#stop').toggleClass('active');
     }
+    
+    $('#start').toggleClass('active');
+    $('#stop').toggleClass('active');
     
     return false;
 });

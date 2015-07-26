@@ -364,8 +364,7 @@ var Sequencer = (function () {
         this.started = false;
     }
     Sequencer.prototype.loop = function () {
-        // can we just do the active thing on the indicator?
-        // also be nice to add a glowy effect
+        // indicator is out of sync with sequence by 1 beat
         var _this = this;
         $('.sequence li').removeClass('active');
         $('.sequence').each(function (i, sequence) {
@@ -581,12 +580,11 @@ var UI = (function () {
         // do sequences here instead of in sequencer
         var $sequence = $('<ul class="sequence"></ul>');
         $sequence.attr('data-channel', name);
-        $sequence.append("<li class=\"sequence-label\">" + name + "</li>");
         for (var i = 0; i < length; ++i) {
             var cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
-            $sequence.append("<li class=\"" + cssClass + "\"><div class=\"light-outer\"><div class=\"light-inner\"></div></div></li>");
+            $sequence.append("<li class=\"" + cssClass + "\"></li>");
         }
-        $sequence.append("<li><a href=\"#\" class=\"clear-sequence\">clear</a></li>");
+        $sequence.append("<li><a href=\"#\" class=\"clear-sequence\"></a></li>");
         $('#sequencer').prepend($sequence);
     };
     UI._knob = function (type, value) {
@@ -598,7 +596,7 @@ var UI = (function () {
         'thickness': 0.1,
         'width': 50,
         'height': 50,
-        'fgColor': '#0f0'
+        'fgColor': '#363439'
     };
     UI._oscTypeSelect = "\n\t\t<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
     UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";
@@ -673,15 +671,17 @@ $('#channel-headers li a').click(function () {
 $('#start').click(function () {
     if (!sequencer.started) {
         sequencer.start();
-        $('#start').toggleClass('active');
     }
+    $('#start').toggleClass('active');
+    $('#stop').toggleClass('active');
     return false;
 });
 $('#stop').click(function () {
     if (sequencer.started) {
         sequencer.stop();
-        $('#stop').toggleClass('active');
     }
+    $('#start').toggleClass('active');
+    $('#stop').toggleClass('active');
     return false;
 });
 $('#tempo').change(function () {

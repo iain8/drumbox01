@@ -18,8 +18,7 @@ class Sequencer {
 	}
 	
 	loop() {
-		// can we just do the active thing on the indicator?
-		// also be nice to add a glowy effect
+		// indicator is out of sync with sequence by 1 beat
 		
 		$('.sequence li').removeClass('active');
 		

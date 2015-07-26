@@ -1,54 +1,74 @@
 body {
-  background: #111;
-  color: rgba(0, 255, 0, 0.5);
+  color: #363439;
   font-family: consolas;
 }
 
 a {
-    color: rgba(0, 255, 0, 0.7);
+  color: #363439;
+    text-decoration: none;
 }
 
 .container {
-    border: 1px solid #eee;
+    border: 1px solid #EDE0C5;
+    border-radius: 4px;
     padding: 0 20px 20px;
     margin-bottom: 10px;
     display: inline-block;
     vertical-align: top;
     height: 408px;
-}
-
-#sequencer {
-
+    background-color: #ECE5D6;
 }
 
 .sequence-label {
     width: 100px;
 }
 
+.sequence {
+  padding-left: 0;
+  position: relative;
+  margin-right: 20px;
+}
+
 .sequence li {
     display: inline-block;
-    
 }
 
 .beat {
-  height: 50px;
+  height: 22px;
   width: 22px;
   border: 1px solid #eee;
+  background-color: #fff;
+  margin-right: 5px;
+}
+
+.beat.on {
+  background-color: #92C8CD;
+}
+
+.clear-sequence {
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #fff;
+  position: absolute;
+  top: 10px;
 }
 
 #indicator-seq {
   display: inline-block;
-  padding: 10px;
   vertical-align: 16%;
 }
 
 #indicator-seq li {
+  background: #fff;
     height: 10px;
     transition: background 0.3s ease-in;
+    margin-right: 5px;
 }
 
 #indicator-seq li.active {
-    background: rgba(0, 255, 0, 0.8);
+    background: #92C8CD;
 }
 
 #channel-headers {
@@ -66,7 +86,7 @@ a {
 }
 
 #channel-headers li.active {
-  border-bottom: 1px solid #111;
+  border-bottom: 1px solid #ECE5D6;
 }
 
 .channel {
@@ -80,36 +100,11 @@ a {
   display: inline-block;
   padding: 0 10px;
   border-right: 1px solid #eee;
+  vertical-align: top;
 }
 
 .channel .section:last-child {
   border: none;
-}
-
-li.active {
-    color: rgba(0, 255, 0, 1.0);
-}
-
-.light-outer {
-    background: rgba(0, 255, 0, 0.5);
-    border: 1px solid rgba(0, 255, 0, 0.5);
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin: 2px 0 0 2px;
-}
-
-.light-inner {
-    border: 1px solid rgba(0, 255, 0, 0.5);
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    margin: 2px 0 0 2px;
-    background: #111;
-}
-
-.on .light-inner {
-    background: rgba(0, 255, 0, 0.5);
 }
 
 .sequencer-control {
@@ -119,15 +114,15 @@ li.active {
   border: 0 solid rgba(0, 255, 0, 0.5);
   width: 3em;
   height: 3em;
-  background-color: black; /* for now */
+  background-color: #ECE5D6;
 }
 
 #tempo {
   width: 35px;
   vertical-align: 30%;
-  color: rgba(0, 255, 0, 0.5);
-  background: black;
-  border: 1px solid rgba(0, 255, 0, 0.5);
+  color: #fff;
+  background: #92C8CD;
+  border: none;
 }
 
 #stop:before {
@@ -136,7 +131,7 @@ li.active {
   left: 0.84em;
   width: 1.41em;
   height: 1.41em;
-  background: rgba(0, 255, 0, 0.5);
+  background: #fff;
   position: absolute;
   content: " ";
 }
@@ -148,7 +143,7 @@ li.active {
   width: 0;
   height: 0;
   border: 0.95em solid transparent;
-  border-left-color: rgba(0, 255, 0, 0.5);
+  border-left-color: #fff;
   border-left-width: 1.6em;
   position: absolute;
   content: " ";
@@ -159,12 +154,12 @@ li.active {
   content: " ";
 }
 
-#stop.active {
-  background: rgba(0, 255, 0, 1.0);
+#stop.active:before {
+  background: #92C8CD;
 }
 
-#start.active {
-  border-left-color: rgba(0, 255, 0, 1.0);
+#start.active:before {
+  border-left-color: #92C8CD;
 }
 
 
