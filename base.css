@@ -14,10 +14,6 @@ a {
     margin-bottom: 10px;
 }
 
-#channels {
-  display: inline-block;
-}
-
 #sequencer {
 
 }
@@ -52,19 +48,38 @@ a {
     background: rgba(0, 255, 0, 0.8);
 }
 
-.node {
+#channel-headers {
+  padding: 0;
+  margin-bottom: 0;
+  z-index: 2;
+  border-bottom: 1px solid white;
+}
+
+#channel-headers li {
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid white;
+  margin-bottom: -1px;
+}
+
+#channel-headers li.active {
+  border-bottom: 1px solid #111;
+}
+
+.channel {
   display: inline-block;
     border: 1px solid #eee;
     padding: 5px;
+    border-top: 0;
 }
 
-.node .section {
+.channel .section {
   display: inline-block;
   padding: 0 10px;
   border-right: 1px solid #eee;
 }
 
-.node .section:last-child {
+.channel .section:last-child {
   border: none;
 }
 

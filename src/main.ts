@@ -59,11 +59,23 @@ $.each(channels, (name, channel) => {
     UI.addChannel(name, channel, sequencer.length, patterns[name]);
 });
 
+$('.channel').hide().first().show();
+$('#channel-headers li').first().addClass('active');
+
 UI.indicator(sequencer.length);
 
 // put these things in the UI class
+// if dynamic elements need "on" bindings
 $('.sequence li').click(function() {
 	$(this).toggleClass('on');
+});
+
+$('#channel-headers li a').click(function() {
+    $('#channel-headers li').removeClass('active');
+    $('.channel').hide();
+    $('#' + $(this).data('name')).show();
+    $(this).parent().addClass('active');
+    return false;
 });
 
 $('#start').click(() => {

@@ -26,6 +26,7 @@ class UI {
 	`;
 	
 	static addChannel(name: string, channel: Channel, length: number, pattern: string = '0000000000000000') {
+		this._header(name);
 		this._panel(name, channel);
 		this._sequence(name, channel, length, pattern);
 	}
@@ -44,9 +45,13 @@ class UI {
 		$('#sequencer').append($sequence);
 	}
 	
+	private static _header(name: string) {
+		var $header = $(`<li><a href="#" data-name="${name}">${name}</a></li>`);
+		$('#channel-headers').append($header);
+	}
+	
 	private static _panel(name: string, channel: Channel) {
-		var $panel = $(`<div class="node" id="${name}"></div>`);
-		$panel.append(`<p>${name}</p>`);
+		var $panel = $(`<div class="channel" id="${name}"></div>`);
 		
 		var $mixer = $('<div class="section"><p>mixer</p></div>');
 		$mixer.append(this._knob('level', channel.level * 100));

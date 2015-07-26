@@ -412,6 +412,7 @@ var UI = (function () {
     }
     UI.addChannel = function (name, channel, length, pattern) {
         if (pattern === void 0) { pattern = '0000000000000000'; }
+        this._header(name);
         this._panel(name, channel);
         this._sequence(name, channel, length, pattern);
     };
@@ -425,9 +426,12 @@ var UI = (function () {
         }
         $('#sequencer').append($sequence);
     };
+    UI._header = function (name) {
+        var $header = $("<li><a href=\"#\" data-name=\"" + name + "\">" + name + "</a></li>");
+        $('#channel-headers').append($header);
+    };
     UI._panel = function (name, channel) {
-        var $panel = $("<div class=\"node\" id=\"" + name + "\"></div>");
-        $panel.append("<p>" + name + "</p>");
+        var $panel = $("<div class=\"channel\" id=\"" + name + "\"></div>");
         var $mixer = $('<div class="section"><p>mixer</p></div>');
         $mixer.append(this._knob('level', channel.level * 100));
         $mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
@@ -651,10 +655,20 @@ var sequencer = new Sequencer(channels, tempo);
 $.each(channels, function (name, channel) {
     UI.addChannel(name, channel, sequencer.length, patterns[name]);
 });
+$('.channel').hide().first().show();
+$('#channel-headers li').first().addClass('active');
 UI.indicator(sequencer.length);
 // put these things in the UI class
+// if dynamic elements need "on" bindings
 $('.sequence li').click(function () {
     $(this).toggleClass('on');
+});
+$('#channel-headers li a').click(function () {
+    $('#channel-headers li').removeClass('active');
+    $('.channel').hide();
+    $('#' + $(this).data('name')).show();
+    $(this).parent().addClass('active');
+    return false;
 });
 $('#start').click(function () {
     if (!sequencer.started) {
