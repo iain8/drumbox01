@@ -21,6 +21,10 @@ a {
   margin: 20px 0;
 }
 
+.horizontal-divider {
+  border: 2px solid #fff;
+}
+
 .container {
     padding: 0 20px 20px;
     display: inline-block;
@@ -132,6 +136,7 @@ a {
   color: #fff;
   background: #92C8CD;
   border: none;
+  padding: 3px 0 3px 3px;
 }
 
 #stop:before {
@@ -169,6 +174,10 @@ a {
 
 #start.active:before {
   border-left-color: #92C8CD;
+}
+
+.knob {
+  color: #363439;
 }
 
 

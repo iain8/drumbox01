@@ -489,7 +489,7 @@ var UI = (function () {
                 channel.channelFilterGain = value;
             },
             format: function (value) {
-                return 'fltr gain';
+                return 'f. gain';
             }
         }));
         $("#" + name + " .filterFreq").knob($.extend({}, this._knobDefaults, {
@@ -499,7 +499,7 @@ var UI = (function () {
                 channel.channelFilterFreq = value;
             },
             format: function (value) {
-                return 'fltr freq';
+                return 'f. freq';
             }
         }));
         $("#" + name + " .wave").change(function () {
@@ -512,7 +512,7 @@ var UI = (function () {
                 channel.frequency = value * 1; // idk why
             },
             format: function (value) {
-                return value;
+                return 'freq';
             }
         }));
         $("#" + name + " .oscAttack").knob($.extend({}, this._knobDefaults, {
@@ -522,7 +522,7 @@ var UI = (function () {
                 channel.oscAttack = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'attack';
             }
         }));
         $("#" + name + " .oscDecay").knob($.extend({}, this._knobDefaults, {
@@ -532,7 +532,7 @@ var UI = (function () {
                 channel.oscDecay = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'decay';
             }
         }));
         $("#" + name + " .pitchAttack").knob($.extend({}, this._knobDefaults, {
@@ -542,7 +542,7 @@ var UI = (function () {
                 channel.pitchAttack = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'attack';
             }
         }));
         $("#" + name + " .pitchDecay").knob($.extend({}, this._knobDefaults, {
@@ -552,7 +552,7 @@ var UI = (function () {
                 channel.pitchDecay = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'decay';
             }
         }));
         $("#" + name + " .noiseAttack").knob($.extend({}, this._knobDefaults, {
@@ -562,7 +562,7 @@ var UI = (function () {
                 channel.noiseAttack = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'attack';
             }
         }));
         $("#" + name + " .noiseDecay").knob($.extend({}, this._knobDefaults, {
@@ -572,7 +572,7 @@ var UI = (function () {
                 channel.noiseDecay = value / 1000;
             },
             format: function (value) {
-                return value;
+                return 'decay';
             }
         }));
     };
@@ -593,10 +593,11 @@ var UI = (function () {
     UI._knobDefaults = {
         'angleOffset': -160,
         'angleArc': 320,
-        'thickness': 0.1,
+        'thickness': 0.3,
         'width': 50,
         'height': 50,
-        'fgColor': '#363439'
+        'fgColor': '#92C8CD',
+        'inputColor': '#363439'
     };
     UI._oscTypeSelect = "\n\t\t<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
     UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";

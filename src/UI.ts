@@ -6,10 +6,11 @@ class UI {
 	private static _knobDefaults = {
 	    'angleOffset': -160,
 	    'angleArc': 320,
-	    'thickness': 0.1,
+	    'thickness': 0.3,
 	    'width': 50,
 	    'height': 50,
-	    'fgColor': '#363439'
+	    'fgColor': '#92C8CD',
+		'inputColor': '#363439'
 	};
 	
 	private static _oscTypeSelect = `
@@ -119,7 +120,7 @@ class UI {
 				channel.channelFilterGain = value;
 			},
 			format: function(value) {
-				return 'fltr gain';
+				return 'f. gain';
 			}
 		}));
 		
@@ -130,7 +131,7 @@ class UI {
 				channel.channelFilterFreq = value;
 			},
 			format: function(value) {
-				return 'fltr freq';
+				return 'f. freq';
 			}
 		}));
 		
@@ -145,7 +146,7 @@ class UI {
 				channel.frequency = value * 1; // idk why
 			},
 			format: function(value) {
-				return value;
+				return 'freq';
 			}
 		}));
 		
@@ -156,7 +157,7 @@ class UI {
 				channel.oscAttack = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'attack';
 			}
 		}));
 		
@@ -167,7 +168,7 @@ class UI {
 				channel.oscDecay = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'decay';
 			}
 		}));
 		
@@ -178,7 +179,7 @@ class UI {
 				channel.pitchAttack = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'attack';
 			}
 		}));
 		
@@ -189,7 +190,7 @@ class UI {
 				channel.pitchDecay = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'decay';
 			}
 		}));
 		
@@ -200,7 +201,7 @@ class UI {
 				channel.noiseAttack = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'attack';
 			}
 		}));
 		
@@ -211,7 +212,7 @@ class UI {
 				channel.noiseDecay = value / 1000;
 			},
 			format: function(value) {
-				return value;
+				return 'decay';
 			}
 		}));
 	}
