@@ -9,7 +9,9 @@ declare var webkitAudioContext: {
 };
     
 var audioContext: any = new (AudioContext || webkitAudioContext)();
-var tempo: number = 120;
+var tempo: number = 140;
+
+$('#tempo').val(tempo.toString());
 
 var channels = {
     // better but still clicky
@@ -37,7 +39,9 @@ var channels = {
         noiseLevel: 0.3,
         oscLevel: 0,
         noiseAttack: 0,
-        noiseDecay: 0.15
+        noiseDecay: 0.15,
+        channelFilterFreq: 15000,
+        channelFilterGain: 10
     }),
     'thing': new Channel(audioContext, {
         frequency: 1000,
@@ -50,7 +54,8 @@ var channels = {
 var patterns = {
     kick: '1100001011000010',
     snare: '0000100000001000',
-    hat: '0010010100110101'
+    hat: '0010010100110101',
+    thing: '1000000001000000'
 };
 
 var sequencer = new Sequencer(channels, tempo);
@@ -81,10 +86,10 @@ $('#channel-headers li a').click(function() {
 $('#start').click(() => {
     if (!sequencer.started) {
         sequencer.start();
+        
+        $('#start').toggleClass('active');
+        $('#stop').toggleClass('active');
     }
-    
-    $('#start').toggleClass('active');
-    $('#stop').toggleClass('active');
     
     return false;
 });
@@ -92,10 +97,10 @@ $('#start').click(() => {
 $('#stop').click(() => {
     if (sequencer.started) {
         sequencer.stop();
+        
+        $('#start').toggleClass('active');
+        $('#stop').toggleClass('active');
     }
-    
-    $('#start').toggleClass('active');
-    $('#stop').toggleClass('active');
     
     return false;
 });

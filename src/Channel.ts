@@ -71,9 +71,9 @@ class Channel {
 		
 		// single peak filter for channel
 		this._channelFilter = new Filter(context);
-		this._channelFilter.frequency = 500;
+		this._channelFilter.frequency = options.hasOwnProperty('channelFilterFreq') ? options.channelFilterFreq : 500;
+		this._channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
 		this._channelFilter.type = 'peaking';
-		this._channelFilter.gain = 0;
 		
 		// choice of high/mid/low pass for noise
 		

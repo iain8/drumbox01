@@ -198,9 +198,9 @@ var Channel = (function () {
         this._noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
         // single peak filter for channel
         this._channelFilter = new Filter(context);
-        this._channelFilter.frequency = 500;
+        this._channelFilter.frequency = options.hasOwnProperty('channelFilterFreq') ? options.channelFilterFreq : 500;
+        this._channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
         this._channelFilter.type = 'peaking';
-        this._channelFilter.gain = 0;
         // choice of high/mid/low pass for noise
         // wiring!
         this._osc.connect(this._oscAmp);
@@ -611,7 +611,8 @@ var UI = (function () {
 ///<reference path="UI.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
 var audioContext = new (AudioContext || webkitAudioContext)();
-var tempo = 120;
+var tempo = 140;
+$('#tempo').val(tempo.toString());
 var channels = {
     // better but still clicky
     'kick': new Channel(audioContext, {
@@ -638,7 +639,9 @@ var channels = {
         noiseLevel: 0.3,
         oscLevel: 0,
         noiseAttack: 0,
-        noiseDecay: 0.15
+        noiseDecay: 0.15,
+        channelFilterFreq: 15000,
+        channelFilterGain: 10
     }),
     'thing': new Channel(audioContext, {
         frequency: 1000,
@@ -650,7 +653,8 @@ var channels = {
 var patterns = {
     kick: '1100001011000010',
     snare: '0000100000001000',
-    hat: '0010010100110101'
+    hat: '0010010100110101',
+    thing: '1000000001000000'
 };
 var sequencer = new Sequencer(channels, tempo);
 $.each(channels, function (name, channel) {
@@ -674,17 +678,17 @@ $('#channel-headers li a').click(function () {
 $('#start').click(function () {
     if (!sequencer.started) {
         sequencer.start();
+        $('#start').toggleClass('active');
+        $('#stop').toggleClass('active');
     }
-    $('#start').toggleClass('active');
-    $('#stop').toggleClass('active');
     return false;
 });
 $('#stop').click(function () {
     if (sequencer.started) {
         sequencer.stop();
+        $('#start').toggleClass('active');
+        $('#stop').toggleClass('active');
     }
-    $('#start').toggleClass('active');
-    $('#stop').toggleClass('active');
     return false;
 });
 $('#tempo').change(function () {
