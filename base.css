@@ -12,7 +12,7 @@ a {
   border: 1px solid #EDE0C5;
     border-radius: 4px;
     background-color: #ECE5D6;
-    width: 840px;
+    width: 830px;
 }
 
 #divider {
@@ -88,7 +88,7 @@ a {
   padding: 0;
   margin-bottom: 0;
   z-index: 2;
-  border-bottom: 1px solid white;
+  border-bottom: 4px solid white;
 }
 
 #channel-headers li {
@@ -104,7 +104,6 @@ a {
 
 .channel {
   display: inline-block;
-    border: 1px solid #eee;
     padding: 5px;
     border-top: 0;
 }
@@ -112,12 +111,15 @@ a {
 .channel .section {
   display: inline-block;
   padding: 0 10px;
-  border-right: 1px solid #eee;
   vertical-align: top;
 }
 
 .channel .section:last-child {
   border: none;
+}
+
+.channel .section p {
+  text-align: center;
 }
 
 .sequencer-control {
@@ -131,7 +133,7 @@ a {
 }
 
 #tempo {
-  width: 35px;
+  width: 36px;
   vertical-align: 30%;
   color: #fff;
   background: #92C8CD;
@@ -178,6 +180,51 @@ a {
 
 .knob {
   color: #363439;
+}
+
+.wave {
+  position: relative;
+  height: 50px;
+  width: 50px;
+}
+
+.wave span {
+  font-size: 10px;
+  font-weight: bold;
+
+  position: absolute;
+  top: 13px;
+  left: 14px;
+
+  display: none;
+}
+
+.wave span.active {
+  display: block;
+}
+
+.wave .prev {
+  width: 0; 
+  height: 0; 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent; 
+  border-right:10px solid #fff;
+
+  position: absolute;
+  top: 10px;
+  left: -3px;
+}
+
+.wave .next {
+  width: 0; 
+  height: 0; 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #fff;
+
+  position: absolute;
+  top: 10px;
+  right: -3px;
 }
 
 

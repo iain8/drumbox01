@@ -10,14 +10,15 @@ class UI {
 	    'width': 50,
 	    'height': 50,
 	    'fgColor': '#92C8CD',
+		'bgColor': '#FFF',
 		'inputColor': '#363439'
 	};
 	
 	private static _oscTypeSelect = `
-		<option>sine</option>
-        <option>square</option>
-        <option>sawtooth</option>
-	    <option>triangle</option>
+		<span class="active" data-wave="sine">sine</span>
+        <span data-wave="square">sqr</span>
+        <span data-wave="sawtooth">saw</span>
+	    <span data-wave="triangle">tri</span>
 	`;
 	
 	private static _filterTypeSelect = `
@@ -62,12 +63,13 @@ class UI {
 		$mixer.append(this._knob('filterGain', channel.channelFilterGain));
 		
 		var $osc = $('<div class="section"><p>osc</p></div>');
-		$osc.append(`<select name="${name}-wave" class="wave">${this._oscTypeSelect}</select>`);
+		$osc.append(`<div class="wave"><a href="#" class="prev"></a>${this._oscTypeSelect}<a href="#" class="next"></a></div>`);
 		$osc.append(this._knob('frequency', channel.frequency));
 		$osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
 		$osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
 		$osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
 		$osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
+		//$osc.append(`<select name="${name}-wave" class="wave">${this._oscTypeSelect}</select>`);
 		
 		var $noise = $('<div class="section"><p>noise</p></div>');
 		$noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));

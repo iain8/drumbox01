@@ -438,12 +438,13 @@ var UI = (function () {
         $mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
         $mixer.append(this._knob('filterGain', channel.channelFilterGain));
         var $osc = $('<div class="section"><p>osc</p></div>');
-        $osc.append("<select name=\"" + name + "-wave\" class=\"wave\">" + this._oscTypeSelect + "</select>");
+        $osc.append("<div class=\"wave\"><a href=\"#\" class=\"prev\"></a>" + this._oscTypeSelect + "<a href=\"#\" class=\"next\"></a></div>");
         $osc.append(this._knob('frequency', channel.frequency));
         $osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
         $osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
         $osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
         $osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
+        //$osc.append(`<select name="${name}-wave" class="wave">${this._oscTypeSelect}</select>`);
         var $noise = $('<div class="section"><p>noise</p></div>');
         $noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));
         $noise.append(this._knob('noiseDecay', channel.noiseDecay * 1000));
@@ -597,9 +598,10 @@ var UI = (function () {
         'width': 50,
         'height': 50,
         'fgColor': '#92C8CD',
+        'bgColor': '#FFF',
         'inputColor': '#363439'
     };
-    UI._oscTypeSelect = "\n\t\t<option>sine</option>\n        <option>square</option>\n        <option>sawtooth</option>\n\t    <option>triangle</option>\n\t";
+    UI._oscTypeSelect = "\n\t\t<span class=\"active\" data-wave=\"sine\">sine</span>\n        <span data-wave=\"square\">sqr</span>\n        <span data-wave=\"sawtooth\">saw</span>\n\t    <span data-wave=\"triangle\">tri</span>\n\t";
     UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";
     return UI;
 })();
@@ -697,5 +699,42 @@ $('.clear-sequence').click(function () {
         .removeClass('on');
     return false;
 });
-sequencer.start();
+$('.wave .prev').click(function () {
+    // TODO: replace spans with list
+    var id = $(this).closest('.channel').attr('id');
+    var $wave = $(this).parent()
+        .children('span')
+        .filter('.active');
+    $wave.removeClass('active');
+    if ($wave.prev().is('span')) {
+        $wave.prev().addClass('active');
+    }
+    else {
+        $(this).parent()
+            .children('span')
+            .last()
+            .addClass('active');
+    }
+    channels[id].wave = $wave.data('wave');
+    return false;
+});
+$('.wave .next').click(function () {
+    var id = $(this).closest('.channel').attr('id');
+    var $wave = $(this).parent()
+        .children('span')
+        .filter('.active');
+    $wave.removeClass('active');
+    if ($wave.next().is('span')) {
+        $wave.next().addClass('active');
+    }
+    else {
+        $(this).parent()
+            .children('span')
+            .first()
+            .addClass('active');
+    }
+    channels[id].wave = $wave.data('wave');
+    return false;
+});
+//sequencer.start(); 
 //# sourceMappingURL=app.js.map

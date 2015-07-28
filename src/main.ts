@@ -6,7 +6,7 @@
 
 declare var webkitAudioContext: {
     new (): AudioContext;
-}
+};
     
 var audioContext: any = new (AudioContext || webkitAudioContext)();
 var tempo: number = 120;
@@ -116,4 +116,51 @@ $('.clear-sequence').click(function() {
     return false;
 });
 
-sequencer.start();
+$('.wave .prev').click(function() {
+    // TODO: replace spans with list
+    var id = $(this).closest('.channel').attr('id');
+    
+    var $wave = $(this).parent()
+        .children('span')
+        .filter('.active');
+        
+    $wave.removeClass('active');
+    
+    if ($wave.prev().is('span')) {
+        $wave.prev().addClass('active');
+    } else {
+        $(this).parent()
+            .children('span')
+            .last()
+            .addClass('active');
+    }
+    
+    channels[id].wave = $wave.data('wave');
+    
+    return false;
+});
+
+$('.wave .next').click(function() {
+    var id = $(this).closest('.channel').attr('id');
+    
+    var $wave = $(this).parent()
+        .children('span')
+        .filter('.active');
+    
+    $wave.removeClass('active');
+    
+    if ($wave.next().is('span')) {
+        $wave.next().addClass('active');
+    } else {
+        $(this).parent()
+            .children('span')
+            .first()
+            .addClass('active');
+    }
+    
+    channels[id].wave = $wave.data('wave');
+        
+    return false;
+});
+
+//sequencer.start();
