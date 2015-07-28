@@ -44,9 +44,14 @@ var channels = {
         channelFilterGain: 10
     }),
     'thing': new Channel(audioContext, {
-        frequency: 1000,
+        frequency: 100,
         noiseLevel: 0.0,
-        oscLevel: 0.3
+        oscLevel: 0.3,
+        wave: 'sawtooth',
+        oscPitchAttack: 0,
+        oscPitchDecay: 4,
+        oscAmpAttack: 0,
+        oscAmpDecay: 4
     })
 };
 

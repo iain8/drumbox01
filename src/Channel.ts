@@ -34,7 +34,7 @@ class Channel {
 	 *     oscLevel: 1.0,
 	 *     oscPitchAttack: 0.1,
 	 *     oscPitchDecay: 0.5,
-	 *     type: 'sine'
+	 *     wave: 'sine'
 	 * }
 	 */
 	constructor(context: AudioContext, options: any = {}) {
@@ -45,7 +45,7 @@ class Channel {
 		this._postOutput.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
 		
 		this._osc = new Osc(context);
-		this._osc.type = options.hasOwnProperty('type') ? options.type : 'sine';
+		this._osc.type = options.hasOwnProperty('wave') ? options.wave : 'sine';
 		this._osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
 		
 		this._oscAmp = new Amp(context);

@@ -169,7 +169,7 @@ var Channel = (function () {
      *     oscLevel: 1.0,
      *     oscPitchAttack: 0.1,
      *     oscPitchDecay: 0.5,
-     *     type: 'sine'
+     *     wave: 'sine'
      * }
      */
     function Channel(context, options) {
@@ -179,7 +179,7 @@ var Channel = (function () {
         this._postOutput = new Amp(context);
         this._postOutput.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
         this._osc = new Osc(context);
-        this._osc.type = options.hasOwnProperty('type') ? options.type : 'sine';
+        this._osc.type = options.hasOwnProperty('wave') ? options.wave : 'sine';
         this._osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
         this._oscAmp = new Amp(context);
         this._oscPitchEnv = new Env(context);
@@ -421,7 +421,8 @@ var UI = (function () {
     UI.indicator = function (length) {
         var $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
         for (var i = 0; i < length; ++i) {
-            $sequence.append('<li class="beat"></li>');
+            var active = i === 0 ? ' active' : '';
+            $sequence.append("<li class=\"beat" + active + "\"></li>");
         }
         $('#sequencer').prepend($sequence);
     };
@@ -644,9 +645,14 @@ var channels = {
         channelFilterGain: 10
     }),
     'thing': new Channel(audioContext, {
-        frequency: 1000,
+        frequency: 100,
         noiseLevel: 0.0,
-        oscLevel: 0.3
+        oscLevel: 0.3,
+        wave: 'sawtooth',
+        oscPitchAttack: 0,
+        oscPitchDecay: 4,
+        oscAmpAttack: 0,
+        oscAmpDecay: 4
     })
 };
 // there's some encoding to be done here

@@ -41,7 +41,9 @@ class UI {
 		var $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
 		
 		for (var i = 0; i < length; ++i) {
-			$sequence.append('<li class="beat"></li>');
+			var active = i === 0 ? ' active' : '';
+			
+			$sequence.append(`<li class="beat${active}"></li>`);
 		}
 		
 		$('#sequencer').prepend($sequence);

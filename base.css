@@ -12,7 +12,7 @@ a {
   border: 1px solid #EDE0C5;
     border-radius: 4px;
     background-color: #ECE5D6;
-    width: 830px;
+    width: 800px;
 }
 
 #divider {
@@ -227,6 +227,19 @@ a {
   right: -3px;
 }
 
+#stop {
+  margin-left: -10px;
+}
+
+#speaker {
+  width: 100px;
+  float: right;
+}
+
+#speaker li {
+  list-style: none;
+  height: 10px;
+}
 
 /* all the slider stuff */
 input[type=range] {
