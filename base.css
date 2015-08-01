@@ -13,6 +13,7 @@ a {
     border-radius: 4px;
     background-color: #ECE5D6;
     width: 765px;
+    display: none;
 }
 
 #divider {

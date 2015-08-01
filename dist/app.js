@@ -782,5 +782,7 @@ $('#master-volume').knob({
 $('form').submit(function () {
     return false;
 });
+$('#loader').hide();
+$('#main-panel').show();
 //sequencer.start(); 
 //# sourceMappingURL=app.js.map

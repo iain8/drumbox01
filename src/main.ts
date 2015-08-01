@@ -192,4 +192,7 @@ $('form').submit(function() {
     return false;
 });
 
+$('#loader').hide();
+$('#main-panel').show();
+
 //sequencer.start();
