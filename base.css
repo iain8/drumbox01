@@ -188,7 +188,7 @@ a {
   width: 50px;
 }
 
-.wave span {
+.wave li {
   font-size: 10px;
   font-weight: bold;
 
@@ -199,7 +199,7 @@ a {
   display: none;
 }
 
-.wave span.active {
+.wave li.active {
   display: block;
 }
 

@@ -21,6 +21,10 @@ class Osc extends BaseModule {
 		this._oscillator.start();
 	}
 	
+	get type(): string {
+		return this._oscillator.type;
+	}
+	
 	set type(type: string) {
 		this._oscillator.type = type;
 	}

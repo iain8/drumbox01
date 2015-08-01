@@ -127,6 +127,10 @@ class Channel {
 		this._noiseAmpEnv.max = level;
 	}
 	
+	get wave(): string {
+		return this._osc.type;
+	}
+	
 	set wave(type: string) {
 		this._osc.type = type;
 	}

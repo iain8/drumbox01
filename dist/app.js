@@ -33,6 +33,9 @@ var Osc = (function (_super) {
         this._oscillator.start();
     };
     Object.defineProperty(Osc.prototype, "type", {
+        get: function () {
+            return this._oscillator.type;
+        },
         set: function (type) {
             this._oscillator.type = type;
         },
@@ -253,6 +256,9 @@ var Channel = (function () {
         configurable: true
     });
     Object.defineProperty(Channel.prototype, "wave", {
+        get: function () {
+            return this._osc.type;
+        },
         set: function (type) {
             this._osc.type = type;
         },
@@ -439,13 +445,12 @@ var UI = (function () {
         $mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
         $mixer.append(this._knob('filterGain', channel.channelFilterGain));
         var $osc = $('<div class="section"><p>osc</p></div>');
-        $osc.append("<div class=\"wave\"><a href=\"#\" class=\"prev\"></a>" + this._oscTypeSelect + "<a href=\"#\" class=\"next\"></a></div>");
+        $osc.append(this._waveSelector(channel.wave));
         $osc.append(this._knob('frequency', channel.frequency));
         $osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
         $osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
         $osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
         $osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
-        //$osc.append(`<select name="${name}-wave" class="wave">${this._oscTypeSelect}</select>`);
         var $noise = $('<div class="section"><p>noise</p></div>');
         $noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));
         $noise.append(this._knob('noiseDecay', channel.noiseDecay * 1000));
@@ -592,6 +597,14 @@ var UI = (function () {
     UI._knob = function (type, value) {
         return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\">\n\t\t</div>";
     };
+    UI._waveSelector = function (selected) {
+        var selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
+        $.each(this._waveSelect, function (value, option) {
+            selector += "<li" + (selected === value ? ' class="active"' : '') + " data-wave=\"" + value + "\">" + option + "</li>";
+        });
+        selector += '</ul><a href="#" class="next"></a></div>';
+        return selector;
+    };
     UI._knobDefaults = {
         'angleOffset': -160,
         'angleArc': 320,
@@ -602,7 +615,12 @@ var UI = (function () {
         'bgColor': '#FFF',
         'inputColor': '#363439'
     };
-    UI._oscTypeSelect = "\n\t\t<span class=\"active\" data-wave=\"sine\">sine</span>\n        <span data-wave=\"square\">sqr</span>\n        <span data-wave=\"sawtooth\">saw</span>\n\t    <span data-wave=\"triangle\">tri</span>\n\t";
+    UI._waveSelect = {
+        sine: 'sine',
+        square: 'sqr',
+        sawtooth: 'saw',
+        triangle: 'tri'
+    };
     UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";
     return UI;
 })();
@@ -713,41 +731,33 @@ $('.clear-sequence').click(function () {
         .removeClass('on');
     return false;
 });
+// TODO: combine these two
 $('.wave .prev').click(function () {
-    // TODO: replace spans with list
     var id = $(this).closest('.channel').attr('id');
-    var $wave = $(this).parent()
-        .children('span')
-        .filter('.active');
+    var $list = $(this).next('ul');
+    var $wave = $list.children('.active');
     $wave.removeClass('active');
-    if ($wave.prev().is('span')) {
+    if ($wave.prev().is('li')) {
         $wave.prev().addClass('active');
     }
     else {
-        $(this).parent()
-            .children('span')
-            .last()
-            .addClass('active');
+        $list.children().last().addClass('active');
     }
-    channels[id].wave = $wave.data('wave');
+    channels[id].wave = $list.children('.active').data('wave');
     return false;
 });
 $('.wave .next').click(function () {
     var id = $(this).closest('.channel').attr('id');
-    var $wave = $(this).parent()
-        .children('span')
-        .filter('.active');
+    var $list = $(this).prev('ul');
+    var $wave = $list.children('.active');
     $wave.removeClass('active');
-    if ($wave.next().is('span')) {
+    if ($wave.next().is('li')) {
         $wave.next().addClass('active');
     }
     else {
-        $(this).parent()
-            .children('span')
-            .first()
-            .addClass('active');
+        $list.children().first().addClass('active');
     }
-    channels[id].wave = $wave.data('wave');
+    channels[id].wave = $list.children('.active').data('wave');
     return false;
 });
 $('#master-volume').knob({

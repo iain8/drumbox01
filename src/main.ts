@@ -131,49 +131,39 @@ $('.clear-sequence').click(function() {
     return false;
 });
 
+// TODO: combine these two
 $('.wave .prev').click(function() {
-    // TODO: replace spans with list
     var id = $(this).closest('.channel').attr('id');
-    
-    var $wave = $(this).parent()
-        .children('span')
-        .filter('.active');
+    var $list = $(this).next('ul');
+    var $wave = $list.children('.active');
         
     $wave.removeClass('active');
     
-    if ($wave.prev().is('span')) {
+    if ($wave.prev().is('li')) {
         $wave.prev().addClass('active');
     } else {
-        $(this).parent()
-            .children('span')
-            .last()
-            .addClass('active');
+        $list.children().last().addClass('active');
     }
     
-    channels[id].wave = $wave.data('wave');
+    channels[id].wave = $list.children('.active').data('wave');
     
     return false;
 });
 
 $('.wave .next').click(function() {
     var id = $(this).closest('.channel').attr('id');
-    
-    var $wave = $(this).parent()
-        .children('span')
-        .filter('.active');
+    var $list = $(this).prev('ul');
+    var $wave = $list.children('.active');
     
     $wave.removeClass('active');
     
-    if ($wave.next().is('span')) {
+    if ($wave.next().is('li')) {
         $wave.next().addClass('active');
     } else {
-        $(this).parent()
-            .children('span')
-            .first()
-            .addClass('active');
+        $list.children().first().addClass('active');
     }
     
-    channels[id].wave = $wave.data('wave');
+    channels[id].wave = $list.children('.active').data('wave');
         
     return false;
 });
