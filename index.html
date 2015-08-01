@@ -5,32 +5,37 @@
     </head>
     <body>
         <div id="main-panel">
-            <div id="synth" class="container">
-                <ul id="channel-headers">
-                    
-                </ul>
-            </div>
-            <div id="divider" class="container"></div>
-            <div class="container" style="padding-left: 0; margin-left: -9px">
-                <div id="sequencer" style="margin-left: 20px">
-                </div>
-                <div class="horizontal-divider"></div>
-                <div style="margin-left: 20px; margin-top: 10px">
-                    <input type="number" id="tempo" value="120">
-                    <button id="start" class="sequencer-control"></button>
-                    <button id="stop" class="sequencer-control active"></button>
-                    <h3>a drum machine <small>v0.whatever</small></h3>
-
-                    <ul id="speaker">
-                        <li><div class="horizontal-divider"></div></li>
-                        <li><div class="horizontal-divider"></div></li>
-                        <li><div class="horizontal-divider"></div></li>
-                        <li><div class="horizontal-divider"></div></li>
-                        <li><div class="horizontal-divider"></div></li>
-                        <li><div class="horizontal-divider"></div></li>
+            <form autocomplete="off">
+                <div id="synth" class="container">
+                    <ul id="channel-headers">
                     </ul>
                 </div>
-            </div>
+                <div id="divider" class="container"></div>
+                <div class="container" style="padding-left: 0; margin-left: -9px">
+                    <div id="sequencer" style="margin-left: 20px">
+                    </div>
+                    <div class="horizontal-divider"></div>
+                    <div style="margin-left: 20px; margin-top: 10px">
+                        <input type="number" id="tempo" value="120">
+                        <button id="start" class="sequencer-control"></button>
+                        <button id="stop" class="sequencer-control active"></button>
+                        <div id="master-controls">
+                            <input type="text" id="master-volume" class="knob" value="100">
+                        </div>
+
+                        <h3>a drum machine <small>v0.whatever</small></h3>
+
+                        <ul id="speaker">
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <script src="lib/jquery-2.1.4.min.js"></script>

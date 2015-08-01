@@ -37,7 +37,7 @@ class Channel {
 	 *     wave: 'sine'
 	 * }
 	 */
-	constructor(context: AudioContext, options: any = {}) {
+	constructor(context: AudioContext, output: Amp, options: any = {}) {
 		this._preOutput = new Amp(context);
 		this._preOutput.level = 1.0;
 		
@@ -89,7 +89,7 @@ class Channel {
 		this._preOutput.connect(this._channelFilter);
 		this._channelFilter.connect(this._postOutput);
 		
-		this._postOutput.connect(context.destination);
+		this._postOutput.connect(output);
 		
 		this._osc.start();
 		this._noise.noise.start();

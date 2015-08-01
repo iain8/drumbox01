@@ -172,7 +172,7 @@ var Channel = (function () {
      *     wave: 'sine'
      * }
      */
-    function Channel(context, options) {
+    function Channel(context, output, options) {
         if (options === void 0) { options = {}; }
         this._preOutput = new Amp(context);
         this._preOutput.level = 1.0;
@@ -212,7 +212,7 @@ var Channel = (function () {
         this._noiseAmp.connect(this._preOutput);
         this._preOutput.connect(this._channelFilter);
         this._channelFilter.connect(this._postOutput);
-        this._postOutput.connect(context.destination);
+        this._postOutput.connect(output);
         this._osc.start();
         this._noise.noise.start();
     }
@@ -607,16 +607,20 @@ var UI = (function () {
     return UI;
 })();
 ///<reference path="jquery.d.ts"/>
+///<reference path="modules/Amp.ts"/>
 ///<reference path="Channel.ts"/>
 ///<reference path="Sequencer.ts"/>
 ///<reference path="UI.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
 var audioContext = new (AudioContext || webkitAudioContext)();
 var tempo = 140;
+var master = new Amp(audioContext);
+master.level = 1.0;
+master.connect(audioContext.destination);
 $('#tempo').val(tempo.toString());
 var channels = {
     // better but still clicky
-    'kick': new Channel(audioContext, {
+    'kick': new Channel(audioContext, master, {
         frequency: 105,
         oscAmpAttack: 0,
         oscAmpDecay: 0.630,
@@ -627,7 +631,7 @@ var channels = {
         level: 0.8
     }),
     // need to tailor noise level (it is V LOUD)
-    'snare': new Channel(audioContext, {
+    'snare': new Channel(audioContext, master, {
         frequency: 800,
         noiseLevel: 0.35,
         noiseAttack: 0,
@@ -635,7 +639,7 @@ var channels = {
         oscLevel: 0,
         level: 0.8
     }),
-    'hat': new Channel(audioContext, {
+    'hat': new Channel(audioContext, master, {
         frequency: 1500,
         noiseLevel: 0.3,
         oscLevel: 0,
@@ -644,7 +648,7 @@ var channels = {
         channelFilterFreq: 15000,
         channelFilterGain: 10
     }),
-    'thing': new Channel(audioContext, {
+    'tom': new Channel(audioContext, master, {
         frequency: 100,
         noiseLevel: 0.0,
         oscLevel: 0.3,
@@ -660,7 +664,7 @@ var patterns = {
     kick: '1100001011000010',
     snare: '0000100000001000',
     hat: '0010010100110101',
-    thing: '1000000001000000'
+    tom: '1000000001000000'
 };
 var sequencer = new Sequencer(channels, tempo);
 $.each(channels, function (name, channel) {
@@ -744,6 +748,28 @@ $('.wave .next').click(function () {
             .addClass('active');
     }
     channels[id].wave = $wave.data('wave');
+    return false;
+});
+$('#master-volume').knob({
+    'angleOffset': -160,
+    'angleArc': 320,
+    'thickness': 0.3,
+    'width': 50,
+    'height': 50,
+    'fgColor': '#92C8CD',
+    'bgColor': '#FFF',
+    'inputColor': '#363439',
+    'min': 0,
+    'max': 100,
+    'change': function (value) {
+        master.level = value / 100;
+    },
+    format: function (value) {
+        return 'level';
+    }
+});
+// might prevent some weirdness
+$('form').submit(function () {
     return false;
 });
 //sequencer.start(); 
