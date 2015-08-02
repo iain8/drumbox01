@@ -439,21 +439,21 @@ var UI = (function () {
     UI._panel = function (name, channel) {
         var $panel = $("<div class=\"channel\" id=\"" + name + "\"></div>");
         var $mixer = $('<div class="section"><p>mixer</p></div>');
-        $mixer.append(this._knob('level', channel.level * 100));
-        $mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
-        $mixer.append(this._knob('noiseLevel', channel.noiseLevel * 100));
-        $mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
-        $mixer.append(this._knob('filterGain', channel.channelFilterGain));
+        $mixer.append(this._knob('level', 'level', channel.level * 100));
+        $mixer.append(this._knob('oscLevel', 'osc', channel.oscLevel * 100));
+        $mixer.append(this._knob('noiseLevel', 'noise', channel.noiseLevel * 100));
+        $mixer.append(this._knob('filterFreq', 'freq', channel.channelFilterFreq));
+        $mixer.append(this._knob('filterGain', 'gain', channel.channelFilterGain));
         var $osc = $('<div class="section"><p>osc</p></div>');
         $osc.append(this._waveSelector(channel.wave));
-        $osc.append(this._knob('frequency', channel.frequency));
-        $osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
-        $osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
-        $osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
-        $osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
+        $osc.append(this._knob('frequency', 'freq', channel.frequency));
+        $osc.append(this._knob('oscAttack', 'attack', channel.oscAttack * 1000));
+        $osc.append(this._knob('oscDecay', 'decay', channel.oscDecay * 1000));
+        $osc.append(this._knob('pitchAttack', 'attack', channel.pitchAttack * 1000));
+        $osc.append(this._knob('pitchDecay', 'decay', channel.pitchDecay * 1000));
         var $noise = $('<div class="section"><p>noise</p></div>');
-        $noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));
-        $noise.append(this._knob('noiseDecay', channel.noiseDecay * 1000));
+        $noise.append(this._knob('noiseAttack', 'attack', channel.noiseAttack * 1000));
+        $noise.append(this._knob('noiseDecay', 'decay', channel.noiseDecay * 1000));
         $panel.append($mixer);
         $panel.append($osc);
         $panel.append($noise);
@@ -464,9 +464,6 @@ var UI = (function () {
             change: function (value) {
                 channel.level = value / 100;
             },
-            format: function (value) {
-                return 'level';
-            }
         }));
         // TODO: combine this and next into 50:50 knob
         $("#" + name + " .oscLevel").knob($.extend({}, this._knobDefaults, {
@@ -594,8 +591,8 @@ var UI = (function () {
         $sequence.append("<li><a href=\"#\" class=\"clear-sequence\"></a></li>");
         $('#sequencer').prepend($sequence);
     };
-    UI._knob = function (type, value) {
-        return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\">\n\t\t</div>";
+    UI._knob = function (type, name, value) {
+        return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\" data-name=\"" + name + "\">\n\t\t</div>";
     };
     UI._waveSelector = function (selected) {
         var selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
@@ -613,7 +610,8 @@ var UI = (function () {
         'height': 50,
         'fgColor': '#92C8CD',
         'bgColor': '#FFF',
-        'inputColor': '#363439'
+        'inputColor': '#363439',
+        'font': 'consolas'
     };
     UI._waveSelect = {
         sine: 'sine',
@@ -771,6 +769,7 @@ $('#master-volume').knob({
     'inputColor': '#363439',
     'min': 0,
     'max': 100,
+    'font': 'consolas',
     'change': function (value) {
         master.level = value / 100;
     },
@@ -781,6 +780,25 @@ $('#master-volume').knob({
 // might prevent some weirdness
 $('form').submit(function () {
     return false;
+});
+$('.knob').parent().mouseover(function () {
+    $(this).children('.knob').trigger('configure', {
+        format: function (value) {
+            return value;
+        }
+    }).trigger('change');
+}).mouseout(function () {
+    var name = $(this).children('.knob').data('name');
+    $(this).children('.knob').trigger('configure', {
+        format: function (value) {
+            return name;
+        }
+    }).trigger('change');
+    $('.knob').css('font-size', '9px');
+});
+$(document).ready(function () {
+    $('.knob').parent().trigger('mouseout');
+    $('.knob').css('font-size', '9px');
 });
 $('#loader').hide();
 $('#main-panel').show();

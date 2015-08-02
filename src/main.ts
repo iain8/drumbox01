@@ -179,6 +179,7 @@ $('#master-volume').knob({
 	'inputColor': '#363439',
     'min': 0,
     'max': 100,
+    'font': 'consolas',
     'change': function(value) {
         master.level = value / 100;
     },
@@ -190,6 +191,29 @@ $('#master-volume').knob({
 // might prevent some weirdness
 $('form').submit(function() {
     return false;
+});
+
+$('.knob').parent().mouseover(function() {
+    $(this).children('.knob').trigger('configure', {
+        format: function(value) {
+            return value;
+        }
+    }).trigger('change');
+}).mouseout(function() {
+    var name = $(this).children('.knob').data('name');
+    
+    $(this).children('.knob').trigger('configure', {
+        format: function(value) {
+            return name;
+        }
+    }).trigger('change');
+    
+    $('.knob').css('font-size', '9px');
+});
+
+$(document).ready(function() {
+    $('.knob').parent().trigger('mouseout');
+    $('.knob').css('font-size', '9px');
 });
 
 $('#loader').hide();

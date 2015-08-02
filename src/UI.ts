@@ -11,7 +11,8 @@ class UI {
 	    'height': 50,
 	    'fgColor': '#92C8CD',
 		'bgColor': '#FFF',
-		'inputColor': '#363439'
+		'inputColor': '#363439',
+		'font': 'consolas'
 	};
 	
 	private static _waveSelect = {
@@ -58,23 +59,23 @@ class UI {
 		var $panel = $(`<div class="channel" id="${name}"></div>`);
 		
 		var $mixer = $('<div class="section"><p>mixer</p></div>');
-		$mixer.append(this._knob('level', channel.level * 100));
-		$mixer.append(this._knob('oscLevel', channel.oscLevel * 100));
-		$mixer.append(this._knob('noiseLevel', channel.noiseLevel * 100));
-		$mixer.append(this._knob('filterFreq', channel.channelFilterFreq));
-		$mixer.append(this._knob('filterGain', channel.channelFilterGain));
+		$mixer.append(this._knob('level', 'level', channel.level * 100));
+		$mixer.append(this._knob('oscLevel', 'osc', channel.oscLevel * 100));
+		$mixer.append(this._knob('noiseLevel', 'noise', channel.noiseLevel * 100));
+		$mixer.append(this._knob('filterFreq', 'freq', channel.channelFilterFreq));
+		$mixer.append(this._knob('filterGain', 'gain', channel.channelFilterGain));
 		
 		var $osc = $('<div class="section"><p>osc</p></div>');
 		$osc.append(this._waveSelector(channel.wave));
-		$osc.append(this._knob('frequency', channel.frequency));
-		$osc.append(this._knob('oscAttack', channel.oscAttack * 1000));
-		$osc.append(this._knob('oscDecay', channel.oscDecay * 1000));
-		$osc.append(this._knob('pitchAttack', channel.pitchAttack * 1000));
-		$osc.append(this._knob('pitchDecay', channel.pitchDecay * 1000));
+		$osc.append(this._knob('frequency', 'freq', channel.frequency));
+		$osc.append(this._knob('oscAttack', 'attack', channel.oscAttack * 1000));
+		$osc.append(this._knob('oscDecay', 'decay', channel.oscDecay * 1000));
+		$osc.append(this._knob('pitchAttack', 'attack', channel.pitchAttack * 1000));
+		$osc.append(this._knob('pitchDecay', 'decay', channel.pitchDecay * 1000));
 		
 		var $noise = $('<div class="section"><p>noise</p></div>');
-		$noise.append(this._knob('noiseAttack', channel.noiseAttack * 1000));
-		$noise.append(this._knob('noiseDecay', channel.noiseDecay * 1000));
+		$noise.append(this._knob('noiseAttack', 'attack', channel.noiseAttack * 1000));
+		$noise.append(this._knob('noiseDecay', 'decay', channel.noiseDecay * 1000));
 		
 		$panel.append($mixer);
 		$panel.append($osc);
@@ -88,9 +89,9 @@ class UI {
 			change: function(value) {
 				channel.level = value / 100;
 			},
-			format: function(value) {
-				return 'level';
-			}
+			// format: function(value) {
+			// 	return 'level';
+			// }
 		}));
 		
 		// TODO: combine this and next into 50:50 knob
@@ -236,9 +237,9 @@ class UI {
 		$('#sequencer').prepend($sequence);
 	}
 	
-	private static _knob(type: string, value: number) {
+	private static _knob(type: string, name: string, value: number) {
 		return `<div>
-			<input type="text" class="knob ${type}" value="${value}">
+			<input type="text" class="knob ${type}" value="${value}" data-name="${name}">
 		</div>`;
 	}
 	
