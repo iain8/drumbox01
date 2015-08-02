@@ -4,6 +4,10 @@
 ///<reference path="modules/Noise.ts"/>
 ///<reference path="modules/Filter.ts"/>
 
+/**
+ * Giant bastard channel class, wraps a lot of things to try and make an
+ * easier public API, possibly fails
+ */
 class Channel {
 	private _osc: Osc;
 	private _oscAmp: Amp;
@@ -19,8 +23,6 @@ class Channel {
 
 	private _preOutput: Amp;
 	private _postOutput: Amp;
-	
-	// LFO?
 	
 	/**
 	 * options = {
@@ -75,8 +77,6 @@ class Channel {
 		this._channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
 		this._channelFilter.type = 'peaking';
 		
-		// choice of high/mid/low pass for noise
-		
 		// wiring!
 		this._osc.connect(this._oscAmp);
 		this._oscPitchEnv.connect(this._osc.frequency);
@@ -92,16 +92,45 @@ class Channel {
 		this._postOutput.connect(output);
 		
 		this._osc.start();
-		this._noise.noise.start();
+		this._noise.start();
 	}
 	
+	/**
+	 * Trigger all the sound making parts of the channel
+	 */
 	trigger() {
 		this._oscAmpEnv.trigger();
 		this._oscPitchEnv.trigger();
 		this._noiseAmpEnv.trigger();
 	}
 	
-	// this sure seems like it sucks
+	// getting and setting ad nauseum
+	
+	get channelFilterGain(): number {
+		return this._channelFilter.gain;
+	}
+	
+	set channelFilterGain(value: number) {
+		this._channelFilter.gain = value;
+	}
+	
+	get channelFilterFreq(): number {
+		return this._channelFilter.frequency;
+	}
+	
+	set channelFilterFreq(value: number) {
+		this._channelFilter.frequency = value;
+	}
+	
+	get frequency() {
+		return this._osc.frequencyValue;
+	}
+	
+	// frequency determined by maximum of pitch envelope
+	set frequency(frequency: number) {
+		this._osc.frequencyValue = frequency;
+		this._oscPitchEnv.max = frequency;
+	}
 	
 	get level(): number {
 		return this._preOutput.amplitude.value;
@@ -109,71 +138,6 @@ class Channel {
 	
 	set level(level: number) {
 		this._preOutput.amplitude.value = level;
-	}
-	
-	get oscLevel(): number {
-		return this._oscAmpEnv.max;
-	}
-	
-	set oscLevel(level: number) {
-		this._oscAmpEnv.max = level;
-	}
-	
-	get noiseLevel(): number {
-		return this._noiseAmpEnv.max;
-	}
-	
-	set noiseLevel(level: number) {
-		this._noiseAmpEnv.max = level;
-	}
-	
-	get wave(): string {
-		return this._osc.type;
-	}
-	
-	set wave(type: string) {
-		this._osc.type = type;
-	}
-	
-	get frequency() {
-		return this._osc.frequencyValue;
-	}
-	
-	set frequency(frequency: number) {
-		this._osc.frequencyValue = frequency;
-		this._oscPitchEnv.max = frequency;
-	}
-	
-	get oscAttack(): number {
-		return this._oscAmpEnv.attack;
-	}
-	
-	set oscAttack(value: number) {
-		this._oscAmpEnv.attack = value;
-	}
-	
-	get oscDecay(): number {
-		return this._oscAmpEnv.decay;
-	}
-	
-	set oscDecay(value: number) {
-		this._oscAmpEnv.decay = value;
-	}
-	
-	get pitchAttack(): number {
-		return this._oscPitchEnv.attack;
-	}
-	
-	set pitchAttack(value: number) {
-		this._oscPitchEnv.attack = value;
-	}
-	
-	get pitchDecay(): number {
-		return this._oscPitchEnv.decay;
-	}
-	
-	set pitchDecay(value: number) {
-		this._oscPitchEnv.decay = value;
 	}
 	
 	get noiseAttack(): number {
@@ -192,21 +156,59 @@ class Channel {
 		this._noiseAmpEnv.decay = value;
 	}
 	
-	get channelFilterGain(): number {
-		return this._channelFilter.gain;
+	get noiseLevel(): number {
+		return this._noiseAmpEnv.max;
 	}
 	
-	set channelFilterGain(value: number) {
-		this._channelFilter.gain = value;
+	set noiseLevel(level: number) {
+		this._noiseAmpEnv.max = level;
 	}
 	
-	get channelFilterFreq(): number {
-		return this._channelFilter.frequency;
+	get oscAttack(): number {
+		return this._oscAmpEnv.attack;
 	}
 	
-	set channelFilterFreq(value: number) {
-		this._channelFilter.frequency = value;
+	set oscAttack(value: number) {
+		this._oscAmpEnv.attack = value;
 	}
 	
-	// changing osc/noise individual levels must change env max also!
+	get oscDecay(): number {
+		return this._oscAmpEnv.decay;
+	}
+	
+	set oscDecay(value: number) {
+		this._oscAmpEnv.decay = value;
+	}
+	
+	get oscLevel(): number {
+		return this._oscAmpEnv.max;
+	}
+	
+	set oscLevel(level: number) {
+		this._oscAmpEnv.max = level;
+	}
+	
+	get pitchAttack(): number {
+		return this._oscPitchEnv.attack;
+	}
+	
+	set pitchAttack(value: number) {
+		this._oscPitchEnv.attack = value;
+	}
+	
+	get pitchDecay(): number {
+		return this._oscPitchEnv.decay;
+	}
+	
+	set pitchDecay(value: number) {
+		this._oscPitchEnv.decay = value;
+	}
+	
+	get wave(): string {
+		return this._osc.type;
+	}
+	
+	set wave(type: string) {
+		this._osc.type = type;
+	}
 }

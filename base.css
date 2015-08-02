@@ -15,6 +15,11 @@ body {
 a {
     color: #363439;
     text-decoration: none;
+    outline: none;
+}
+
+button {
+    outline: none;
 }
 
 #main-panel {

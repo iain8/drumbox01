@@ -1,7 +1,10 @@
 ///<reference path="BaseModule.ts"/>
 
+/**
+ * Filter module, wraps BiquadFilterNode
+ */
 class Filter extends BaseModule {
-	_filter: BiquadFilterNode;
+	private _filter: BiquadFilterNode;
 	input: BiquadFilterNode;
 	output: BiquadFilterNode;
 	

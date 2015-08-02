@@ -1,6 +1,12 @@
+/**
+ * Base module class that defines the minimum to be a connectable module
+ */
 var BaseModule = (function () {
     function BaseModule() {
     }
+    /**
+     * Connect a node depending on i/o configuration
+     */
     BaseModule.prototype.connect = function (node) {
         if (node.hasOwnProperty('input')) {
             this.output.connect(node.input);
@@ -18,6 +24,9 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/**
+ * Oscillator module, wraps an OscillatorNode
+ */
 var Osc = (function (_super) {
     __extends(Osc, _super);
     function Osc(context) {
@@ -29,6 +38,9 @@ var Osc = (function (_super) {
         this.output = this._oscillator;
         this.frequency = this._oscillator.frequency;
     }
+    /**
+     * Start oscillator oscillating
+     */
     Osc.prototype.start = function () {
         this._oscillator.start();
     };
@@ -55,6 +67,9 @@ var Osc = (function (_super) {
     return Osc;
 })(BaseModule);
 ///<reference path="BaseModule.ts"/>
+/**
+ * Amplifier module, wraps a GainNode
+ */
 var Amp = (function (_super) {
     __extends(Amp, _super);
     function Amp(context) {
@@ -74,48 +89,70 @@ var Amp = (function (_super) {
     });
     return Amp;
 })(BaseModule);
+/**
+ * (A)ttack (D)ecay envelope generator
+ */
 var Env = (function () {
     function Env(context) {
-        this.context = context;
+        this._context = context;
         this.attack = 0.01;
         this.decay = 0.5;
         this.max = 1;
         this.min = 0;
     }
+    /**
+     * Trigger an envelope
+     */
     Env.prototype.trigger = function () {
-        var now = this.context.currentTime;
-        this.param.cancelScheduledValues(now);
-        this.param.setValueAtTime(this.min, now);
-        this.param.linearRampToValueAtTime(this.max, now + this.attack);
-        this.param.exponentialRampToValueAtTime(this.min, now + this.attack + this.decay);
+        var now = this._context.currentTime;
+        this._param.cancelScheduledValues(now);
+        this._param.setValueAtTime(this.min, now);
+        this._param.linearRampToValueAtTime(this.max, now + this.attack);
+        var min = this.min > 0.0 ? this.min : 0.001;
+        this._param.exponentialRampToValueAtTime(min, now + this.attack + this.decay);
     };
+    /**
+     * Connect to an AudioParam of another node
+     */
     Env.prototype.connect = function (param) {
-        this.param = param;
+        this._param = param;
     };
     return Env;
 })();
 ///<reference path="BaseModule.ts"/>
+/**
+ * Noise generator, fills a buffer with random white noise
+ */
 var Noise = (function (_super) {
     __extends(Noise, _super);
     function Noise(context) {
         _super.call(this);
-        this.channels = 1;
+        this._channels = 1;
         var size = 2 * context.sampleRate;
-        var buffer = context.createBuffer(this.channels, size, context.sampleRate);
+        var buffer = context.createBuffer(this._channels, size, context.sampleRate);
         var output = buffer.getChannelData(0);
-        // more noise functions to be done
+        // white noise
         for (var i = 0; i < size; ++i) {
             output[i] = Math.random() * 2 - 1;
         }
-        this.noise = context.createBufferSource();
-        this.noise.buffer = buffer;
-        this.noise.loop = true;
-        this.input = this.noise;
-        this.output = this.noise;
+        this._noise = context.createBufferSource();
+        this._noise.buffer = buffer;
+        this._noise.loop = true;
+        this.input = this._noise;
+        this.output = this._noise;
     }
+    /**
+     * Start generating noise
+     */
+    Noise.prototype.start = function () {
+        this._noise.start();
+    };
     return Noise;
 })(BaseModule);
 ///<reference path="BaseModule.ts"/>
+/**
+ * Filter module, wraps BiquadFilterNode
+ */
 var Filter = (function (_super) {
     __extends(Filter, _super);
     function Filter(context) {
@@ -158,8 +195,11 @@ var Filter = (function (_super) {
 ///<reference path="modules/Env.ts"/>
 ///<reference path="modules/Noise.ts"/>
 ///<reference path="modules/Filter.ts"/>
+/**
+ * Giant bastard channel class, wraps a lot of things to try and make an
+ * easier public API, possibly fails
+ */
 var Channel = (function () {
-    // LFO?
     /**
      * options = {
      *     frequency: 440,
@@ -204,7 +244,6 @@ var Channel = (function () {
         this._channelFilter.frequency = options.hasOwnProperty('channelFilterFreq') ? options.channelFilterFreq : 500;
         this._channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
         this._channelFilter.type = 'peaking';
-        // choice of high/mid/low pass for noise
         // wiring!
         this._osc.connect(this._oscAmp);
         this._oscPitchEnv.connect(this._osc.frequency);
@@ -217,50 +256,33 @@ var Channel = (function () {
         this._channelFilter.connect(this._postOutput);
         this._postOutput.connect(output);
         this._osc.start();
-        this._noise.noise.start();
+        this._noise.start();
     }
+    /**
+     * Trigger all the sound making parts of the channel
+     */
     Channel.prototype.trigger = function () {
         this._oscAmpEnv.trigger();
         this._oscPitchEnv.trigger();
         this._noiseAmpEnv.trigger();
     };
-    Object.defineProperty(Channel.prototype, "level", {
-        // this sure seems like it sucks
+    Object.defineProperty(Channel.prototype, "channelFilterGain", {
+        // getting and setting ad nauseum
         get: function () {
-            return this._preOutput.amplitude.value;
+            return this._channelFilter.gain;
         },
-        set: function (level) {
-            this._preOutput.amplitude.value = level;
+        set: function (value) {
+            this._channelFilter.gain = value;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Channel.prototype, "oscLevel", {
+    Object.defineProperty(Channel.prototype, "channelFilterFreq", {
         get: function () {
-            return this._oscAmpEnv.max;
+            return this._channelFilter.frequency;
         },
-        set: function (level) {
-            this._oscAmpEnv.max = level;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "noiseLevel", {
-        get: function () {
-            return this._noiseAmpEnv.max;
-        },
-        set: function (level) {
-            this._noiseAmpEnv.max = level;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "wave", {
-        get: function () {
-            return this._osc.type;
-        },
-        set: function (type) {
-            this._osc.type = type;
+        set: function (value) {
+            this._channelFilter.frequency = value;
         },
         enumerable: true,
         configurable: true
@@ -269,6 +291,7 @@ var Channel = (function () {
         get: function () {
             return this._osc.frequencyValue;
         },
+        // frequency determined by maximum of pitch envelope
         set: function (frequency) {
             this._osc.frequencyValue = frequency;
             this._oscPitchEnv.max = frequency;
@@ -276,42 +299,12 @@ var Channel = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Channel.prototype, "oscAttack", {
+    Object.defineProperty(Channel.prototype, "level", {
         get: function () {
-            return this._oscAmpEnv.attack;
+            return this._preOutput.amplitude.value;
         },
-        set: function (value) {
-            this._oscAmpEnv.attack = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "oscDecay", {
-        get: function () {
-            return this._oscAmpEnv.decay;
-        },
-        set: function (value) {
-            this._oscAmpEnv.decay = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "pitchAttack", {
-        get: function () {
-            return this._oscPitchEnv.attack;
-        },
-        set: function (value) {
-            this._oscPitchEnv.attack = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Channel.prototype, "pitchDecay", {
-        get: function () {
-            return this._oscPitchEnv.decay;
-        },
-        set: function (value) {
-            this._oscPitchEnv.decay = value;
+        set: function (level) {
+            this._preOutput.amplitude.value = level;
         },
         enumerable: true,
         configurable: true
@@ -336,22 +329,72 @@ var Channel = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Channel.prototype, "channelFilterGain", {
+    Object.defineProperty(Channel.prototype, "noiseLevel", {
         get: function () {
-            return this._channelFilter.gain;
+            return this._noiseAmpEnv.max;
         },
-        set: function (value) {
-            this._channelFilter.gain = value;
+        set: function (level) {
+            this._noiseAmpEnv.max = level;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Channel.prototype, "channelFilterFreq", {
+    Object.defineProperty(Channel.prototype, "oscAttack", {
         get: function () {
-            return this._channelFilter.frequency;
+            return this._oscAmpEnv.attack;
         },
         set: function (value) {
-            this._channelFilter.frequency = value;
+            this._oscAmpEnv.attack = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "oscDecay", {
+        get: function () {
+            return this._oscAmpEnv.decay;
+        },
+        set: function (value) {
+            this._oscAmpEnv.decay = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "oscLevel", {
+        get: function () {
+            return this._oscAmpEnv.max;
+        },
+        set: function (level) {
+            this._oscAmpEnv.max = level;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "pitchAttack", {
+        get: function () {
+            return this._oscPitchEnv.attack;
+        },
+        set: function (value) {
+            this._oscPitchEnv.attack = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "pitchDecay", {
+        get: function () {
+            return this._oscPitchEnv.decay;
+        },
+        set: function (value) {
+            this._oscPitchEnv.decay = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Channel.prototype, "wave", {
+        get: function () {
+            return this._osc.type;
+        },
+        set: function (type) {
+            this._osc.type = type;
         },
         enumerable: true,
         configurable: true
@@ -360,17 +403,28 @@ var Channel = (function () {
 })();
 ///<reference path="jquery.d.ts"/>
 ///<reference path="Channel.ts"/>
+/**
+ * Sequencer for the beats
+ */
 var Sequencer = (function () {
-    function Sequencer(channels, tempo) {
+    function Sequencer(tempo) {
         if (tempo === void 0) { tempo = 120; }
         this._beat = 0;
         this._length = 16;
-        this._channels = channels;
+        this._channels = {};
         this._tempo = tempo;
         this.started = false;
     }
-    Sequencer.prototype.loop = function () {
-        // indicator is out of sync with sequence by 1 beat
+    /**
+     * Add a channel to the sequencer
+     */
+    Sequencer.prototype.addChannel = function (name, channel) {
+        this._channels[name] = channel;
+    };
+    /**
+     * Perform one sequencer step
+     */
+    Sequencer.prototype.step = function () {
         var _this = this;
         $('.sequence li').removeClass('active');
         $('.sequence').each(function (i, sequence) {
@@ -383,20 +437,32 @@ var Sequencer = (function () {
         });
         this._beat = this._beat == this._length - 1 ? 0 : this._beat + 1;
     };
+    /**
+     * Start the sequencer
+     */
     Sequencer.prototype.start = function () {
         var _this = this;
         this.started = true;
-        this._interval = setInterval(function () { _this.loop(); }, this.bpmToMs(this._tempo));
+        this._interval = setInterval(function () { _this.step(); }, this.bpmToMs(this._tempo));
     };
+    /**
+     * Stop the sequencer
+     */
     Sequencer.prototype.stop = function () {
         this.started = false;
         clearInterval(this._interval);
     };
+    /**
+     * Set the tempo in beats per minute
+     */
     Sequencer.prototype.setTempo = function (tempo) {
         this._tempo = tempo;
         clearInterval(this._interval);
         this.start();
     };
+    /**
+     * Convert bpm to ms
+     */
     Sequencer.prototype.bpmToMs = function (bpm) {
         return (60000 / bpm) / 2;
     };
@@ -412,18 +478,147 @@ var Sequencer = (function () {
 ///<reference path="jquery.d.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
 ///<reference path="Channel.ts"/>
+///<reference path="Sequencer.ts"/>
+///<reference path="modules/Amp.ts"/>
+/**
+ * Where the cardboard and tape are hurriedly combined into an interface
+ */
 var UI = (function () {
     function UI() {
     }
+    /**
+     * Do remaining stuff to set up UI
+     */
+    UI.init = function (sequencer, channels, master, tempo) {
+        $('.channel').hide().first().show();
+        $('#channel-headers li').first().addClass('active');
+        $('#tempo').val(tempo.toString());
+        // if dynamic elements need "on" bindings
+        $('.sequence li').click(function () {
+            $(this).toggleClass('on');
+        });
+        $('#channel-headers li a').click(function () {
+            $('#channel-headers li').removeClass('active');
+            $('.channel').hide();
+            $('#' + $(this).data('name')).show();
+            $(this).parent().addClass('active');
+            return false;
+        });
+        $('#start').click(function () {
+            if (!sequencer.started) {
+                sequencer.start();
+                $('#start').toggleClass('active');
+                $('#stop').toggleClass('active');
+            }
+            return false;
+        });
+        $('#stop').click(function () {
+            if (sequencer.started) {
+                sequencer.stop();
+                $('#start').toggleClass('active');
+                $('#stop').toggleClass('active');
+            }
+            return false;
+        });
+        $('#tempo').change(function () {
+            sequencer.setTempo($(this).val());
+        });
+        $('#tempo').keyup(function () {
+            sequencer.setTempo($(this).val());
+        });
+        $('.clear-sequence').click(function () {
+            $(this).closest('ul')
+                .children('li')
+                .removeClass('on');
+            return false;
+        });
+        // TODO: combine these two
+        $('.wave .prev').click(function () {
+            var id = $(this).closest('.channel').attr('id');
+            var $list = $(this).next('ul');
+            var $wave = $list.children('.active');
+            $wave.removeClass('active');
+            if ($wave.prev().is('li')) {
+                $wave.prev().addClass('active');
+            }
+            else {
+                $list.children().last().addClass('active');
+            }
+            channels[id].wave = $list.children('.active').data('wave');
+            return false;
+        });
+        $('.wave .next').click(function () {
+            var id = $(this).closest('.channel').attr('id');
+            var $list = $(this).prev('ul');
+            var $wave = $list.children('.active');
+            $wave.removeClass('active');
+            if ($wave.next().is('li')) {
+                $wave.next().addClass('active');
+            }
+            else {
+                $list.children().first().addClass('active');
+            }
+            channels[id].wave = $list.children('.active').data('wave');
+            return false;
+        });
+        $('#master-volume').knob({
+            'angleOffset': -160,
+            'angleArc': 320,
+            'thickness': 0.3,
+            'width': 50,
+            'height': 50,
+            'fgColor': '#92C8CD',
+            'bgColor': '#FFF',
+            'inputColor': '#363439',
+            'min': 0,
+            'max': 100,
+            'font': 'consolas, monaco, monospace',
+            'change': function (value) {
+                master.level = value / 100;
+            },
+            format: function (value) {
+                return 'level';
+            }
+        });
+        // might prevent some weirdness
+        $('form').submit(function () {
+            return false;
+        });
+        $('.knob').parent().mouseover(function () {
+            $(this).children('.knob').trigger('configure', {
+                format: function (value) {
+                    return value;
+                }
+            }).trigger('change');
+            $('.knob').css('font-size', '9px');
+        }).mouseout(function () {
+            var name = $(this).children('.knob').data('name');
+            $(this).children('.knob').trigger('configure', {
+                format: function (value) {
+                    return name;
+                }
+            }).trigger('change');
+            $('.knob').css('font-size', '9px');
+        });
+        $(document).ready(function () {
+            $('.knob').parent().trigger('mouseout');
+            $('.knob').css('font-size', '9px');
+        });
+        $('#loader').hide();
+        $('#main-panel').show();
+    };
+    /**
+     * Add the necessary components for a channel
+     */
     UI.addChannel = function (name, channel, length, pattern) {
         if (pattern === void 0) { pattern = '0000000000000000'; }
         this._header(name);
         this._panel(name, channel);
         this._sequence(name, channel, length, pattern);
     };
-    UI.removeChannel = function () {
-        // delete it all
-    };
+    /**
+     * Create the indicator sequence
+     */
     UI.indicator = function (length) {
         var $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
         for (var i = 0; i < length; ++i) {
@@ -432,10 +627,16 @@ var UI = (function () {
         }
         $('#sequencer').prepend($sequence);
     };
+    /**
+     * Create a header item for the channel
+     */
     UI._header = function (name) {
         var $header = $("<li><a href=\"#\" data-name=\"" + name + "\">" + name + "</a></li>");
         $('#channel-headers').append($header);
     };
+    /**
+     * Populate the panel for the channel
+     */
     UI._panel = function (name, channel) {
         var $panel = $("<div class=\"channel\" id=\"" + name + "\"></div>");
         var $mixer = $('<div class="section"><p>mixer</p></div>');
@@ -463,17 +664,13 @@ var UI = (function () {
             max: 100,
             change: function (value) {
                 channel.level = value / 100;
-            },
+            }
         }));
-        // TODO: combine this and next into 50:50 knob
         $("#" + name + " .oscLevel").knob($.extend({}, this._knobDefaults, {
             min: 0,
             max: 100,
             change: function (value) {
                 channel.oscLevel = value / 100;
-            },
-            format: function (value) {
-                return 'osc';
             }
         }));
         $("#" + name + " .noiseLevel").knob($.extend({}, this._knobDefaults, {
@@ -481,9 +678,6 @@ var UI = (function () {
             max: 100,
             change: function (value) {
                 channel.noiseLevel = value / 100;
-            },
-            format: function (value) {
-                return 'noise';
             }
         }));
         $("#" + name + " .filterGain").knob($.extend({}, this._knobDefaults, {
@@ -491,9 +685,6 @@ var UI = (function () {
             max: 40,
             change: function (value) {
                 channel.channelFilterGain = value;
-            },
-            format: function (value) {
-                return 'f. gain';
             }
         }));
         $("#" + name + " .filterFreq").knob($.extend({}, this._knobDefaults, {
@@ -501,9 +692,6 @@ var UI = (function () {
             max: 22500,
             change: function (value) {
                 channel.channelFilterFreq = value;
-            },
-            format: function (value) {
-                return 'f. freq';
             }
         }));
         $("#" + name + " .wave").change(function () {
@@ -513,10 +701,7 @@ var UI = (function () {
             min: 20,
             max: 2000,
             change: function (value) {
-                channel.frequency = value * 1; // idk why
-            },
-            format: function (value) {
-                return 'freq';
+                channel.frequency = value;
             }
         }));
         $("#" + name + " .oscAttack").knob($.extend({}, this._knobDefaults, {
@@ -524,9 +709,6 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.oscAttack = value / 1000;
-            },
-            format: function (value) {
-                return 'attack';
             }
         }));
         $("#" + name + " .oscDecay").knob($.extend({}, this._knobDefaults, {
@@ -534,9 +716,6 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.oscDecay = value / 1000;
-            },
-            format: function (value) {
-                return 'decay';
             }
         }));
         $("#" + name + " .pitchAttack").knob($.extend({}, this._knobDefaults, {
@@ -544,9 +723,6 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.pitchAttack = value / 1000;
-            },
-            format: function (value) {
-                return 'attack';
             }
         }));
         $("#" + name + " .pitchDecay").knob($.extend({}, this._knobDefaults, {
@@ -554,9 +730,6 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.pitchDecay = value / 1000;
-            },
-            format: function (value) {
-                return 'decay';
             }
         }));
         $("#" + name + " .noiseAttack").knob($.extend({}, this._knobDefaults, {
@@ -564,9 +737,6 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.noiseAttack = value / 1000;
-            },
-            format: function (value) {
-                return 'attack';
             }
         }));
         $("#" + name + " .noiseDecay").knob($.extend({}, this._knobDefaults, {
@@ -574,14 +744,13 @@ var UI = (function () {
             max: 10000,
             change: function (value) {
                 channel.noiseDecay = value / 1000;
-            },
-            format: function (value) {
-                return 'decay';
             }
         }));
     };
+    /**
+     * Create a sequence linked to a channel
+     */
     UI._sequence = function (name, channel, length, pattern) {
-        // do sequences here instead of in sequencer
         var $sequence = $('<ul class="sequence"></ul>');
         $sequence.attr('data-channel', name);
         for (var i = 0; i < length; ++i) {
@@ -591,9 +760,15 @@ var UI = (function () {
         $sequence.append("<li><a href=\"#\" class=\"clear-sequence\"></a></li>");
         $('#sequencer').prepend($sequence);
     };
+    /**
+     * Output the markdown for a jQuery Knob
+     */
     UI._knob = function (type, name, value) {
         return "<div>\n\t\t\t<input type=\"text\" class=\"knob " + type + "\" value=\"" + value + "\" data-name=\"" + name + "\">\n\t\t</div>";
     };
+    /**
+     * Make a wave selection thing
+     */
     UI._waveSelector = function (selected) {
         var selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
         $.each(this._waveSelect, function (value, option) {
@@ -602,206 +777,106 @@ var UI = (function () {
         selector += '</ul><a href="#" class="next"></a></div>';
         return selector;
     };
+    /**
+     * Default options for jQuery Knob instances
+     */
     UI._knobDefaults = {
         'angleOffset': -160,
         'angleArc': 320,
+        'bgColor': '#FFF',
+        'fgColor': '#92C8CD',
+        'font': 'consolas, monaco, monospace',
+        'height': 50,
+        'inputColor': '#363439',
         'thickness': 0.3,
         'width': 50,
-        'height': 50,
-        'fgColor': '#92C8CD',
-        'bgColor': '#FFF',
-        'inputColor': '#363439',
-        'font': 'consolas'
     };
+    /**
+     * Options for the wave selection of the oscillator
+     */
     UI._waveSelect = {
         sine: 'sine',
         square: 'sqr',
         sawtooth: 'saw',
         triangle: 'tri'
     };
+    /**
+     * Filter options for noise filter (not yet implemented)
+     */
     UI._filterTypeSelect = "\n\t\t<option>lowpass</option>\n\t\t<option>bandpass</option>\n\t\t<option>highpass</option>\n\t";
     return UI;
 })();
-///<reference path="jquery.d.ts"/>
 ///<reference path="modules/Amp.ts"/>
-///<reference path="Channel.ts"/>
 ///<reference path="Sequencer.ts"/>
 ///<reference path="UI.ts"/>
+/**
+ * A drum machine with channels and a sequencer
+ */
+var Machine = (function () {
+    function Machine(context, tempo) {
+        if (tempo === void 0) { tempo = 120; }
+        this._context = context;
+        this._master = new Amp(context);
+        this._master.level = 1.0;
+        this._master.connect(context.destination);
+        this._sequencer = new Sequencer(tempo);
+        this._channels = {};
+        this._tempo = tempo;
+    }
+    Machine.prototype.addChannel = function (name, channel, pattern) {
+        this._channels[name] = new Channel(this._context, this._master, channel);
+        this._sequencer.addChannel(name, this._channels[name]);
+        UI.addChannel(name, this._channels[name], this._sequencer.length, pattern || null);
+    };
+    Machine.prototype.init = function () {
+        UI.indicator(this._sequencer.length);
+        UI.init(this._sequencer, this._channels, this._master, this._tempo);
+    };
+    return Machine;
+})();
+///<reference path="jquery.d.ts"/>
+///<reference path="UI.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
+///<reference path="Machine.ts"/>
 var audioContext = new (AudioContext || webkitAudioContext)();
 var tempo = 140;
-var master = new Amp(audioContext);
-master.level = 1.0;
-master.connect(audioContext.destination);
-$('#tempo').val(tempo.toString());
-var channels = {
-    // better but still clicky
-    'kick': new Channel(audioContext, master, {
-        frequency: 105,
-        oscAmpAttack: 0,
-        oscAmpDecay: 0.630,
-        oscPitchAttack: 0,
-        oscPitchDecay: 0.380,
-        noiseLevel: 0,
-        oscLevel: 1.0,
-        level: 0.8
-    }),
-    // need to tailor noise level (it is V LOUD)
-    'snare': new Channel(audioContext, master, {
-        frequency: 800,
-        noiseLevel: 0.35,
-        noiseAttack: 0,
-        noiseDecay: 0.37,
-        oscLevel: 0,
-        level: 0.8
-    }),
-    'hat': new Channel(audioContext, master, {
-        frequency: 1500,
-        noiseLevel: 0.3,
-        oscLevel: 0,
-        noiseAttack: 0,
-        noiseDecay: 0.15,
-        channelFilterFreq: 15000,
-        channelFilterGain: 10
-    }),
-    'tom': new Channel(audioContext, master, {
-        frequency: 100,
-        noiseLevel: 0.0,
-        oscLevel: 0.3,
-        wave: 'sawtooth',
-        oscPitchAttack: 0,
-        oscPitchDecay: 4,
-        oscAmpAttack: 0,
-        oscAmpDecay: 4
-    })
-};
-// there's some encoding to be done here
-var patterns = {
-    kick: '1100001011000010',
-    snare: '0000100000001000',
-    hat: '0010010100110101',
-    tom: '1000000001000000'
-};
-var sequencer = new Sequencer(channels, tempo);
-$.each(channels, function (name, channel) {
-    UI.addChannel(name, channel, sequencer.length, patterns[name]);
-});
-$('.channel').hide().first().show();
-$('#channel-headers li').first().addClass('active');
-UI.indicator(sequencer.length);
-// put these things in the UI class
-// if dynamic elements need "on" bindings
-$('.sequence li').click(function () {
-    $(this).toggleClass('on');
-});
-$('#channel-headers li a').click(function () {
-    $('#channel-headers li').removeClass('active');
-    $('.channel').hide();
-    $('#' + $(this).data('name')).show();
-    $(this).parent().addClass('active');
-    return false;
-});
-$('#start').click(function () {
-    if (!sequencer.started) {
-        sequencer.start();
-        $('#start').toggleClass('active');
-        $('#stop').toggleClass('active');
-    }
-    return false;
-});
-$('#stop').click(function () {
-    if (sequencer.started) {
-        sequencer.stop();
-        $('#start').toggleClass('active');
-        $('#stop').toggleClass('active');
-    }
-    return false;
-});
-$('#tempo').change(function () {
-    sequencer.setTempo($(this).val());
-});
-$('#tempo').keyup(function () {
-    sequencer.setTempo($(this).val());
-});
-$('.clear-sequence').click(function () {
-    $(this).closest('ul')
-        .children('li')
-        .removeClass('on');
-    return false;
-});
-// TODO: combine these two
-$('.wave .prev').click(function () {
-    var id = $(this).closest('.channel').attr('id');
-    var $list = $(this).next('ul');
-    var $wave = $list.children('.active');
-    $wave.removeClass('active');
-    if ($wave.prev().is('li')) {
-        $wave.prev().addClass('active');
-    }
-    else {
-        $list.children().last().addClass('active');
-    }
-    channels[id].wave = $list.children('.active').data('wave');
-    return false;
-});
-$('.wave .next').click(function () {
-    var id = $(this).closest('.channel').attr('id');
-    var $list = $(this).prev('ul');
-    var $wave = $list.children('.active');
-    $wave.removeClass('active');
-    if ($wave.next().is('li')) {
-        $wave.next().addClass('active');
-    }
-    else {
-        $list.children().first().addClass('active');
-    }
-    channels[id].wave = $list.children('.active').data('wave');
-    return false;
-});
-$('#master-volume').knob({
-    'angleOffset': -160,
-    'angleArc': 320,
-    'thickness': 0.3,
-    'width': 50,
-    'height': 50,
-    'fgColor': '#92C8CD',
-    'bgColor': '#FFF',
-    'inputColor': '#363439',
-    'min': 0,
-    'max': 100,
-    'font': 'consolas',
-    'change': function (value) {
-        master.level = value / 100;
-    },
-    format: function (value) {
-        return 'level';
-    }
-});
-// might prevent some weirdness
-$('form').submit(function () {
-    return false;
-});
-$('.knob').parent().mouseover(function () {
-    $(this).children('.knob').trigger('configure', {
-        format: function (value) {
-            return value;
-        }
-    }).trigger('change');
-    $('.knob').css('font-size', '9px');
-}).mouseout(function () {
-    var name = $(this).children('.knob').data('name');
-    $(this).children('.knob').trigger('configure', {
-        format: function (value) {
-            return name;
-        }
-    }).trigger('change');
-    $('.knob').css('font-size', '9px');
-});
-$(document).ready(function () {
-    $('.knob').parent().trigger('mouseout');
-    $('.knob').css('font-size', '9px');
-});
-$('#loader').hide();
-$('#main-panel').show();
-//sequencer.start(); 
+var machine = new Machine(audioContext, tempo);
+machine.addChannel('kick', {
+    frequency: 105,
+    oscAmpAttack: 0,
+    oscAmpDecay: 0.630,
+    oscPitchAttack: 0,
+    oscPitchDecay: 0.380,
+    noiseLevel: 0,
+    oscLevel: 1.0,
+    level: 0.8
+}, '1100001011000010');
+machine.addChannel('snare', {
+    frequency: 800,
+    noiseLevel: 0.35,
+    noiseAttack: 0,
+    noiseDecay: 0.37,
+    oscLevel: 0,
+    level: 0.8
+}, '0000100000001000');
+machine.addChannel('hat', {
+    frequency: 1500,
+    noiseLevel: 0.3,
+    oscLevel: 0,
+    noiseAttack: 0,
+    noiseDecay: 0.15,
+    channelFilterFreq: 15000,
+    channelFilterGain: 10
+}, '0010010100110101');
+machine.addChannel('tom', {
+    frequency: 100,
+    noiseLevel: 0.0,
+    oscLevel: 0.3,
+    wave: 'sawtooth',
+    oscPitchAttack: 0,
+    oscPitchDecay: 4,
+    oscAmpAttack: 0,
+    oscAmpDecay: 4
+}, '1000000001000000');
+machine.init();
 //# sourceMappingURL=app.js.map

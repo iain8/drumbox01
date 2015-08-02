@@ -1,8 +1,11 @@
 ///<reference path="BaseModule.ts"/>
 
+/**
+ * Noise generator, fills a buffer with random white noise
+ */
 class Noise extends BaseModule {
-	channels: number = 1;
-	noise: AudioBufferSourceNode;
+	private _channels: number = 1;
+	private _noise: AudioBufferSourceNode;
 	input: AudioBufferSourceNode;
 	output: AudioBufferSourceNode;
 	
@@ -10,19 +13,26 @@ class Noise extends BaseModule {
 		super();
 		
 		var size: number = 2 * context.sampleRate;
-		var buffer: AudioBuffer = context.createBuffer(this.channels, size, context.sampleRate);
+		var buffer: AudioBuffer = context.createBuffer(this._channels, size, context.sampleRate);
 		var output: number[] = buffer.getChannelData(0);
 		
-		// more noise functions to be done
+		// white noise
 		for (var i = 0; i < size; ++i) {
 			output[i] = Math.random() * 2 - 1;
 		}
 		
-		this.noise = context.createBufferSource();
-		this.noise.buffer = buffer;
-		this.noise.loop = true;
+		this._noise = context.createBufferSource();
+		this._noise.buffer = buffer;
+		this._noise.loop = true;
 		
-		this.input = this.noise;
-		this.output = this.noise;
+		this.input = this._noise;
+		this.output = this._noise;
+	}
+	
+	/**
+	 * Start generating noise
+	 */
+	start() {
+		this._noise.start();
 	}
 }

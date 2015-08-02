@@ -1,5 +1,8 @@
 ///<reference path="BaseModule.ts"/>
 
+/**
+ * Amplifier module, wraps a GainNode
+ */
 class Amp extends BaseModule {
 	private _gain: GainNode;
 	amplitude: AudioParam;

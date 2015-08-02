@@ -1,25 +1,36 @@
 ///<reference path="jquery.d.ts"/>
 ///<reference path="Channel.ts"/>
 
+/**
+ * Sequencer for the beats
+ */
 class Sequencer {
 	private _tempo: number;
 	private _beat: number;
 	private _length: number;
-	private _channels; // what is it
-	private _interval;	// what is it
+	private _channels: {};
+	private _interval;
 	started: boolean;
 	
-	constructor(channels, tempo: number = 120) {
+	constructor(tempo: number = 120) {
 		this._beat = 0;
 		this._length = 16;
-		this._channels = channels;
+		this._channels = {};
 		this._tempo = tempo;
 		this.started = false;
 	}
 	
-	loop() {
-		// indicator is out of sync with sequence by 1 beat
-		
+	/**
+	 * Add a channel to the sequencer
+	 */
+	addChannel(name: string, channel: {}) {
+		this._channels[name] = channel;
+	}
+	
+	/**
+	 * Perform one sequencer step
+	 */
+	step() {
 		$('.sequence li').removeClass('active');
 		
 		$('.sequence').each((i, sequence) => {
@@ -36,17 +47,26 @@ class Sequencer {
 		this._beat = this._beat == this._length - 1 ? 0 : this._beat + 1;
 	}
 	
+	/**
+	 * Start the sequencer
+	 */
 	start() {
 		this.started = true;
 		
-		this._interval = setInterval(() => { this.loop(); }, this.bpmToMs(this._tempo));
+		this._interval = setInterval(() => { this.step(); }, this.bpmToMs(this._tempo));
 	}
 	
+	/**
+	 * Stop the sequencer
+	 */
 	stop() {
 		this.started = false;
 		clearInterval(this._interval);
 	}
 	
+	/**
+	 * Set the tempo in beats per minute
+	 */
 	setTempo(tempo: number) {
 		this._tempo = tempo;
 		
@@ -54,6 +74,9 @@ class Sequencer {
 		this.start();
 	}
 	
+	/**
+	 * Convert bpm to ms
+	 */
 	bpmToMs(bpm: number) {
 		return (60000 / bpm) / 2;
 	}

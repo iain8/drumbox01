@@ -1,5 +1,8 @@
 ///<reference path="BaseModule.ts"/>
 
+/**
+ * Oscillator module, wraps an OscillatorNode
+ */
 class Osc extends BaseModule {
 	private _oscillator: OscillatorNode;
 	input: OscillatorNode;
@@ -17,6 +20,9 @@ class Osc extends BaseModule {
 		this.frequency = this._oscillator.frequency;
 	}
 	
+	/**
+	 * Start oscillator oscillating
+	 */
 	start() {
 		this._oscillator.start();
 	}

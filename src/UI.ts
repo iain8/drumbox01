@@ -1,20 +1,31 @@
 ///<reference path="jquery.d.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
 ///<reference path="Channel.ts"/>
+///<reference path="Sequencer.ts"/>
+///<reference path="modules/Amp.ts"/>
 
+/**
+ * Where the cardboard and tape are hurriedly combined into an interface
+ */
 class UI {
+	/**
+	 * Default options for jQuery Knob instances
+	 */
 	private static _knobDefaults = {
 	    'angleOffset': -160,
 	    'angleArc': 320,
+		'bgColor': '#FFF',
+		'fgColor': '#92C8CD',
+		'font': 'consolas, monaco, monospace',
+		'height': 50,
+		'inputColor': '#363439',
 	    'thickness': 0.3,
 	    'width': 50,
-	    'height': 50,
-	    'fgColor': '#92C8CD',
-		'bgColor': '#FFF',
-		'inputColor': '#363439',
-		'font': 'consolas, monaco, monospace'
 	};
 	
+	/**
+	 * Options for the wave selection of the oscillator
+	 */
 	private static _waveSelect = {
 		sine: 'sine',
 		square: 'sqr',
@@ -22,22 +33,180 @@ class UI {
 		triangle: 'tri'
 	};
 	
+	/**
+	 * Filter options for noise filter (not yet implemented)
+	 */
 	private static _filterTypeSelect = `
 		<option>lowpass</option>
 		<option>bandpass</option>
 		<option>highpass</option>
 	`;
 	
+	/**
+	 * Do remaining stuff to set up UI
+	 */
+	static init(sequencer: Sequencer, channels: {}, master: Amp, tempo: number) {
+		$('.channel').hide().first().show();
+		
+		$('#channel-headers li').first().addClass('active');
+		
+		$('#tempo').val(tempo.toString());
+		
+		
+		// if dynamic elements need "on" bindings
+		$('.sequence li').click(function() {
+			$(this).toggleClass('on');
+		});
+		
+		$('#channel-headers li a').click(function() {
+		    $('#channel-headers li').removeClass('active');
+		    $('.channel').hide();
+		    $('#' + $(this).data('name')).show();
+		    $(this).parent().addClass('active');
+		    return false;
+		});
+		
+		$('#start').click(() => {
+		    if (!sequencer.started) {
+		        sequencer.start();
+		        
+		        $('#start').toggleClass('active');
+		        $('#stop').toggleClass('active');
+		    }
+		    
+		    return false;
+		});
+		
+		$('#stop').click(() => {
+		    if (sequencer.started) {
+		        sequencer.stop();
+		        
+		        $('#start').toggleClass('active');
+		        $('#stop').toggleClass('active');
+		    }
+		    
+		    return false;
+		});
+		
+		$('#tempo').change(function() {
+		    sequencer.setTempo($(this).val());
+		});
+		
+		$('#tempo').keyup(function() {
+		    sequencer.setTempo($(this).val());
+		});
+		
+		$('.clear-sequence').click(function() {
+		    $(this).closest('ul')
+		        .children('li')
+		        .removeClass('on');
+		    
+		    return false;
+		});
+		
+		// TODO: combine these two
+		$('.wave .prev').click(function() {
+		    var id = $(this).closest('.channel').attr('id');
+		    var $list = $(this).next('ul');
+		    var $wave = $list.children('.active');
+		        
+		    $wave.removeClass('active');
+		    
+		    if ($wave.prev().is('li')) {
+		        $wave.prev().addClass('active');
+		    } else {
+		        $list.children().last().addClass('active');
+		    }
+		    
+		    channels[id].wave = $list.children('.active').data('wave');
+		    
+		    return false;
+		});
+		
+		$('.wave .next').click(function() {
+		    var id = $(this).closest('.channel').attr('id');
+		    var $list = $(this).prev('ul');
+		    var $wave = $list.children('.active');
+		    
+		    $wave.removeClass('active');
+		    
+		    if ($wave.next().is('li')) {
+		        $wave.next().addClass('active');
+		    } else {
+		        $list.children().first().addClass('active');
+		    }
+		    
+		    channels[id].wave = $list.children('.active').data('wave');
+		        
+		    return false;
+		});
+		
+		$('#master-volume').knob({
+		    'angleOffset': -160,
+		    'angleArc': 320,
+		    'thickness': 0.3,
+		    'width': 50,
+		    'height': 50,
+		    'fgColor': '#92C8CD',
+			'bgColor': '#FFF',
+			'inputColor': '#363439',
+		    'min': 0,
+		    'max': 100,
+		    'font': 'consolas, monaco, monospace',
+		    'change': function(value) {
+		        master.level = value / 100;
+		    },
+			format: function(value) {
+				return 'level';
+			}
+		});
+		
+		// might prevent some weirdness
+		$('form').submit(function() {
+		    return false;
+		});
+		
+		$('.knob').parent().mouseover(function() {
+		    $(this).children('.knob').trigger('configure', {
+		        format: function(value) {
+		            return value;
+		        }
+		    }).trigger('change');
+		    
+		    $('.knob').css('font-size', '9px');
+		}).mouseout(function() {
+		    var name = $(this).children('.knob').data('name');
+		    
+		    $(this).children('.knob').trigger('configure', {
+		        format: function(value) {
+		            return name;
+		        }
+		    }).trigger('change');
+		    
+		    $('.knob').css('font-size', '9px');
+		});
+		
+		$(document).ready(function() {
+		    $('.knob').parent().trigger('mouseout');
+		    $('.knob').css('font-size', '9px');
+		});
+		
+		$('#loader').hide();
+		$('#main-panel').show();
+	}
+	
+	/**
+	 * Add the necessary components for a channel
+	 */
 	static addChannel(name: string, channel: Channel, length: number, pattern: string = '0000000000000000') {
 		this._header(name);
 		this._panel(name, channel);
 		this._sequence(name, channel, length, pattern);
 	}
 	
-	static removeChannel() {
-		// delete it all
-	}
-	
+	/**
+	 * Create the indicator sequence
+	 */
 	static indicator(length: number) {
 		var $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
 		
@@ -50,11 +219,17 @@ class UI {
 		$('#sequencer').prepend($sequence);
 	}
 	
+	/**
+	 * Create a header item for the channel
+	 */
 	private static _header(name: string) {
 		var $header = $(`<li><a href="#" data-name="${name}">${name}</a></li>`);
 		$('#channel-headers').append($header);
 	}
 	
+	/**
+	 * Populate the panel for the channel
+	 */
 	private static _panel(name: string, channel: Channel) {
 		var $panel = $(`<div class="channel" id="${name}"></div>`);
 		
@@ -88,21 +263,14 @@ class UI {
 			max: 100,
 			change: function(value) {
 				channel.level = value / 100;
-			},
-			// format: function(value) {
-			// 	return 'level';
-			// }
+			}
 		}));
 		
-		// TODO: combine this and next into 50:50 knob
 		$(`#${name} .oscLevel`).knob($.extend({}, this._knobDefaults, {
 			min: 0,
 			max: 100,
 			change: function(value) {
 				channel.oscLevel = value / 100;
-			},
-			format: function(value) {
-				return 'osc';
 			}
 		}));
 		
@@ -111,9 +279,6 @@ class UI {
 			max: 100,
 			change: function(value) {
 				channel.noiseLevel = value / 100;
-			},
-			format: function(value) {
-				return 'noise';
 			}
 		}));
 		
@@ -122,20 +287,14 @@ class UI {
 			max: 40,
 			change: function(value) {
 				channel.channelFilterGain = value;
-			},
-			format: function(value) {
-				return 'f. gain';
 			}
 		}));
 		
 		$(`#${name} .filterFreq`).knob($.extend({}, this._knobDefaults, {
 			min: 10,
-			max: 22500, // TODO: calculate this
+			max: 22500,
 			change: function(value) {
 				channel.channelFilterFreq = value;
-			},
-			format: function(value) {
-				return 'f. freq';
 			}
 		}));
 		
@@ -147,10 +306,7 @@ class UI {
 			min: 20,
 			max: 2000,
 			change: function(value) {
-				channel.frequency = value * 1; // idk why
-			},
-			format: function(value) {
-				return 'freq';
+				channel.frequency = value;
 			}
 		}));
 		
@@ -159,9 +315,6 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.oscAttack = value / 1000;
-			},
-			format: function(value) {
-				return 'attack';
 			}
 		}));
 		
@@ -170,9 +323,6 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.oscDecay = value / 1000;
-			},
-			format: function(value) {
-				return 'decay';
 			}
 		}));
 		
@@ -181,9 +331,6 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.pitchAttack = value / 1000;
-			},
-			format: function(value) {
-				return 'attack';
 			}
 		}));
 		
@@ -192,9 +339,6 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.pitchDecay = value / 1000;
-			},
-			format: function(value) {
-				return 'decay';
 			}
 		}));
 		
@@ -203,9 +347,6 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.noiseAttack = value / 1000;
-			},
-			format: function(value) {
-				return 'attack';
 			}
 		}));
 		
@@ -214,15 +355,14 @@ class UI {
 			max: 10000,
 			change: function(value) {
 				channel.noiseDecay = value / 1000;
-			},
-			format: function(value) {
-				return 'decay';
 			}
 		}));
 	}
 	
+	/**
+	 * Create a sequence linked to a channel
+	 */
 	private static _sequence(name: string, channel: Channel, length: number, pattern: string) {
-		// do sequences here instead of in sequencer
 		var $sequence = $('<ul class="sequence"></ul>');
 		$sequence.attr('data-channel', name);
 		
@@ -237,12 +377,18 @@ class UI {
 		$('#sequencer').prepend($sequence);
 	}
 	
+	/**
+	 * Output the markdown for a jQuery Knob
+	 */
 	private static _knob(type: string, name: string, value: number) {
 		return `<div>
 			<input type="text" class="knob ${type}" value="${value}" data-name="${name}">
 		</div>`;
 	}
 	
+	/**
+	 * Make a wave selection thing
+	 */
 	private static _waveSelector(selected: string) {
 		var selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
 		
