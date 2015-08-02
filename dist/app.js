@@ -87,7 +87,7 @@ var Env = (function () {
         this.param.cancelScheduledValues(now);
         this.param.setValueAtTime(this.min, now);
         this.param.linearRampToValueAtTime(this.max, now + this.attack);
-        this.param.linearRampToValueAtTime(this.min, now + this.attack + this.decay);
+        this.param.exponentialRampToValueAtTime(this.min, now + this.attack + this.decay);
     };
     Env.prototype.connect = function (param) {
         this.param = param;
