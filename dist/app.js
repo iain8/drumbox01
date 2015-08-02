@@ -787,6 +787,7 @@ $('.knob').parent().mouseover(function () {
             return value;
         }
     }).trigger('change');
+    $('.knob').css('font-size', '9px');
 }).mouseout(function () {
     var name = $(this).children('.knob').data('name');
     $(this).children('.knob').trigger('configure', {

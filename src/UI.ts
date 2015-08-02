@@ -12,7 +12,7 @@ class UI {
 	    'fgColor': '#92C8CD',
 		'bgColor': '#FFF',
 		'inputColor': '#363439',
-		'font': 'consolas'
+		'font': 'consolas, monaco, monospace'
 	};
 	
 	private static _waveSelect = {

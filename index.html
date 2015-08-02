@@ -7,15 +7,17 @@
         <div id="main-panel">
             <form autocomplete="off">
                 <div id="synth" class="container">
-                    <ul id="channel-headers">
-                    </ul>
+                    <ul id="channel-headers"></ul>
                 </div>
-                <div id="divider" class="container"></div>
+
+                <div class="container vertical-divider"></div>
+
                 <div class="container" style="padding-left: 0; margin-left: -9px">
-                    <div id="sequencer" style="margin-left: 20px">
-                    </div>
+                    <div id="sequencer" style="margin-left: 20px"></div>
+
                     <div class="horizontal-divider"></div>
-                    <div style="margin-left: 20px; margin-top: 10px">
+
+                    <div id="master">
                         <input type="number" id="tempo" value="120">
                         <button id="start" class="sequencer-control"></button>
                         <button id="stop" class="sequencer-control active"></button>

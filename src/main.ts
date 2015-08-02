@@ -179,7 +179,7 @@ $('#master-volume').knob({
 	'inputColor': '#363439',
     'min': 0,
     'max': 100,
-    'font': 'consolas',
+    'font': 'consolas, monaco, monospace',
     'change': function(value) {
         master.level = value / 100;
     },
@@ -199,6 +199,8 @@ $('.knob').parent().mouseover(function() {
             return value;
         }
     }).trigger('change');
+    
+    $('.knob').css('font-size', '9px');
 }).mouseout(function() {
     var name = $(this).children('.knob').data('name');
     
