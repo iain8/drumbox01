@@ -526,11 +526,12 @@ var UI = (function () {
         $('.sequencer-control').click(function () {
             if (sequencer.started && $(this).attr('id') === 'stop') {
                 sequencer.stop();
+                $('.sequencer-control').toggleClass('active');
             }
             else if (!sequencer.started && $(this).attr('id') === 'start') {
                 sequencer.start();
+                $('.sequencer-control').toggleClass('active');
             }
-            $('.sequencer-control').toggleClass('active');
             return false;
         });
         $('#tempo').bind('change keyup', function () {
