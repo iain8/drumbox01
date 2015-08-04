@@ -10,8 +10,15 @@
 declare var webkitAudioContext: {
     new (): AudioContext;
 };
-    
-var audioContext: any = new (AudioContext || webkitAudioContext)();
+
+var audioContext;
+
+if ('webkitAudioContext' in window) {
+    audioContext = new webkitAudioContext();
+} else {
+    audioContext = new AudioContext();
+}
+
 var tempo: number = 140;
 
 var machine = new Machine(audioContext, tempo);

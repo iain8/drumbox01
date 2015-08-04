@@ -42,7 +42,7 @@ var Osc = (function (_super) {
      * Start oscillator oscillating
      */
     Osc.prototype.start = function () {
-        this._oscillator.start();
+        this._oscillator.start(0);
     };
     Object.defineProperty(Osc.prototype, "type", {
         get: function () {
@@ -95,21 +95,21 @@ var Amp = (function (_super) {
 var Env = (function () {
     function Env(context) {
         this._context = context;
-        this.attack = 0.01;
+        this.attack = 0.1;
         this.decay = 0.5;
         this.max = 1;
-        this.min = 0;
+        this.min = 0.0001;
     }
     /**
      * Trigger an envelope
+     * CAUTION: any 0 values passed to exponentialRamp cause FF errors
      */
     Env.prototype.trigger = function () {
         var now = this._context.currentTime;
         this._param.cancelScheduledValues(now);
-        this._param.setValueAtTime(this.min, now);
-        this._param.linearRampToValueAtTime(this.max, now + this.attack);
-        var min = this.min > 0.0 ? this.min : 0.001;
-        this._param.exponentialRampToValueAtTime(min, now + this.attack + this.decay);
+        this._param.setValueAtTime(this._min, now);
+        this._param.linearRampToValueAtTime(this._max, now + this.attack);
+        this._param.exponentialRampToValueAtTime(this._min, now + this.attack + this.decay);
     };
     /**
      * Connect to an AudioParam of another node
@@ -117,6 +117,26 @@ var Env = (function () {
     Env.prototype.connect = function (param) {
         this._param = param;
     };
+    Object.defineProperty(Env.prototype, "max", {
+        get: function () {
+            return this._max;
+        },
+        set: function (value) {
+            this._max = value > 0 ? value : 0.0001;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Env.prototype, "min", {
+        get: function () {
+            return this._min;
+        },
+        set: function (value) {
+            this._min = value > 0 ? value : 0.0001;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Env;
 })();
 ///<reference path="BaseModule.ts"/>
@@ -145,7 +165,7 @@ var Noise = (function (_super) {
      * Start generating noise
      */
     Noise.prototype.start = function () {
-        this._noise.start();
+        this._noise.start(0);
     };
     return Noise;
 })(BaseModule);
@@ -812,7 +832,13 @@ var Machine = (function () {
 ///<reference path="UI.ts"/>
 ///<reference path="jquery.knob.d.ts"/>
 ///<reference path="Machine.ts"/>
-var audioContext = new (AudioContext || webkitAudioContext)();
+var audioContext;
+if ('webkitAudioContext' in window) {
+    audioContext = new webkitAudioContext();
+}
+else {
+    audioContext = new AudioContext();
+}
 var tempo = 140;
 var machine = new Machine(audioContext, tempo);
 machine.addChannel('kick', {

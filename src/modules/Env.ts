@@ -7,30 +7,29 @@ class Env {
 	
 	attack: number;
 	decay: number;
-	max: number;
-	min: number;
+	private _max: number;
+	private _min: number;
 	
 	constructor(context: AudioContext) {
 		this._context = context;
-		this.attack = 0.01;
+		this.attack = 0.1;
 		this.decay = 0.5;
 		this.max = 1;
-		this.min = 0;
+		this.min = 0.0001;
 	}
 	
 	/**
 	 * Trigger an envelope
+	 * CAUTION: any 0 values passed to exponentialRamp cause FF errors
 	 */
 	trigger() {
 		var now: number = this._context.currentTime;
 		
 		this._param.cancelScheduledValues(now);
-		this._param.setValueAtTime(this.min, now);
-		this._param.linearRampToValueAtTime(this.max, now + this.attack);
+		this._param.setValueAtTime(this._min, now);
+		this._param.linearRampToValueAtTime(this._max, now + this.attack);
 		
-		var min = this.min > 0.0 ? this.min : 0.001;
-		
-		this._param.exponentialRampToValueAtTime(min, now + this.attack + this.decay);
+		this._param.exponentialRampToValueAtTime(this._min, now + this.attack + this.decay);
 	}
 	
 	/**
@@ -38,5 +37,21 @@ class Env {
 	 */
 	connect(param: AudioParam) {
 		this._param = param;
+	}
+	
+	set max(value: number) {
+		this._max = value > 0 ? value : 0.0001; 
+	}
+	
+	get max(): number {
+		return this._max;
+	}
+	
+	set min(value: number) {
+		this._min = value > 0 ? value : 0.0001; 
+	}
+	
+	get min(): number {
+		return this._min;
 	}
 }

@@ -24,7 +24,7 @@ class Osc extends BaseModule {
 	 * Start oscillator oscillating
 	 */
 	start() {
-		this._oscillator.start();
+		this._oscillator.start(0);
 	}
 	
 	get type(): string {

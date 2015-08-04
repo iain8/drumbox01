@@ -33,6 +33,6 @@ class Noise extends BaseModule {
 	 * Start generating noise
 	 */
 	start() {
-		this._noise.start();
+		this._noise.start(0);
 	}
 }
