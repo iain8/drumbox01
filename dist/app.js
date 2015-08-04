@@ -839,7 +839,7 @@ if ('webkitAudioContext' in window) {
 else {
     audioContext = new AudioContext();
 }
-var tempo = 140;
+var tempo = 160;
 var machine = new Machine(audioContext, tempo);
 machine.addChannel('kick', {
     frequency: 105,
@@ -850,7 +850,7 @@ machine.addChannel('kick', {
     noiseLevel: 0,
     oscLevel: 1.0,
     level: 0.8
-}, '1100001011000010');
+}, '1001001101000100');
 machine.addChannel('snare', {
     frequency: 800,
     noiseLevel: 0.35,
@@ -867,16 +867,16 @@ machine.addChannel('hat', {
     noiseDecay: 0.15,
     channelFilterFreq: 15000,
     channelFilterGain: 10
-}, '0010010100110101');
+}, '0010001000100010');
 machine.addChannel('tom', {
     frequency: 100,
     noiseLevel: 0.0,
     oscLevel: 0.3,
-    wave: 'sawtooth',
+    wave: 'triangle',
     oscPitchAttack: 0,
     oscPitchDecay: 4,
     oscAmpAttack: 0,
     oscAmpDecay: 4
-}, '1000000001000000');
+}, '1001001101000100');
 machine.init();
 //# sourceMappingURL=app.js.map
