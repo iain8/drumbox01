@@ -50,14 +50,6 @@ class UI {
 		
 		$('#channel-headers li').first().addClass('active');
 		
-		$('#tempo').val(tempo.toString());
-		
-		
-		// if dynamic elements need "on" bindings
-		$('.sequence li').click(function() {
-			$(this).toggleClass('on');
-		});
-		
 		$('#channel-headers li a').click(function() {
 		    $('#channel-headers li').removeClass('active');
 		    $('.channel').hide();
@@ -66,34 +58,26 @@ class UI {
 		    return false;
 		});
 		
-		$('#start').click(() => {
-		    if (!sequencer.started) {
-		        sequencer.start();
-		        
-		        $('#start').toggleClass('active');
-		        $('#stop').toggleClass('active');
-		    }
-		    
-		    return false;
+		$('.sequence li').click(function() {
+			$(this).toggleClass('on');
 		});
 		
-		$('#stop').click(() => {
-		    if (sequencer.started) {
-		        sequencer.stop();
-		        
-		        $('#start').toggleClass('active');
-		        $('#stop').toggleClass('active');
-		    }
-		    
-		    return false;
+		$('#tempo').val(tempo.toString());
+		
+		$('.sequencer-control').click(function() {
+			if (sequencer.started && $(this).attr('id') === 'stop') {
+				sequencer.stop();
+			} else if (!sequencer.started && $(this).attr('id') === 'start') {
+				sequencer.start();
+			}
+			
+			$('.sequencer-control').toggleClass('active');
+			
+			return false;
 		});
 		
-		$('#tempo').change(function() {
-		    sequencer.setTempo($(this).val());
-		});
-		
-		$('#tempo').keyup(function() {
-		    sequencer.setTempo($(this).val());
+		$('#tempo').bind('change keyup', function() {
+			sequencer.setTempo($(this).val());
 		});
 		
 		$('.clear-sequence').click(function() {
@@ -104,64 +88,42 @@ class UI {
 		    return false;
 		});
 		
-		// TODO: combine these two
-		$('.wave .prev').click(function() {
-		    var id = $(this).closest('.channel').attr('id');
-		    var $list = $(this).next('ul');
+		$('.wave a').click(function() {
+			var $this = $(this);
+			var id = $this.closest('.channel').attr('id');
+		    var $list = $this.hasClass('prev') ? $this.next('ul') : $this.prev('ul');
 		    var $wave = $list.children('.active');
-		        
-		    $wave.removeClass('active');
-		    
-		    if ($wave.prev().is('li')) {
-		        $wave.prev().addClass('active');
-		    } else {
-		        $list.children().last().addClass('active');
-		    }
-		    
-		    channels[id].wave = $list.children('.active').data('wave');
+			
+			$wave.removeClass('active');
+			
+			if ($this.hasClass('prev')) {
+				if ($wave.prev().is('li')) {
+			        $wave.prev().addClass('active');
+			    } else {
+			        $list.children().last().addClass('active');
+			    }
+			} else {
+				if ($wave.next().is('li')) {
+			        $wave.next().addClass('active');
+			    } else {
+			        $list.children().first().addClass('active');
+			    }
+			}
+			
+			channels[id].wave = $list.children('.active').data('wave');
 		    
 		    return false;
 		});
 		
-		$('.wave .next').click(function() {
-		    var id = $(this).closest('.channel').attr('id');
-		    var $list = $(this).prev('ul');
-		    var $wave = $list.children('.active');
-		    
-		    $wave.removeClass('active');
-		    
-		    if ($wave.next().is('li')) {
-		        $wave.next().addClass('active');
-		    } else {
-		        $list.children().first().addClass('active');
-		    }
-		    
-		    channels[id].wave = $list.children('.active').data('wave');
-		        
-		    return false;
-		});
-		
-		$('#master-volume').knob({
-		    'angleOffset': -160,
-		    'angleArc': 320,
-		    'thickness': 0.3,
-		    'width': 50,
-		    'height': 50,
-		    'fgColor': '#92C8CD',
-			'bgColor': '#FFF',
-			'inputColor': '#363439',
+		$('#master-volume').knob($.extend({}, this._knobDefaults, {
 		    'min': 0,
 		    'max': 100,
-		    'font': 'consolas, monaco, monospace',
 		    'change': function(value) {
 		        master.level = value / 100;
-		    },
-			format: function(value) {
-				return 'level';
-			}
-		});
+		    }
+		}));
 		
-		// might prevent some weirdness
+		// prevent something weird refreshing the page
 		$('form').submit(function() {
 		    return false;
 		});
