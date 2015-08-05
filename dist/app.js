@@ -433,6 +433,7 @@ var Sequencer = (function () {
         this._length = 16;
         this._channels = {};
         this._tempo = tempo;
+        this._division = 4;
         this.started = false;
     }
     /**
@@ -480,11 +481,20 @@ var Sequencer = (function () {
         clearInterval(this._interval);
         this.start();
     };
+    Object.defineProperty(Sequencer.prototype, "division", {
+        set: function (value) {
+            this._division = value;
+            clearInterval(this._interval);
+            this.start();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Convert bpm to ms
      */
     Sequencer.prototype.bpmToMs = function (bpm) {
-        return (60000 / bpm) / 2;
+        return (60000 / bpm) / this._division;
     };
     Object.defineProperty(Sequencer.prototype, "length", {
         get: function () {
@@ -523,6 +533,9 @@ var UI = (function () {
             $(this).toggleClass('on');
         });
         $('#tempo').val(tempo.toString());
+        $('#division').change(function () {
+            sequencer.division = $(this).val();
+        });
         $('.sequencer-control').click(function () {
             if (sequencer.started && $(this).attr('id') === 'stop') {
                 sequencer.stop();
@@ -840,7 +853,7 @@ if ('webkitAudioContext' in window) {
 else {
     audioContext = new AudioContext();
 }
-var tempo = 160;
+var tempo = 80;
 var machine = new Machine(audioContext, tempo);
 machine.addChannel('kick', {
     frequency: 105,

@@ -204,6 +204,14 @@ button {
     padding: 3px 0 3px 3px;
 }
 
+#division {
+    background: #92C8CD;
+    color: #fff;
+    border: 2px solid #92C8CD;
+    border-left: 0;
+    border-right: 0;
+}
+
 .sequencer-control {
     position: relative;
     padding: 10px;

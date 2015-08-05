@@ -19,7 +19,7 @@ if ('webkitAudioContext' in window) {
     audioContext = new AudioContext();
 }
 
-var tempo: number = 160;
+var tempo: number = 80;
 
 var machine = new Machine(audioContext, tempo);
 

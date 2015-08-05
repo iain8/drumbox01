@@ -64,6 +64,10 @@ class UI {
 		
 		$('#tempo').val(tempo.toString());
 		
+		$('#division').change(function() {
+			sequencer.division = $(this).val();
+		});
+		
 		$('.sequencer-control').click(function() {
 			if (sequencer.started && $(this).attr('id') === 'stop') {
 				sequencer.stop();

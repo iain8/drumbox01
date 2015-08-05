@@ -10,6 +10,7 @@ class Sequencer {
 	private _length: number;
 	private _channels: {};
 	private _interval;
+	private _division: number;
 	started: boolean;
 	
 	constructor(tempo: number = 120) {
@@ -17,6 +18,7 @@ class Sequencer {
 		this._length = 16;
 		this._channels = {};
 		this._tempo = tempo;
+		this._division = 4;
 		this.started = false;
 	}
 	
@@ -74,11 +76,18 @@ class Sequencer {
 		this.start();
 	}
 	
+	set division(value: number) {
+		this._division = value;
+		
+		clearInterval(this._interval);
+		this.start();
+	}
+	
 	/**
 	 * Convert bpm to ms
 	 */
 	bpmToMs(bpm: number) {
-		return (60000 / bpm) / 2;
+		return (60000 / bpm) / this._division;
 	}
 	
 	get length() {
