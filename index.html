@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="base.css">
+    </head>
+    <body>
+        <div id="main-panel">
+            <form autocomplete="off">
+                <div id="synth" class="container">
+                    <ul id="channel-headers"></ul>
+                </div>
+
+                <div class="container vertical-divider"></div>
+
+                <div class="container" style="padding-left: 0; margin-left: -9px">
+                    <div id="sequencer" style="margin-left: 20px"></div>
+
+                    <div class="horizontal-divider"></div>
+
+                    <div id="master">
+                        <input type="number" id="tempo" value="120">
+                        <select id="division">
+                            <option value="2">1/4</option>
+                            <option value="4" selected>1/8</option>
+                            <option value="8">1/16</option>
+                        </select>
+                        <button id="start" class="sequencer-control"></button>
+                        <button id="stop" class="sequencer-control active"></button>
+                        <div id="master-controls">
+                            <input type="text" id="master-volume" class="knob" value="100" data-name="master">
+                        </div>
+
+                        <h3>drumbox<small>01</small></h3>
+
+                        <ul id="speaker">
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                            <li><div class="horizontal-divider"></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <p id="loader">loading...</p>
+
+        <script src="lib/jquery-2.1.4.min.js"></script>
+        <script src="lib/jquery.knob.min.js"></script>
+        <script src="dist/app.js"></script>
+    </body>
+</html>
