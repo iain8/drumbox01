@@ -1,4 +1,4 @@
-# Drum Machine (name TBA)
+# drumbox01
 
 A four-channel drum machine all up in the browser. Takes a pure synthesis approach, combining oscillators and noise generators for a vague approximation of some drum sounds.
 
