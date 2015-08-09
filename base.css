@@ -28,6 +28,7 @@ button {
     background-color: #ECE5D6;
     width: 765px;
     display: none;
+    white-space: nowrap;
 }
 
 .container {
@@ -194,6 +195,7 @@ button {
 
 #master {
     margin: 10px 0 0 20px;
+    white-space: normal;
 }
 
 #tempo {
