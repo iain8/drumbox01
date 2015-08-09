@@ -24,6 +24,8 @@ class Channel {
 	private _preOutput: Amp;
 	private _postOutput: Amp;
 	
+	private _started: boolean;
+	
 	/**
 	 * options = {
 	 *     frequency: 440,
@@ -90,15 +92,24 @@ class Channel {
 		this._channelFilter.connect(this._postOutput);
 		
 		this._postOutput.connect(output);
+	}
+	
+	/**
+	 * Start the channel
+	 */
+	start(): void {
+		if (!this._started) {
+			this._osc.start();
+			this._noise.start();
+		}
 		
-		this._osc.start();
-		this._noise.start();
+		this._started = true;
 	}
 	
 	/**
 	 * Trigger all the sound making parts of the channel
 	 */
-	trigger() {
+	trigger(): void {
 		this._oscAmpEnv.trigger();
 		this._oscPitchEnv.trigger();
 		this._noiseAmpEnv.trigger();

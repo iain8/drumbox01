@@ -4,7 +4,7 @@
  * Oscillator module, wraps an OscillatorNode
  */
 class Osc extends BaseModule {
-	private _oscillator: OscillatorNode;
+	private _oscillator: any;	// due to iOS noteOn()
 	input: OscillatorNode;
 	output: OscillatorNode;
 	frequency: AudioParam;
@@ -24,7 +24,7 @@ class Osc extends BaseModule {
 	 * Start oscillator oscillating
 	 */
 	start() {
-		this._oscillator.start(0);
+		this._oscillator.start ? this._oscillator.start(0) : this._oscillator.noteOn(0);
 	}
 	
 	get type(): string {

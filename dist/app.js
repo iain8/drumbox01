@@ -42,7 +42,7 @@ var Osc = (function (_super) {
      * Start oscillator oscillating
      */
     Osc.prototype.start = function () {
-        this._oscillator.start(0);
+        this._oscillator.start ? this._oscillator.start(0) : this._oscillator.noteOn(0);
     };
     Object.defineProperty(Osc.prototype, "type", {
         get: function () {
@@ -275,9 +275,17 @@ var Channel = (function () {
         this._preOutput.connect(this._channelFilter);
         this._channelFilter.connect(this._postOutput);
         this._postOutput.connect(output);
-        this._osc.start();
-        this._noise.start();
     }
+    /**
+     * Start the channel
+     */
+    Channel.prototype.start = function () {
+        if (!this._started) {
+            this._osc.start();
+            this._noise.start();
+        }
+        this._started = true;
+    };
     /**
      * Trigger all the sound making parts of the channel
      */
@@ -435,6 +443,7 @@ var Sequencer = (function () {
         this._tempo = tempo;
         this._division = 4;
         this.started = false;
+        this._iOSTouchStarted = false;
     }
     /**
      * Add a channel to the sequencer
@@ -463,6 +472,9 @@ var Sequencer = (function () {
      */
     Sequencer.prototype.start = function () {
         var _this = this;
+        $.each(this._channels, function () {
+            this.start();
+        });
         this.started = true;
         this._interval = setInterval(function () { _this.step(); }, this.bpmToMs(this._tempo));
     };

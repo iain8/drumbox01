@@ -9,8 +9,9 @@ class Sequencer {
 	private _beat: number;
 	private _length: number;
 	private _channels: {};
-	private _interval;
+	private _interval: any;
 	private _division: number;
+	private _iOSTouchStarted: boolean;
 	started: boolean;
 	
 	constructor(tempo: number = 120) {
@@ -20,6 +21,7 @@ class Sequencer {
 		this._tempo = tempo;
 		this._division = 4;
 		this.started = false;
+		this._iOSTouchStarted = false;
 	}
 	
 	/**
@@ -53,6 +55,10 @@ class Sequencer {
 	 * Start the sequencer
 	 */
 	start() {
+		$.each(this._channels, function() {
+			this.start();
+		});
+		
 		this.started = true;
 		
 		this._interval = setInterval(() => { this.step(); }, this.bpmToMs(this._tempo));
