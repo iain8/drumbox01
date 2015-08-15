@@ -28,6 +28,7 @@ button {
     background-color: #ECE5D6;
     width: 765px;
     display: none;
+    margin-bottom: 10px;
 }
 
 .container {
