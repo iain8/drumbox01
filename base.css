@@ -29,6 +29,7 @@ button {
     width: 765px;
     display: none;
     white-space: nowrap;
+    margin-bottom: 10px;
 }
 
 .container {
