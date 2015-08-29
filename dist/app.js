@@ -806,10 +806,10 @@ var UI = (function () {
         'bgColor': '#FFF',
         'fgColor': '#92C8CD',
         'font': 'consolas, monaco, monospace',
-        'height': 50,
+        'height': 60,
         'inputColor': '#363439',
         'thickness': 0.3,
-        'width': 50,
+        'width': 60
     };
     /**
      * Options for the wave selection of the oscillator

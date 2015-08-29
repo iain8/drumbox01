@@ -26,23 +26,25 @@ button {
     border: 1px solid #EDE0C5;
     border-radius: 4px;
     background-color: #ECE5D6;
-    width: 765px;
+    width: 815px;
     display: none;
     white-space: nowrap;
     margin-bottom: 10px;
+    position: relative;
 }
 
 .container {
     padding: 0 20px 20px;
     display: inline-block;
     vertical-align: top;
-    height: 408px;
+    height: 470px;
 }
 
 .vertical-divider {
     border: 2px solid #fff;
     padding: 0;
     margin: 20px 0;
+    height: 485px;
 }
 
 .horizontal-divider {
@@ -53,11 +55,17 @@ button {
     color: #363439;
 }
 
+#synth {
+    padding-left: 24px;
+    padding-right: 15px;
+}
+
 /* channels */
 
 #channel-headers {
     padding: 0;
     margin-bottom: 0;
+    margin-top: 12px;
     z-index: 2;
     border-bottom: 4px solid white;
 }
@@ -76,7 +84,6 @@ button {
 
 .channel {
     display: inline-block;
-    padding: 5px;
     border-top: 0;
 }
 
@@ -86,18 +93,27 @@ button {
     vertical-align: top;
 }
 
+.channel .section:first-child {
+    padding-left: 0;
+}
+
 .channel .section:last-child {
     border: none;
+    padding-right: 0;
 }
 
 .channel .section p {
     text-align: center;
 }
 
+.channel .section div {
+    margin-bottom: 5px;
+}
+
 .wave {
     position: relative;
-    height: 56px;
-    width: 50px;
+    height: 66px;
+    width: 60px;
 }
 
 .wave li {
@@ -105,8 +121,8 @@ button {
     font-weight: bold;
 
     position: absolute;
-    top: 16px;
-    left: 14px;
+    top: 25px;
+    left: 19px;
 
     display: none;
 }
@@ -123,7 +139,7 @@ button {
     border-right:10px solid #fff;
 
     position: absolute;
-    top: 12px;
+    top: 20px;
     left: -3px;
 }
 
@@ -135,7 +151,7 @@ button {
     border-left: 10px solid #fff;
 
     position: absolute;
-    top: 12px;
+    top: 20px;
     right: -3px;
 }
 
@@ -156,8 +172,8 @@ button {
 }
 
 .beat {
-    height: 22px;
-    width: 22px;
+    height: 25px;
+    width: 25px;
     background-color: #fff;
     margin-right: 5px;
 }
@@ -205,6 +221,7 @@ button {
     background: #92C8CD;
     border: none;
     padding: 3px 0 3px 3px;
+    font-size: 14px;
 }
 
 #division {
@@ -213,6 +230,7 @@ button {
     border: 2px solid #92C8CD;
     border-left: 0;
     border-right: 0;
+    font-size: 14px;
 }
 
 .sequencer-control {
@@ -272,7 +290,9 @@ button {
 
 #speaker {
     width: 100px;
-    float: right;
+    position: absolute;
+    right: 24px;
+    bottom: 0;
 }
 
 #speaker li {
