@@ -14,7 +14,7 @@ class Noise extends BaseModule {
 		
 		var size: number = 2 * context.sampleRate;
 		var buffer: AudioBuffer = context.createBuffer(this._channels, size, context.sampleRate);
-		var output: number[] = buffer.getChannelData(0);
+		var output: Float32Array = buffer.getChannelData(0);
 		
 		// white noise
 		for (var i = 0; i < size; ++i) {

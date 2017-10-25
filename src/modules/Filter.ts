@@ -33,7 +33,7 @@ class Filter extends BaseModule {
 		this._filter.frequency.value = value;
 	}
 	
-	set type(value: string) {
+	set type(value: BiquadFilterType) {
 		this._filter.type = value;
 	}
 }
