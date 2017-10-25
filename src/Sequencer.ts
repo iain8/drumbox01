@@ -1,102 +1,102 @@
-///<reference path="jquery.d.ts"/>
-///<reference path="Channel.ts"/>
+import * as $ from 'jquery';
+import Channel from './Channel';
 
 /**
  * Sequencer for the beats
  */
-class Sequencer {
-	private _tempo: number;
-	private _beat: number;
-	private _length: number;
-	private _channels: {};
-	private _interval: any;
-	private _division: number;
-	private _iOSTouchStarted: boolean;
-	started: boolean;
-	
-	constructor(tempo: number = 120) {
-		this._beat = 0;
-		this._length = 16;
-		this._channels = {};
-		this._tempo = tempo;
-		this._division = 4;
-		this.started = false;
-		this._iOSTouchStarted = false;
-	}
-	
-	/**
-	 * Add a channel to the sequencer
-	 */
-	addChannel(name: string, channel: {}) {
-		this._channels[name] = channel;
-	}
-	
-	/**
-	 * Perform one sequencer step
-	 */
-	step() {
-		$('.sequence li').removeClass('active');
-		
-		$('.sequence').each((i, sequence) => {
-			var $sequence = $(sequence);
-			var $current = $($sequence.children('.beat')[this._beat]);
-			
-			if ($current.hasClass('on') && $sequence.data('channel') !== 'indicator') {
-				this._channels[$sequence.data('channel')].trigger();
-			}
-			
-			$current.addClass('active');
-		});
-		
-		this._beat = this._beat == this._length - 1 ? 0 : this._beat + 1;
-	}
-	
-	/**
-	 * Start the sequencer
-	 */
-	start() {
-		$.each(this._channels, function() {
-			this.start();
-		});
-		
-		this.started = true;
-		
-		this._interval = setInterval(() => { this.step(); }, this.bpmToMs(this._tempo));
-	}
-	
-	/**
-	 * Stop the sequencer
-	 */
-	stop() {
-		this.started = false;
-		clearInterval(this._interval);
-	}
-	
-	/**
-	 * Set the tempo in beats per minute
-	 */
-	setTempo(tempo: number) {
-		this._tempo = tempo;
-		
-		clearInterval(this._interval);
-		this.start();
-	}
-	
-	set division(value: number) {
-		this._division = value;
-		
-		clearInterval(this._interval);
-		this.start();
-	}
-	
-	/**
-	 * Convert bpm to ms
-	 */
-	bpmToMs(bpm: number) {
-		return (60000 / bpm) / this._division;
-	}
-	
-	get length() {
-		return this._length;
-	}
+export default class Sequencer {
+  public started: boolean;
+  private tempo: number;
+  private beat: number;
+  private seqLength: number;
+  private channels: {};
+  private interval: any;
+  private seqDivision: number;
+  private iOSTouchStarted: boolean;
+
+  constructor(tempo: number = 120) {
+    this.beat = 0;
+    this.seqLength = 16;
+    this.channels = {};
+    this.tempo = tempo;
+    this.seqDivision = 4;
+    this.started = false;
+    this.iOSTouchStarted = false;
+  }
+
+  /**
+   * Add a channel to the sequencer
+   */
+  public addChannel(name: string, channel: {}) {
+    this.channels[name] = channel;
+  }
+
+  /**
+   * Start the sequencer
+   */
+  public start() {
+    $.each(this.channels, function() {
+      this.start();
+    });
+
+    this.started = true;
+
+    this.interval = setInterval(() => this.step(), this.bpmToMs(this.tempo));
+  }
+
+  /**
+   * Stop the sequencer
+   */
+  public stop() {
+    this.started = false;
+    clearInterval(this.interval);
+  }
+
+  /**
+   * Set the tempo in beats per minute
+   */
+  public setTempo(tempo: number) {
+    this.tempo = tempo;
+
+    clearInterval(this.interval);
+    this.start();
+  }
+
+  public set division(value: number) {
+    this.seqDivision = value;
+
+    clearInterval(this.interval);
+    this.start();
+  }
+
+  /**
+   * Perform one sequencer step
+   */
+  private step() {
+    $('.sequence li').removeClass('active');
+
+    $('.sequence').each((i, sequence) => {
+      const $sequence = $(sequence);
+      const $current = $($sequence.children('.beat')[this.beat]);
+
+      if ($current.hasClass('on') && $sequence.data('channel') !== 'indicator') {
+        this.channels[$sequence.data('channel')].trigger();
+      }
+
+      $current.addClass('active');
+    });
+
+    this.beat = this.beat === this.seqLength - 1 ? 0 : this.beat + 1;
+  }
+
+  /**
+   * Convert bpm to ms
+   */
+  private bpmToMs(bpm: number) {
+    return (60000 / bpm) / this.seqDivision;
+  }
+
+  get length() {
+    return this.seqLength;
+  }
 }

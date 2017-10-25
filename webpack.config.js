@@ -6,11 +6,10 @@ module.exports = {
   },
   module: {
     rules: [{ 
-      enforce: "pre", 
+      enforce: "pre",
       loader: "tslint-loader",
       options: {
         emitErrors: true,
-        failOnHint: true,
       },
       test: /\.tsx?$/,
     }, {

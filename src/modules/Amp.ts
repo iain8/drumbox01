@@ -1,25 +1,26 @@
-///<reference path="BaseModule.ts"/>
+import BaseModule from './BaseModule';
 
 /**
  * Amplifier module, wraps a GainNode
  */
-class Amp extends BaseModule {
-	private _gain: GainNode;
-	amplitude: AudioParam;
-	input: GainNode;
-	output: GainNode;
-	
-	constructor(context: AudioContext) {
-		super();
-		
-		this._gain = context.createGain();
-		this._gain.gain.value = 0;
-		this.amplitude = this._gain.gain;
-		this.input = this._gain;
-		this.output = this._gain;
-	}
-	
-	set level(level: number) {
-		this.amplitude.value = level;
-	}
+export default class Amp extends BaseModule {
+  public amplitude: AudioParam;
+  public input: GainNode;
+  public output: GainNode;
+
+  private gain: GainNode;
+
+  constructor(context: AudioContext) {
+    super();
+
+    this.gain = context.createGain();
+    this.gain.gain.value = 0;
+    this.amplitude = this.gain.gain;
+    this.input = this.gain;
+    this.output = this.gain;
+  }
+
+  public set level(level: number) {
+    this.gain.gain.value = level;
+  }
 }

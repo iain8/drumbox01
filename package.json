@@ -22,11 +22,16 @@
   },
   "homepage": "https://github.com/iain8/drumbox01#readme",
   "devDependencies": {
+    "@types/jquery": "^3.2.15",
+    "@types/jquery-knob": "^1.2.31",
     "awesome-typescript-loader": "^3.2.3",
     "source-map-loader": "^0.2.3",
     "tslint": "^5.8.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.5.3",
     "webpack": "^3.8.1"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
   }
 }
