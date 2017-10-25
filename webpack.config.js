@@ -5,10 +5,22 @@ module.exports = {
     "jquery": "jQuery",
   },
   module: {
-    rules: [
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
-    ]
+    rules: [{ 
+      enforce: "pre", 
+      loader: "tslint-loader",
+      options: {
+        emitErrors: true,
+        failOnHint: true,
+      },
+      test: /\.tsx?$/,
+    }, {
+      loader: "awesome-typescript-loader",
+      test: /\.tsx?$/,
+    }, {
+      enforce: "pre",
+      loader: "source-map-loader", 
+      test: /\.js$/,
+    }]
   },
   output: {
     filename: "app.js",
