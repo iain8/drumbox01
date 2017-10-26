@@ -21,45 +21,22 @@ if ('webkitAudioContext' in window) {
 const tempo: number = 80;
 const machine = new Machine(audioContext, tempo);
 
-machine.addChannel('kick', {
-  frequency: 105,
-  oscAmpAttack: 0,
-  oscAmpDecay: 0.630,
-  oscPitchAttack: 0,
-  oscPitchDecay: 0.380,
-  noiseLevel: 0,
-  oscLevel: 1.0,
-  level: 0.8,
-}, '1001001101000100');
+$.get('/data/1').then((preset) => {
+  let instData = JSON.parse(preset.inst_1);
 
-machine.addChannel('snare', {
-  frequency: 800,
-  noiseLevel: 0.35,
-  noiseAttack: 0,
-  noiseDecay: 0.37,
-  oscLevel: 0,
-  level: 0.8,
-}, '0000100000001000');
+  machine.addChannel(instData.name, instData.options, instData.pattern);
+  
+  instData = JSON.parse(preset.inst_2);
 
-machine.addChannel('hat', {
-  frequency: 1500,
-  noiseLevel: 0.3,
-  oscLevel: 0,
-  noiseAttack: 0,
-  noiseDecay: 0.15,
-  channelFilterFreq: 15000,
-  channelFilterGain: 10,
-}, '0010001000100010');
+  machine.addChannel(instData.name, instData.options, instData.pattern);
 
-machine.addChannel('tom', {
-  frequency: 100,
-  noiseLevel: 0.0,
-  oscLevel: 0.3,
-  wave: 'triangle',
-  oscPitchAttack: 0,
-  oscPitchDecay: 4,
-  oscAmpAttack: 0,
-  oscAmpDecay: 4,
-}, '1001001101000100');
+  instData = JSON.parse(preset.inst_3);
+  
+  machine.addChannel(instData.name, instData.options, instData.pattern);
 
-machine.init();
+  instData = JSON.parse(preset.inst_4);
+  
+  machine.addChannel(instData.name, instData.options, instData.pattern);
+
+  machine.init();
+});
