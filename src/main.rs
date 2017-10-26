@@ -1,7 +1,8 @@
-extern crate iron;
-extern crate staticfile;
-extern crate mount;
-extern crate router;
+#![feature(plugin)]
+#![plugin(rocket_codegen)]
+
+extern crate rocket;
+#[macro_use] extern crate rocket_contrib;
 
 #[macro_use]
 extern crate diesel;
@@ -9,20 +10,32 @@ extern crate diesel;
 extern crate diesel_codegen;
 extern crate dotenv;
 
+#[macro_use]
+extern crate serde_derive;
+
+extern crate serde;
+
 pub mod schema;
 pub mod models;
 
-use std::path::Path;
+use std::io;
+use std::path::{Path, PathBuf};
+use rocket::response::NamedFile;
+use rocket_contrib::Json;
 use diesel::prelude::*;
 use dotenv::dotenv;
 use std::env;
 
-use iron::prelude::*;
-use iron::status;
-use router::Router;
+use self::models::Preset;
 
-use staticfile::Static;
-use mount::Mount;
+#[derive(Serialize, Deserialize, Debug)]
+struct JsonPreset {
+    id: i32,
+    inst_1: String,
+    inst_2: String,
+    inst_3: String,
+    inst_4: String,
+}
 
 fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -34,33 +47,36 @@ fn establish_connection() -> SqliteConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-fn get_preset(req: &mut Request) -> IronResult<Response> {
-    let ref id = req.extensions.get::<Router>().unwrap().find("id").unwrap_or("/");
-    Ok(Response::with((status::Ok, *id)))
+#[get("/data/<request_id>")]
+fn get_preset(request_id: i32) -> Json<JsonPreset> {
+    use self::schema::presets::dsl::*;
+
+    let connection = establish_connection();
+
+    let preset = presets
+        .filter(id.eq(&request_id))
+        .load::<Preset>(&connection)
+        .expect("Error loading presets");
+    
+    Json(JsonPreset {
+        id: preset[0].id,
+        inst_1: preset[0].inst_1.clone(),
+        inst_2: preset[0].inst_2.clone(),
+        inst_3: preset[0].inst_3.clone(),
+        inst_4: preset[0].inst_4.clone(),
+    })
 }
 
-fn chain() -> iron::Chain {
-    let mut router = Router::new();
+#[get("/")]
+fn index() -> io::Result<NamedFile> {
+    NamedFile::open("index.html")
+}
 
-    router.get("/:id", get_preset, "data");
-
-    let mut mount = Mount::new();
-
-    mount.mount("/", Static::new(Path::new("index.html")));
-    mount.mount("/js/", Static::new(Path::new("dist/js")));
-    mount.mount("/css/", Static::new(Path::new("dist/css")));
-    mount.mount("/lib/", Static::new(Path::new("dist/lib")));
-    mount.mount("/data/", router);
-
-    iron::Chain::new(mount)
+#[get("/assets/<file..>")]
+fn assets(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("dist/").join(file)).ok()
 }
 
 fn main() {
-    // let connection = establish_connection();
-
-    println!("server running at http://localhost:3000/");
-
-    // Iron::new(mount).http("127.0.0.1:3000").unwrap();
-
-    Iron::new(chain()).http("localhost:3000").unwrap();
+    rocket::ignite().mount("/", routes![index, assets, get_preset]).launch();
 }
