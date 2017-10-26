@@ -71,11 +71,16 @@ fn index() -> io::Result<NamedFile> {
     NamedFile::open("index.html")
 }
 
+#[get("/<preset_id>")]
+fn index_with_id(preset_id: i32) -> io::Result<NamedFile> {
+    NamedFile::open("index.html")
+}
+
 #[get("/assets/<file..>")]
 fn assets(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("dist/").join(file)).ok()
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index, assets, get_preset]).launch();
+    rocket::ignite().mount("/", routes![assets, index, index_with_id, get_preset]).launch();
 }

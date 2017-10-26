@@ -20,8 +20,9 @@ if ('webkitAudioContext' in window) {
 
 const tempo: number = 80;
 const machine = new Machine(audioContext, tempo);
+const presetId = window.location.pathname === '/' ? '/1' : window.location.pathname;
 
-$.get('/data/1').then((preset) => {
+$.get(`/data${presetId}`).then((preset) => {
   preset.channels.forEach((channel) => {
     const instData = JSON.parse(channel);
 
@@ -29,4 +30,6 @@ $.get('/data/1').then((preset) => {
   });
 
   machine.init();
+}).catch((error) => {
+  $('#loader').text('Error: preset not found');
 });
