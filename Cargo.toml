@@ -1,0 +1,10 @@
+[package]
+name = "drumbox01"
+version = "0.1.0"
+authors = ["iain8 <iain@fastmail.com>"]
+publish = false
+
+[dependencies]
+iron = "0.5.*"
+staticfile = "*"
+mount = "*"

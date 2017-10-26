@@ -1,0 +1,16 @@
+[{
+  "name": "kick",
+  "options": {
+    "frequency": 105,
+    "oscAmpAttack": 0,
+    "oscAmpDecay": 0.630,
+    "oscPitchAttack": 0,
+    "oscPitchDecay": 0.380,
+    "noiseLevel": 0,
+    "oscLevel": 1.0,
+    "level": 0.8
+  },
+  "pattern": "1001001101000100"
+}, {
+  
+}]

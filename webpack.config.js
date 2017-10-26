@@ -1,6 +1,6 @@
 module.exports = {
   devtool: "source-map",
-  entry: "./src/main.ts",
+  entry: "./app/main.ts",
   externals: {
     "jquery": "jQuery",
   },

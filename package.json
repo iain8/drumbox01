@@ -2,7 +2,7 @@
   "name": "drumbox01",
   "version": "1.0.0",
   "description": "drum machine in browser",
-  "main": "src/index.js",
+  "main": "app/index.js",
   "directories": {
     "lib": "lib"
   },
