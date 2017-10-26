@@ -1,6 +1,7 @@
 .DS_Store
 .settings
-dist
+dist/css
+dist/js
 node_modules
 /target/
 **/*.rs.bk
