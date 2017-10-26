@@ -1,3 +1,5 @@
+import './sass/base.scss';
+
 import Machine from './Machine';
 
 /**

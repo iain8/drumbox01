@@ -12,7 +12,8 @@ fn main() {
     let mut mount = Mount::new();
 
     mount.mount("/", Static::new(Path::new("index.html")));
-    mount.mount("/dist/", Static::new(Path::new("dist/")));
+    mount.mount("/js/", Static::new(Path::new("dist/js")));
+    mount.mount("/css/", Static::new(Path::new("dist/css")));
     mount.mount("/lib/", Static::new(Path::new("lib/")));
 
     println!("server running at http://localhost:3000/");
