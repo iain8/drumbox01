@@ -152,7 +152,7 @@ export default class UI {
     angleArc: 320,
     bgColor: '#FFF',
     fgColor: '#92C8CD',
-    font: 'consolas, monaco, monospace',
+    font: "'Orbitron', monospace",
     height: 60,
     inputColor: '#363439',
     thickness: 0.3,
