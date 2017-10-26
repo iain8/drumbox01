@@ -23,7 +23,7 @@ const machine = new Machine(audioContext, tempo);
 
 $.get('/data/1').then((preset) => {
   preset.channels.forEach((channel) => {
-    let instData = JSON.parse(channel);
+    const instData = JSON.parse(channel);
 
     machine.addChannel(instData.name, instData.options, instData.pattern);
   });
