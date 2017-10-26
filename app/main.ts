@@ -22,21 +22,11 @@ const tempo: number = 80;
 const machine = new Machine(audioContext, tempo);
 
 $.get('/data/1').then((preset) => {
-  let instData = JSON.parse(preset.inst_1);
+  preset.channels.forEach((channel) => {
+    let instData = JSON.parse(channel);
 
-  machine.addChannel(instData.name, instData.options, instData.pattern);
-  
-  instData = JSON.parse(preset.inst_2);
-
-  machine.addChannel(instData.name, instData.options, instData.pattern);
-
-  instData = JSON.parse(preset.inst_3);
-  
-  machine.addChannel(instData.name, instData.options, instData.pattern);
-
-  instData = JSON.parse(preset.inst_4);
-  
-  machine.addChannel(instData.name, instData.options, instData.pattern);
+    machine.addChannel(instData.name, instData.options, instData.pattern);
+  });
 
   machine.init();
 });

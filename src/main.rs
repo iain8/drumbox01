@@ -2,7 +2,7 @@
 #![plugin(rocket_codegen)]
 
 extern crate rocket;
-#[macro_use] extern crate rocket_contrib;
+extern crate rocket_contrib;
 
 #[macro_use]
 extern crate diesel;
@@ -31,10 +31,7 @@ use self::models::Preset;
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonPreset {
     id: i32,
-    inst_1: String,
-    inst_2: String,
-    inst_3: String,
-    inst_4: String,
+    channels: [String; 4],
 }
 
 fn establish_connection() -> SqliteConnection {
@@ -60,10 +57,12 @@ fn get_preset(request_id: i32) -> Json<JsonPreset> {
     
     Json(JsonPreset {
         id: preset[0].id,
-        inst_1: preset[0].inst_1.clone(),
-        inst_2: preset[0].inst_2.clone(),
-        inst_3: preset[0].inst_3.clone(),
-        inst_4: preset[0].inst_4.clone(),
+        channels: [
+            preset[0].inst_1.clone(),
+            preset[0].inst_2.clone(),
+            preset[0].inst_3.clone(),
+            preset[0].inst_4.clone(),
+        ]
     })
 }
 
