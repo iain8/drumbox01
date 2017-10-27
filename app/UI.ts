@@ -4,7 +4,7 @@ import Amp from './modules/Amp';
 import Sequencer from './Sequencer';
 
 /**
- * Where the cardboard and tape are hurriedly combined into an interface
+ * Where the cardboard and tape are combined into an interface
  */
 export default class UI {
   /**

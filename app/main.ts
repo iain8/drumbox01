@@ -1,23 +1,15 @@
-import './sass/base.scss';
-
 import Machine from './Machine';
+import './sass/base.scss';
 
 /**
  * Entry point for the drum machine
  */
 
 declare const webkitAudioContext: {
-    new (): AudioContext;
+  new (): AudioContext;
 };
 
-let audioContext;
-
-if ('webkitAudioContext' in window) {
-    audioContext = new webkitAudioContext();
-} else {
-    audioContext = new AudioContext();
-}
-
+const audioContext = 'webkitAudioContext' in window ? new webkitAudioContext() : new AudioContext();
 const tempo: number = 80;
 const machine = new Machine(audioContext, tempo);
 const presetId = window.location.pathname === '/' ? '/1' : window.location.pathname;
