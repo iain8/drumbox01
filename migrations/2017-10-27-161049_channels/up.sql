@@ -3,7 +3,7 @@ CREATE TABLE channels (
   preset_id integer NOT NULL,
   name text NOT NULL,
   options text NOT NULL,
-  pattern text NOT NULL,
+  pattern text NOT NULL
 );
 
 INSERT INTO channels (preset_id, name, options, pattern)

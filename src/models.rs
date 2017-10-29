@@ -1,8 +1,16 @@
-#[derive(Queryable)]
+use schema::{presets, channels};
+
+#[derive(Identifiable, Queryable)]
 pub struct Preset {
     pub id: i32,
-    pub inst_1: String,
-    pub inst_2: String,
-    pub inst_3: String,
-    pub inst_4: String,
+}
+
+#[derive(Identifiable, Queryable, Associations, Serialize, Debug)]
+#[belongs_to(Preset)]
+pub struct Channel {
+    pub id: i32,
+    pub preset_id: i32,
+    pub name: String,
+    pub options: String,
+    pub pattern: String,
 }
