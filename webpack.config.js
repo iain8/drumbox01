@@ -5,8 +5,8 @@ const extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
-  devtool: "source-map",
-  entry: "./app/main.ts",
+  devtool: "eval",
+  entry: "./app/index.tsx",
   externals: {
     "jquery": "jQuery",
   },
