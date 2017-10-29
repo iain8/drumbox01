@@ -16,9 +16,7 @@ const presetId = window.location.pathname === '/' ? '/1' : window.location.pathn
 
 $.get(`/data${presetId}`).then((preset) => {
   preset.channels.forEach((channel) => {
-    const instData = JSON.parse(channel);
-
-    machine.addChannel(instData.name, instData.options, instData.pattern);
+    machine.addChannel(channel.name, JSON.parse(channel.options), channel.pattern);
   });
 
   machine.init();
