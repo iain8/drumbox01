@@ -19,8 +19,12 @@
 }
 
 .channel {
-  display: inline-block;
   border-top: 0;
+  display: none;
+
+  &.active {
+    display: inline-block;
+  }
 
   .section {
     display: inline-block;

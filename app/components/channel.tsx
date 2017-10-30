@@ -6,6 +6,7 @@ export default class Channel extends Component<any, any> {
     super();
 
     this.state = {
+      active: true,
       filterFreq: 100,
       filterGain: 100,
       frequency: 100,
@@ -30,7 +31,7 @@ export default class Channel extends Component<any, any> {
 
   render() {
     return (
-      <div class="channel">
+      <div class={ `channel ${ this.state.active ? 'active' : '' }` }>
         <div class="section">
           <p>mixer</p>
           <Knob

@@ -11,12 +11,12 @@ export default class UI {
    * Do remaining stuff to set up UI
    */
   public static init(sequencer: Sequencer, channels: {}, master: Amp, tempo: number) {
-    $('.channel').hide().first().show();
+    // $('.channel').hide().first().show();
 
-    $('#channel-headers li').first().addClass('active');
+    // $('#channel-headers li').first().addClass('active');
 
     $('#channel-headers li a').click(function() {
-        $('#channel-headers li').removeClass('active');
+        // $('#channel-headers li').removeClass('active');
         $('.channel').hide();
         $('#' + $(this).data('name')).show();
         $(this).parent().addClass('active');

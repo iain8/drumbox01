@@ -1,10 +1,13 @@
 import { Component, h } from 'preact';
 import Channel from './channel';
+import ChannelHeaders from './channel/headers';
 import data from '../data/default';
 
 export default class Channels extends Component<any, any> {
   constructor() {
     super();
+
+    this.handleChannelChange = this.handleChannelChange.bind(this);
 
     this.state = {
       activeChannelIndex: 0,
@@ -16,25 +19,16 @@ export default class Channels extends Component<any, any> {
       <div
         id='synth'
         class='container'>
-        <ul class='channel-headers'>
-          {
-            data.map((channel, i) => {
-              return (
-                <li key={ channel.name } class={ i === this.state.activeChannelIndex ? 'active' : '' }>
-                  <a onClick={ this.handleChannelChange.bind(this) }>{ channel.name }</a>
-                </li>
-              );
-            })
-          }
-        </ul>
+        <ChannelHeaders
+          active={ this.state.activeChannelIndex }
+          data={ data }
+          onChange={ this.handleChannelChange } />
         <Channel />
       </div>
     );
   }
 
-  private handleChannelChange(e: Event) {
-    // TODO: figure this out
-
-    console.log(e);
+  private handleChannelChange(index: number) {
+    this.setState({ activeChannelIndex: index });
   }
 }
