@@ -1,4 +1,5 @@
 @import "./variables.scss";
+@import "./channels.scss";
 @import "./master.scss";
 @import "./sequencer.scss";
 
@@ -50,99 +51,4 @@ button {
 #synth {
     padding-left: 24px;
     padding-right: 15px;
-}
-
-/* channels */
-
-#channel-headers {
-    padding: 0;
-    margin-bottom: 0;
-    margin-top: 12px;
-    z-index: 2;
-    border-bottom: 4px solid white;
-}
-
-#channel-headers li {
-    display: inline-block;
-    padding: 5px;
-    margin-bottom: 0;
-}
-
-#channel-headers li.active {
-    border-bottom: 4px solid $lightblue;
-    font-weight: bold;
-    margin-bottom: -4px;
-}
-
-.channel {
-    display: inline-block;
-    border-top: 0;
-}
-
-.channel .section {
-    display: inline-block;
-    padding: 0 10px;
-    vertical-align: top;
-}
-
-.channel .section:first-child {
-    padding-left: 0;
-}
-
-.channel .section:last-child {
-    border: none;
-    padding-right: 0;
-}
-
-.channel .section p {
-    text-align: center;
-}
-
-.channel .section div {
-    margin-bottom: 5px;
-}
-
-.wave {
-    position: relative;
-    height: 66px;
-    width: 60px;
-}
-
-.wave li {
-    font-size: 10px;
-    font-weight: bold;
-
-    position: absolute;
-    top: 25px;
-    left: 19px;
-
-    display: none;
-}
-
-.wave li.active {
-    display: block;
-}
-
-.wave .prev {
-    width: 0; 
-    height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent; 
-    border-right:10px solid $white;
-
-    position: absolute;
-    top: 20px;
-    left: -3px;
-}
-
-.wave .next {
-    width: 0; 
-    height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid $white;
-
-    position: absolute;
-    top: 20px;
-    right: -3px;
 }

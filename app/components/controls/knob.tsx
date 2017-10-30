@@ -89,6 +89,7 @@ export default class Knob extends Component<any, any> {
       canvasClassName,
       className,
       disableMouseWheel,
+      display,
       id, // TODO: shouldn't be necessary anyway
       readOnly,
       title,
@@ -98,7 +99,7 @@ export default class Knob extends Component<any, any> {
     return (
       <div
         id={ id }
-        style={{ width: this.w, height: this.h, display: 'inline-block' }}
+        style={{ width: this.w, height: this.h, display: display || 'inline-block' }}
         onWheel={readOnly || disableMouseWheel ? null : this.handleWheel}
       >
         <canvas

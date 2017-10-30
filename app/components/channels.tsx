@@ -1,4 +1,5 @@
 import { Component, h } from 'preact';
+import Channel from './channel';
 import data from '../data/default';
 
 export default class Channels extends Component<any, any> {
@@ -15,7 +16,7 @@ export default class Channels extends Component<any, any> {
       <div
         id='synth'
         class='container'>
-        <ul id='channel-headers'>
+        <ul class='channel-headers'>
           {
             data.map((channel, i) => {
               return (
@@ -26,6 +27,7 @@ export default class Channels extends Component<any, any> {
             })
           }
         </ul>
+        <Channel />
       </div>
     );
   }
