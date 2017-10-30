@@ -12,6 +12,11 @@ export default class Osc extends Component<any, any> {
     this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
+
+    this.state = {
+      selectedWave: props.data.options.wave,
+      waves: props.waves,
+    };
   }
 
   public render() {
@@ -21,9 +26,10 @@ export default class Osc extends Component<any, any> {
       <div class="section">
         <p>osc</p>
         <Selector
-          onChange={ this.handleWaveChange }
-          options={ this.props.waves } 
-          selected={ data.options.wave } />
+          onNext={ () => this.handleWaveChange('next') }
+          onPrev={ () => this.handleWaveChange('prev') }
+          options={ this.state.waves } 
+          selected={ this.state.selectedWave } />
         <Knob
           display='block'
           max={ 2000 }
@@ -58,8 +64,19 @@ export default class Osc extends Component<any, any> {
     );
   }
 
-  private handleWaveChange() {
-    // TODO
+  private handleWaveChange(direction: string) {
+    const currentIndex = this.state.waves.indexOf(this.state.selectedWave);
+    let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+
+    if (newIndex === -1) {
+      newIndex = this.state.waves.length - 1;
+    } else if (newIndex === this.state.waves.length) {
+      newIndex = 0;
+    }
+
+    this.setState({
+      selectedWave: this.state.waves[newIndex],
+    });
   }
 
   private handleFreqChange(value: number) {

@@ -26,12 +26,7 @@ export default class Channel extends Component<any, any> {
     super();
 
     this.state = {
-      waves: {
-        sine: 'sine',
-        square: 'sqr',
-        sawtooth: 'saw',
-        triangle: 'tri',
-      },
+      waves: ['sine', 'sqr', 'saw', 'tri'],
     };
   }
 

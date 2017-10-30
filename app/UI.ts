@@ -57,32 +57,32 @@ export default class UI {
     //     return false;
     // });
 
-    $('.wave a').click(function() {
-      const $this = $(this);
-      const id = $this.closest('.channel').attr('id');
-      const $list = $this.hasClass('prev') ? $this.next('ul') : $this.prev('ul');
-      const $wave = $list.children('.active');
+    // $('.wave a').click(function() {
+    //   const $this = $(this);
+    //   const id = $this.closest('.channel').attr('id');
+    //   const $list = $this.hasClass('prev') ? $this.next('ul') : $this.prev('ul');
+    //   const $wave = $list.children('.active');
 
-      $wave.removeClass('active');
+    //   $wave.removeClass('active');
 
-      if ($this.hasClass('prev')) {
-        if ($wave.prev().is('li')) {
-          $wave.prev().addClass('active');
-        } else {
-          $list.children().last().addClass('active');
-        }
-      } else {
-        if ($wave.next().is('li')) {
-          $wave.next().addClass('active');
-        } else {
-          $list.children().first().addClass('active');
-        }
-      }
+    //   if ($this.hasClass('prev')) {
+    //     if ($wave.prev().is('li')) {
+    //       $wave.prev().addClass('active');
+    //     } else {
+    //       $list.children().last().addClass('active');
+    //     }
+    //   } else {
+    //     if ($wave.next().is('li')) {
+    //       $wave.next().addClass('active');
+    //     } else {
+    //       $list.children().first().addClass('active');
+    //     }
+    //   }
 
-      channels[id].wave = $list.children('.active').data('wave');
+    //   channels[id].wave = $list.children('.active').data('wave');
 
-      return false;
-    });
+    //   return false;
+    // });
 
     // $('#master-volume').knob($.extend({}, this.knobDefaults, {
     //   min: 0,
