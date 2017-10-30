@@ -1,6 +1,7 @@
 import { Component, h } from 'preact';
 
 interface ISelectorProps {
+  onChange: Function,
   options: {};
   selected: any;
 }

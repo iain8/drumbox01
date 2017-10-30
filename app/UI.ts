@@ -192,27 +192,27 @@ export default class UI {
   private static panel(name: string, channel: Channel) {
     const $panel = $(`<div class="channel" id="${name}"></div>`);
 
-    const $mixer = $('<div class="section"><p>mixer</p></div>');
+    // const $mixer = $('<div class="section"><p>mixer</p></div>');
     // $mixer.append(this.knob('level', 'level', channel.level * 100));
     // $mixer.append(this.knob('oscLevel', 'osc', channel.oscLevel * 100));
     // $mixer.append(this.knob('noiseLevel', 'noise', channel.noiseLevel * 100));
     // $mixer.append(this.knob('filterFreq', 'freq', channel.channelFilterFreq));
     // $mixer.append(this.knob('filterGain', 'gain', channel.channelFilterGain));
 
-    const $osc = $('<div class="section"><p>osc</p></div>');
-    $osc.append(this.waveSelector(channel.wave));
-    $osc.append(this.knob('frequency', 'freq', channel.frequency));
-    $osc.append(this.knob('oscAttack', 'attack', channel.oscAttack * 1000));
-    $osc.append(this.knob('oscDecay', 'decay', channel.oscDecay * 1000));
-    $osc.append(this.knob('pitchAttack', 'attack', channel.pitchAttack * 1000));
-    $osc.append(this.knob('pitchDecay', 'decay', channel.pitchDecay * 1000));
+    // const $osc = $('<div class="section"><p>osc</p></div>');
+    // $osc.append(this.waveSelector(channel.wave));
+    // $osc.append(this.knob('frequency', 'freq', channel.frequency));
+    // $osc.append(this.knob('oscAttack', 'attack', channel.oscAttack * 1000));
+    // $osc.append(this.knob('oscDecay', 'decay', channel.oscDecay * 1000));
+    // $osc.append(this.knob('pitchAttack', 'attack', channel.pitchAttack * 1000));
+    // $osc.append(this.knob('pitchDecay', 'decay', channel.pitchDecay * 1000));
 
     const $noise = $('<div class="section"><p>noise</p></div>');
     $noise.append(this.knob('noiseAttack', 'attack', channel.noiseAttack * 1000));
     $noise.append(this.knob('noiseDecay', 'decay', channel.noiseDecay * 1000));
 
-    $panel.append($mixer);
-    $panel.append($osc);
+    // $panel.append($mixer);
+    // $panel.append($osc);
     $panel.append($noise);
 
     $('#synth').append($panel);
@@ -247,39 +247,39 @@ export default class UI {
     //   change: (value) => channel.channelFilterFreq = value,
     // }));
 
-    $(`#${name} .wave`).change(function() {
-      channel.wave = $(this).val() as string;
-    });
+    // $(`#${name} .wave`).change(function() {
+    //   channel.wave = $(this).val() as string;
+    // });
 
-    $(`#${name} .frequency`).knob($.extend({}, this.knobDefaults, {
-      min: 20,
-      max: 2000,
-      change: (value) => channel.frequency = value,
-    }));
+    // $(`#${name} .frequency`).knob($.extend({}, this.knobDefaults, {
+    //   min: 20,
+    //   max: 2000,
+    //   change: (value) => channel.frequency = value,
+    // }));
 
-    $(`#${name} .oscAttack`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 10000,
-      change: (value) => channel.oscAttack = value / 1000,
-    }));
+    // $(`#${name} .oscAttack`).knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 10000,
+    //   change: (value) => channel.oscAttack = value / 1000,
+    // }));
 
-    $(`#${name} .oscDecay`).knob($.extend({}, this.knobDefaults, {
-      min: 10,
-      max: 10000,
-      change: (value) => channel.oscDecay = value / 1000,
-    }));
+    // $(`#${name} .oscDecay`).knob($.extend({}, this.knobDefaults, {
+    //   min: 10,
+    //   max: 10000,
+    //   change: (value) => channel.oscDecay = value / 1000,
+    // }));
 
-    $(`#${name} .pitchAttack`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 10000,
-      change: (value) => channel.pitchAttack = value / 1000,
-    }));
+    // $(`#${name} .pitchAttack`).knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 10000,
+    //   change: (value) => channel.pitchAttack = value / 1000,
+    // }));
 
-    $(`#${name} .pitchDecay`).knob($.extend({}, this.knobDefaults, {
-      min: 10,
-      max: 10000,
-      change: (value) => channel.pitchDecay = value / 1000,
-    }));
+    // $(`#${name} .pitchDecay`).knob($.extend({}, this.knobDefaults, {
+    //   min: 10,
+    //   max: 10000,
+    //   change: (value) => channel.pitchDecay = value / 1000,
+    // }));
 
     $(`#${name} .noiseAttack`).knob($.extend({}, this.knobDefaults, {
       min: 0,
@@ -297,20 +297,20 @@ export default class UI {
   /**
    * Create a sequence linked to a channel
    */
-  private static sequence(name: string, channel: Channel, length: number, pattern: string) {
-    const $sequence = $('<ul class="sequence"></ul>');
-    $sequence.attr('data-channel', name);
+  // private static sequence(name: string, channel: Channel, length: number, pattern: string) {
+  //   const $sequence = $('<ul class="sequence"></ul>');
+  //   $sequence.attr('data-channel', name);
 
-    for (let i = 0; i < length; ++i) {
-      const cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
+  //   for (let i = 0; i < length; ++i) {
+  //     const cssClass = 'beat' + (pattern.charAt(i) === '1' ? ' on' : '');
 
-      $sequence.append(`<li class="${cssClass}"></li>`);
-    }
+  //     $sequence.append(`<li class="${cssClass}"></li>`);
+  //   }
 
-    $sequence.append(`<li><a href="#" class="clear-sequence"></a></li>`);
+  //   $sequence.append(`<li><a href="#" class="clear-sequence"></a></li>`);
 
-    $('#sequencer').prepend($sequence);
-  }
+  //   $('#sequencer').prepend($sequence);
+  // }
 
   /**
    * Output the markdown for a jQuery Knob
