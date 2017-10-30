@@ -1,0 +1,50 @@
+.sequencer {
+  margin-left: 20px;
+
+  .sequence {
+    padding-left: 0;
+    position: relative;
+    margin-right: 20px;
+
+    li {
+      display: inline-block;
+    }
+
+    .beat {
+      height: 25px;
+      width: 25px;
+      background-color: $white;
+      margin-right: 5px;
+
+      &.on {
+        background-color: $lightblue;
+      }
+    }
+
+    .clear-sequence {
+      width: 0; 
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid $white;
+      position: absolute;
+      top: 8px;
+    }
+
+    &.indicator {
+      display: inline-block;
+      vertical-align: 16%;
+
+      li {
+        background: $white;
+        height: 10px;
+        transition: background 0.2s ease-in;
+        margin-right: 5px;
+      }
+
+      &.on {
+        background: $lightblue;
+      }
+    }
+  }
+}

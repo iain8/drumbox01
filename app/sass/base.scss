@@ -1,5 +1,6 @@
 @import "./variables.scss";
 @import "./master.scss";
+@import "./sequencer.scss";
 
 /* main bits */
 
@@ -144,57 +145,4 @@ button {
     position: absolute;
     top: 20px;
     right: -3px;
-}
-
-/* sequencer */
-
-.sequence-label {
-    width: 100px;
-}
-
-.sequence {
-    padding-left: 0;
-    position: relative;
-    margin-right: 20px;
-}
-
-.sequence li {
-    display: inline-block;
-}
-
-.beat {
-    height: 25px;
-    width: 25px;
-    background-color: $white;
-    margin-right: 5px;
-}
-
-.beat.on {
-    background-color: $lightblue;
-}
-
-.clear-sequence {
-    width: 0; 
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid $white;
-    position: absolute;
-    top: 8px;
-}
-
-#indicator-seq {
-    display: inline-block;
-    vertical-align: 16%;
-}
-
-#indicator-seq li {
-    background: $white;
-    height: 10px;
-    transition: background 0.2s ease-in;
-    margin-right: 5px;
-}
-
-#indicator-seq li.active {
-    background: $lightblue;
 }
