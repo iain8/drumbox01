@@ -28,7 +28,7 @@ export default class Channels extends Component<any, IChannelsState> {
           data={ data }
           onChange={ this.handleChannelChange } />
         {
-          data.map((channel, i) => {
+          data.map((channel, i) => { // TODO: can we optimise to only create active channel
             return (
               <Channel
                 active={ this.state.activeChannelIndex }

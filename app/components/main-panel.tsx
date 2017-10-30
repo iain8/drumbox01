@@ -7,7 +7,7 @@ export default class MainPanel extends Component<any, any> {
   public render() {
     return (
       <div id='main-panel'>
-        <form autocomplete='off'>
+        <form onSubmit={ () => false } autocomplete='off'>
           <Channels />
 
           <div class='container vertical-divider'></div>

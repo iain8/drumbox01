@@ -23,39 +23,39 @@ export default class UI {
     //     return false;
     // });
 
-    $('.sequence li').click(function() {
-      $(this).toggleClass('on');
-    });
+    // $('.sequence li').click(function() {
+    //   $(this).toggleClass('on');
+    // });
 
-    $('#tempo').val(tempo.toString());
+    // $('#tempo').val(tempo.toString());
 
-    $('#division').change(function() {
-      sequencer.division = $(this).val() as number;
-    });
+    // $('#division').change(function() {
+    //   sequencer.division = $(this).val() as number;
+    // });
 
-    $('.sequencer-control').click(function() {
-      if (sequencer.started && $(this).attr('id') === 'stop') {
-        sequencer.stop();
-        $('.sequencer-control').toggleClass('active');
-      } else if (!sequencer.started && $(this).attr('id') === 'start') {
-        sequencer.start();
-        $('.sequencer-control').toggleClass('active');
-      }
+    // $('.sequencer-control').click(function() {
+    //   if (sequencer.started && $(this).attr('id') === 'stop') {
+    //     sequencer.stop();
+    //     $('.sequencer-control').toggleClass('active');
+    //   } else if (!sequencer.started && $(this).attr('id') === 'start') {
+    //     sequencer.start();
+    //     $('.sequencer-control').toggleClass('active');
+    //   }
 
-      return false;
-    });
+    //   return false;
+    // });
 
-    $('#tempo').bind('change keyup', function() {
-      sequencer.setTempo($(this).val() as number);
-    });
+    // $('#tempo').bind('change keyup', function() {
+    //   sequencer.setTempo($(this).val() as number);
+    // });
 
-    $('.clear-sequence').click(function() {
-        $(this).closest('ul')
-            .children('li')
-            .removeClass('on');
+    // $('.clear-sequence').click(function() {
+    //     $(this).closest('ul')
+    //         .children('li')
+    //         .removeClass('on');
 
-        return false;
-    });
+    //     return false;
+    // });
 
     $('.wave a').click(function() {
       const $this = $(this);
@@ -84,16 +84,16 @@ export default class UI {
       return false;
     });
 
-    $('#master-volume').knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 100,
-      change: (value) => {
-        master.level = value / 100;
-      },
-    }));
+    // $('#master-volume').knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 100,
+    //   change: (value) => {
+    //     master.level = value / 100;
+    //   },
+    // }));
 
     // prevent something weird refreshing the page
-    $('form').submit(() => false);
+    // $('form').submit(() => false);
 
     $('.knob').parent().mouseover(function() {
       $(this).children('.knob').trigger('configure', {
@@ -124,50 +124,50 @@ export default class UI {
    * Add the necessary components for a channel
    */
   public static addChannel(name: string, channel: Channel, length: number, pattern: string = '0000000000000000') {
-    this.header(name);
-    this.panel(name, channel);
-    this.sequence(name, channel, length, pattern);
+    // this.header(name);
+    // this.panel(name, channel);
+    // this.sequence(name, channel, length, pattern);
   }
 
   /**
    * Create the indicator sequence
    */
-  public static indicator(length: number) {
-    const $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
+  // public static indicator(length: number) {
+  //   const $sequence = $('<ul class="sequence" data-channel="indicator" id="indicator-seq"></ul>');
 
-    for (let i = 0; i < length; ++i) {
-      const active = i === 0 ? ' active' : '';
+  //   for (let i = 0; i < length; ++i) {
+  //     const active = i === 0 ? ' active' : '';
 
-      $sequence.append(`<li class="beat${active}"></li>`);
-    }
+  //     $sequence.append(`<li class="beat${active}"></li>`);
+  //   }
 
-    $('#sequencer').prepend($sequence);
-  }
+  //   $('#sequencer').prepend($sequence);
+  // }
 
   /**
    * Default options for jQuery Knob instances
    */
-  private static knobDefaults = {
-    angleOffset: -160,
-    angleArc: 320,
-    bgColor: '#FFF',
-    fgColor: '#92C8CD',
-    font: "'Orbitron', monospace",
-    height: 60,
-    inputColor: '#363439',
-    thickness: 0.3,
-    width: 60,
-  };
+  // private static knobDefaults = {
+  //   angleOffset: -160,
+  //   angleArc: 320,
+  //   bgColor: '#FFF',
+  //   fgColor: '#92C8CD',
+  //   font: "'Orbitron', monospace",
+  //   height: 60,
+  //   inputColor: '#363439',
+  //   thickness: 0.3,
+  //   width: 60,
+  // };
 
   /**
    * Options for the wave selection of the oscillator
    */
-  private static waveSelect = {
-    sine: 'sine',
-    square: 'sqr',
-    sawtooth: 'saw',
-    triangle: 'tri',
-  };
+  // private static waveSelect = {
+  //   sine: 'sine',
+  //   square: 'sqr',
+  //   sawtooth: 'saw',
+  //   triangle: 'tri',
+  // };
 
   /**
    * Filter options for noise filter (not yet implemented)
@@ -181,16 +181,16 @@ export default class UI {
   /**
    * Create a header item for the channel
    */
-  private static header(name: string) {
-    const $header = $(`<li><a href="#" data-name="${name}">${name}</a></li>`);
-    $('#channel-headers').append($header);
-  }
+  // private static header(name: string) {
+  //   const $header = $(`<li><a href="#" data-name="${name}">${name}</a></li>`);
+  //   $('#channel-headers').append($header);
+  // }
 
   /**
    * Populate the panel for the channel
    */
-  private static panel(name: string, channel: Channel) {
-    const $panel = $(`<div class="channel" id="${name}"></div>`);
+  // private static panel(name: string, channel: Channel) {
+    // const $panel = $(`<div class="channel" id="${name}"></div>`);
 
     // const $mixer = $('<div class="section"><p>mixer</p></div>');
     // $mixer.append(this.knob('level', 'level', channel.level * 100));
@@ -207,15 +207,15 @@ export default class UI {
     // $osc.append(this.knob('pitchAttack', 'attack', channel.pitchAttack * 1000));
     // $osc.append(this.knob('pitchDecay', 'decay', channel.pitchDecay * 1000));
 
-    const $noise = $('<div class="section"><p>noise</p></div>');
-    $noise.append(this.knob('noiseAttack', 'attack', channel.noiseAttack * 1000));
-    $noise.append(this.knob('noiseDecay', 'decay', channel.noiseDecay * 1000));
+    // const $noise = $('<div class="section"><p>noise</p></div>');
+    // $noise.append(this.knob('noiseAttack', 'attack', channel.noiseAttack * 1000));
+    // $noise.append(this.knob('noiseDecay', 'decay', channel.noiseDecay * 1000));
 
     // $panel.append($mixer);
     // $panel.append($osc);
-    $panel.append($noise);
+    // $panel.append($noise);
 
-    $('#synth').append($panel);
+    // $('#synth').append($panel);
 
     // $(`#${name} .level`).knob($.extend({}, this.knobDefaults, {
       // min: 0,
@@ -281,18 +281,18 @@ export default class UI {
     //   change: (value) => channel.pitchDecay = value / 1000,
     // }));
 
-    $(`#${name} .noiseAttack`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 10000,
-      change: (value) => channel.noiseAttack = value / 1000,
-    }));
+    // $(`#${name} .noiseAttack`).knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 10000,
+    //   change: (value) => channel.noiseAttack = value / 1000,
+    // }));
 
-    $(`#${name} .noiseDecay`).knob($.extend({}, this.knobDefaults, {
-      min: 10,
-      max: 10000,
-      change: (value) => channel.noiseDecay = value / 1000,
-    }));
-  }
+    // $(`#${name} .noiseDecay`).knob($.extend({}, this.knobDefaults, {
+    //   min: 10,
+    //   max: 10000,
+    //   change: (value) => channel.noiseDecay = value / 1000,
+    // }));
+  // }
 
   /**
    * Create a sequence linked to a channel
@@ -315,24 +315,24 @@ export default class UI {
   /**
    * Output the markdown for a jQuery Knob
    */
-  private static knob(type: string, name: string, value: number) {
-    return `<div>
-      <input type="text" class="knob ${type}" value="${value}" data-name="${name}">
-    </div>`;
-  }
+  // private static knob(type: string, name: string, value: number) {
+  //   return `<div>
+  //     <input type="text" class="knob ${type}" value="${value}" data-name="${name}">
+  //   </div>`;
+  // }
 
   /**
    * Make a wave selection thing
    */
-  private static waveSelector(selected: string) {
-    let selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
+  // private static waveSelector(selected: string) {
+  //   let selector = '<div class="wave"><a href="#" class="prev"></a><ul>';
 
-    $.each(this.waveSelect, (value, option) => {
-      selector += `<li${selected === value ? ' class="active"' : ''} data-wave="${value}">${option}</li>`;
-    });
+  //   $.each(this.waveSelect, (value, option) => {
+  //     selector += `<li${selected === value ? ' class="active"' : ''} data-wave="${value}">${option}</li>`;
+  //   });
 
-    selector += '</ul><a href="#" class="next"></a></div>';
+  //   selector += '</ul><a href="#" class="next"></a></div>';
 
-    return selector;
-  }
+  //   return selector;
+  // }
 }

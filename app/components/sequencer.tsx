@@ -1,5 +1,6 @@
 import { Component, h } from 'preact';
 import data from '../data/default';
+import Sequence from './sequencer/sequence';
 
 export default class Sequencer extends Component<any, any> {
   constructor() {
@@ -14,18 +15,11 @@ export default class Sequencer extends Component<any, any> {
     return (
       <div class='sequencer'>
         {
-          data.map((channel) => {
-            return (
-              <ul class="sequence">
-                {
-                  Array(this.state.patternLength).fill(1).map((x, i) =>
-                    <li class={ `beat ${channel.pattern.charAt(i) === '1' ? 'on' : ''}` } />
-                  )
-                }
-                <li><a href="#" class="clear-sequence"></a></li>
-              </ul>
-            );
-          })
+          data.map((channel) => 
+            <Sequence
+              pattern={ channel.pattern }
+              patternLength={ this.state.patternLength } />
+          )
         }
         <ul class="sequence indicator">
           {

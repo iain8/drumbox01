@@ -109,7 +109,7 @@ export default class Knob extends Component<any, any> {
           onMouseDown={readOnly ? null : this.handleMouseDown}
           title={title ? `${title}: ${value}` : value}
         />
-        {this.renderCenter()}
+        { this.renderCenter() }
       </div>
     );
   }
@@ -327,10 +327,10 @@ export default class Knob extends Component<any, any> {
     if (displayInput) {
       return (
         <input
-          style={this.inputStyle()}
+          style={ this.inputStyle() }
           type='text'
-          value={value}
-          onChange={this.handleTextInput}
+          value={ value }
+          onChange={ this.handleTextInput }
           onKeyDown={this.handleArrowKey}
           readOnly={readOnly || disableTextInput}
         />

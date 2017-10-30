@@ -1,6 +1,7 @@
 import { Component, h } from 'preact';
 import Knob from './controls/knob';
 import Mixer from './channel/mixer';
+import Noise from './channel/noise';
 import Osc from './channel/osc';
 
 export default class Channel extends Component<any, any> {
@@ -41,17 +42,7 @@ export default class Channel extends Component<any, any> {
         <Osc
           data={ this.props.data }
           waves={ this.state.waves } />
-        <div class="section">
-          <p>noise</p>
-          <Knob
-            display='block'
-            onChange={ () => {} }
-            value={ this.state.noiseAttack } />
-          <Knob
-            display='block'
-            onChange={ () => {} }
-            value={ this.state.noiseDecay } />
-        </div>
+        <Noise data={ this.props.data } />
       </div>
     );
   }
