@@ -3,7 +3,11 @@ import Channel from './channel';
 import ChannelHeaders from './channel/headers';
 import data from '../data/default';
 
-export default class Channels extends Component<any, any> {
+interface IChannelsState {
+  activeChannelIndex: number;
+}
+
+export default class Channels extends Component<any, IChannelsState> {
   constructor() {
     super();
 
