@@ -1,4 +1,4 @@
-[{
+const data = [{
   "name": "kick",
   "options": {
     "frequency": 105,
@@ -47,4 +47,6 @@
     "oscAmpDecay": 4
   },
   "pattern": "1001001101000100"
-}]
+}];
+
+export default data;

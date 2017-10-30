@@ -1,4 +1,5 @@
 @import "./variables.scss";
+@import "./master.scss";
 
 /* main bits */
 
@@ -43,10 +44,6 @@ button {
 
 .horizontal-divider {
     border: 2px solid $white;
-}
-
-.knob {
-    color: $black;
 }
 
 #synth {
@@ -200,96 +197,4 @@ button {
 
 #indicator-seq li.active {
     background: $lightblue;
-}
-
-/* master panel */
-
-#master {
-    margin: 10px 0 0 20px;
-    white-space: normal;
-}
-
-#tempo {
-    width: 36px;
-    color: $white;
-    background: $lightblue;
-    border: none;
-    padding: 3px 0 3px 3px;
-    font-size: 14px;
-}
-
-#division {
-    background: $lightblue;
-    color: $white;
-    border: 2px solid $lightblue;
-    border-left: 0;
-    border-right: 0;
-    font-size: 14px;
-}
-
-.sequencer-control {
-    position: relative;
-    padding: 10px;
-    border-radius: 10em;
-    border: 0 solid rgba(0, 255, 0, 0.5);
-    width: 3em;
-    height: 3em;
-    background-color: $fawn;
-}
-
-#stop:before {
-    z-index: 2;
-    top: 0.84em;
-    left: 0.84em;
-    width: 1.41em;
-    height: 1.41em;
-    background: $white;
-    position: absolute;
-    content: " ";
-}
-
-#start:before {
-    z-index: 2;
-    top: 0.66em;
-    left: 1.08em;
-    width: 0;
-    height: 0;
-    border: 0.95em solid transparent;
-    border-left-color: $white;
-    border-left-width: 1.6em;
-    position: absolute;
-    content: " ";
-}
-
-.sequencer-control:after {
-    position: absolute;
-    content: " ";
-}
-
-#stop.active:before {
-    background: $lightblue;
-}
-
-#start.active:before {
-    border-left-color: $lightblue;
-}
-
-#stop {
-    margin-left: -10px;
-}
-
-#master-controls {
-    float: right;
-}
-
-#speaker {
-    width: 100px;
-    position: absolute;
-    right: 24px;
-    bottom: 0;
-}
-
-#speaker li {
-    list-style: none;
-    height: 10px;
 }

@@ -2,9 +2,9 @@ import { Component, h } from 'preact';
 
 export default class Knob extends Component<any, any> {
   public static defaultProps = {
-    angleArc: 360,
-    angleOffset: 0,
-    bgColor: '#EEE',
+    angleArc: 320,
+    angleOffset: -160,
+    bgColor: '#FFF',
     canvasClassName: null,
     className: null,
     clockwise: true,
@@ -12,11 +12,11 @@ export default class Knob extends Component<any, any> {
     disableMouseWheel: false,
     disableTextInput: false,
     displayInput: true,
-    fgColor: '#EA2',
-    font: 'Arial',
+    fgColor: '#92C8CD',
+    font: "'Orbitron', monospace",
     fontWeight: 'bold',
-    height: 200,
-    inputColor: '',
+    height: 60,
+    inputColor: '#363439',
     lineCap: 'butt',
     log: false,
     max: 100,
@@ -25,8 +25,8 @@ export default class Knob extends Component<any, any> {
     readOnly: false,
     step: 1,
     stopper: true,
-    thickness: 0.35,
-    width: 200,
+    thickness: 0.3,
+    width: 60,
   };
 
   private angleArc: number;
@@ -97,7 +97,6 @@ export default class Knob extends Component<any, any> {
 
     return (
       <div
-        class='knob'
         id={ id }
         style={{ width: this.w, height: this.h, display: 'inline-block' }}
         onWheel={readOnly || disableMouseWheel ? null : this.handleWheel}
