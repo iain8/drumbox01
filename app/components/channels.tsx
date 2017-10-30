@@ -27,7 +27,16 @@ export default class Channels extends Component<any, IChannelsState> {
           active={ this.state.activeChannelIndex }
           data={ data }
           onChange={ this.handleChannelChange } />
-        <Channel />
+        {
+          data.map((channel, i) => {
+            return (
+              <Channel
+                active={ this.state.activeChannelIndex }
+                data={ channel }
+                index={ i } />
+            );
+          })
+        }
       </div>
     );
   }

@@ -8,7 +8,8 @@ const data = [{
     "oscPitchDecay": 0.380,
     "noiseLevel": 0,
     "oscLevel": 1.0,
-    "level": 0.8
+    "level": 0.8,
+    "wave": "sine"
   },
   "pattern": "1001001101000100"
 }, {
@@ -19,7 +20,8 @@ const data = [{
     "noiseAttack": 0,
     "noiseDecay": 0.37,
     "oscLevel": 0,
-    "level": 0.8
+    "level": 0.8,
+    "wave": "sine"
   },
   "pattern": "0000100000001000"
 }, {
@@ -31,7 +33,8 @@ const data = [{
     "noiseAttack": 0,
     "noiseDecay": 0.15,
     "channelFilterFreq": 15000,
-    "channelFilterGain": 10
+    "channelFilterGain": 10,
+    "wave": "sine"
   },
   "pattern": "0010001000100010"
 }, {

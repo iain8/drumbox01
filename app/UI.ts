@@ -15,13 +15,13 @@ export default class UI {
 
     // $('#channel-headers li').first().addClass('active');
 
-    $('#channel-headers li a').click(function() {
-        // $('#channel-headers li').removeClass('active');
-        $('.channel').hide();
-        $('#' + $(this).data('name')).show();
-        $(this).parent().addClass('active');
-        return false;
-    });
+    // $('#channel-headers li a').click(function() {
+    //     $('#channel-headers li').removeClass('active');
+    //     $('.channel').hide();
+    //     $('#' + $(this).data('name')).show();
+    //     $(this).parent().addClass('active');
+    //     return false;
+    // });
 
     $('.sequence li').click(function() {
       $(this).toggleClass('on');
@@ -193,11 +193,11 @@ export default class UI {
     const $panel = $(`<div class="channel" id="${name}"></div>`);
 
     const $mixer = $('<div class="section"><p>mixer</p></div>');
-    $mixer.append(this.knob('level', 'level', channel.level * 100));
-    $mixer.append(this.knob('oscLevel', 'osc', channel.oscLevel * 100));
-    $mixer.append(this.knob('noiseLevel', 'noise', channel.noiseLevel * 100));
-    $mixer.append(this.knob('filterFreq', 'freq', channel.channelFilterFreq));
-    $mixer.append(this.knob('filterGain', 'gain', channel.channelFilterGain));
+    // $mixer.append(this.knob('level', 'level', channel.level * 100));
+    // $mixer.append(this.knob('oscLevel', 'osc', channel.oscLevel * 100));
+    // $mixer.append(this.knob('noiseLevel', 'noise', channel.noiseLevel * 100));
+    // $mixer.append(this.knob('filterFreq', 'freq', channel.channelFilterFreq));
+    // $mixer.append(this.knob('filterGain', 'gain', channel.channelFilterGain));
 
     const $osc = $('<div class="section"><p>osc</p></div>');
     $osc.append(this.waveSelector(channel.wave));
@@ -217,35 +217,35 @@ export default class UI {
 
     $('#synth').append($panel);
 
-    $(`#${name} .level`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 100,
-      change: (value) => channel.level = value / 100,
-    }));
+    // $(`#${name} .level`).knob($.extend({}, this.knobDefaults, {
+      // min: 0,
+      // max: 100,
+      // change: (value) => channel.level = value / 100,
+    // }));
 
-    $(`#${name} .oscLevel`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 100,
-      change: (value) => channel.oscLevel = value / 100,
-    }));
+    // $(`#${name} .oscLevel`).knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 100,
+    //   change: (value) => channel.oscLevel = value / 100,
+    // }));
 
-    $(`#${name} .noiseLevel`).knob($.extend({}, this.knobDefaults, {
-      min: 0,
-      max: 100,
-      change: (value) => channel.noiseLevel = value / 100,
-    }));
+    // $(`#${name} .noiseLevel`).knob($.extend({}, this.knobDefaults, {
+    //   min: 0,
+    //   max: 100,
+    //   change: (value) => channel.noiseLevel = value / 100,
+    // }));
 
-    $(`#${name} .filterGain`).knob($.extend({}, this.knobDefaults, {
-      min: -40,
-      max: 40,
-      change: (value) => channel.channelFilterGain = value,
-    }));
+    // $(`#${name} .filterGain`).knob($.extend({}, this.knobDefaults, {
+    //   min: -40,
+    //   max: 40,
+    //   change: (value) => channel.channelFilterGain = value,
+    // }));
 
-    $(`#${name} .filterFreq`).knob($.extend({}, this.knobDefaults, {
-      min: 10,
-      max: 22500,
-      change: (value) => channel.channelFilterFreq = value,
-    }));
+    // $(`#${name} .filterFreq`).knob($.extend({}, this.knobDefaults, {
+    //   min: 10,
+    //   max: 22500,
+    //   change: (value) => channel.channelFilterFreq = value,
+    // }));
 
     $(`#${name} .wave`).change(function() {
       channel.wave = $(this).val() as string;
