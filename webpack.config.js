@@ -54,6 +54,10 @@ module.exports = {
     extractSass,
   ],
   resolve: {
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat',
+    },
     extensions: [".ts", ".tsx", ".js", ".json"],
   },
 };

@@ -1,7 +1,16 @@
 import { Component, h } from 'preact';
+import Knob from './controls/knob';
 import Speaker from './speaker';
 
 export default class Sequencer extends Component<any, any> {
+  constructor() {
+    super();
+
+    this.state = {
+      masterVolume: 100,
+    };
+  }
+
   public render() {
     return (
       <div id='master'>
@@ -14,7 +23,11 @@ export default class Sequencer extends Component<any, any> {
         <button id='start' class='sequencer-control'></button>
         <button id='stop' class='sequencer-control active'></button>
         <div id='master-controls'>
-            <input type='text' id='master-volume' class='knob' value='100' data-name='master' />
+          <Knob
+            dataName='master'
+            id='master-volume'
+            onChange={ this.handleVolumeChange.bind(this) }
+            value={ this.state.masterVolume } />
         </div>
 
         <h2>drumbox<small>01</small></h2>
@@ -22,5 +35,9 @@ export default class Sequencer extends Component<any, any> {
         <Speaker grilleCount={ 7 } />
       </div>
     );
+  }
+
+  private handleVolumeChange(value: number) {
+    this.setState({ masterVolume: value });
   }
 }

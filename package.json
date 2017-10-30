@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
-    "preact": "^8.2.6"
+    "preact": "^8.2.6",
+    "preact-compat": "^3.17.0"
   }
 }

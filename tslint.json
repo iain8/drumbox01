@@ -5,6 +5,7 @@
     ],
     "jsRules": {},
     "rules": {
+        "no-bitwise": false,
         "quotemark": [true, "single", "avoid-escape"]
     },
     "rulesDirectory": []
