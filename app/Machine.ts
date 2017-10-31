@@ -35,7 +35,7 @@ export default class Machine {
   }
 
   public init() {
-    UI.indicator(this.sequencer.length);
-    UI.init(this.sequencer, this.channels, this.master, this.tempo);
+    // UI.indicator(this.sequencer.length);
+    // UI.init(this.sequencer, this.channels, this.master, this.tempo);
   }
 }
