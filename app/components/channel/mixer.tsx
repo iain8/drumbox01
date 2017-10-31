@@ -22,30 +22,35 @@ export default class Mixer extends Component<any, any> {
           display='block'
           max={ 100 }
           min={ 0 }
+          name='level'
           onChange={ this.handleLevelChange }
           value={ data.options.level * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
+          name='osc'
           onChange={ this.handleOscLevelChange }
           value={ data.options.oscLevel * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
+          name='noise'
           onChange={ this.handleNoiseLevelChange }
           value={ data.options.noiseLevel } />
         <Knob
           display='block'
           max={ 22500 }
           min={ 10 }
+          name='freq'
           onChange={ this.handleFilterFreqChange }
           value={ data.options.channelFilterFreq } />
         <Knob
           display='block'
           max={ 40 }
           min={ -40 }
+          name='gain'
           onChange={ this.handleFilterGainChange }
           value={ data.options.channelFilterGain } />
       </div>

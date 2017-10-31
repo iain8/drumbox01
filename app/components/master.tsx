@@ -38,6 +38,7 @@ export default class Sequencer extends Component<any, any> {
           class={ `sequencer-control stop ${ this.state.playing ? '' : 'active' }` }
           onClick={ this.handleStopButton.bind(this) } />
         <Knob
+          name='vol'
           onChange={ this.handleVolumeChange.bind(this) }
           value={ this.state.masterVolume } />
 

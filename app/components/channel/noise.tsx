@@ -19,12 +19,14 @@ export default class Noise extends Component<any, any> {
           display='block'
           max={ 10000 }
           min={ 0 }
+          name='attack'
           onChange={ this.handleNoiseAttackChange }
           value={ data.options.noiseAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
+          name='decay'
           onChange={ this.handleNoiseDecayChange }
           value={ data.options.noiseDecay * 1000 } />
       </div>

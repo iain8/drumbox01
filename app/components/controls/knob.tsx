@@ -5,8 +5,6 @@ export default class Knob extends Component<any, any> {
     angleArc: 320,
     angleOffset: -160,
     bgColor: '#FFF',
-    canvasClassName: null,
-    className: null,
     clockwise: true,
     cursor: false,
     disableMouseWheel: false,
@@ -86,11 +84,8 @@ export default class Knob extends Component<any, any> {
 
   public render() {
     const {
-      canvasClassName,
-      className,
       disableMouseWheel,
       display,
-      id, // TODO: shouldn't be necessary anyway
       readOnly,
       title,
       value,
@@ -98,17 +93,13 @@ export default class Knob extends Component<any, any> {
 
     return (
       <div
-        id={ id }
+        class='knob'
         style={{ width: this.w, height: this.h, display: display || 'inline-block' }}
-        onWheel={readOnly || disableMouseWheel ? null : this.handleWheel}
-      >
+        onWheel={ readOnly || disableMouseWheel ? null : this.handleWheel }>
         <canvas
           ref={(ref) => { this.canvasRef = ref as HTMLCanvasElement; }}
-          className={canvasClassName}
-          style={{ width: '100%', height: '100%' }}
           onMouseDown={readOnly ? null : this.handleMouseDown}
-          title={title ? `${title}: ${value}` : value}
-        />
+          title={title ? `${title}: ${value}` : value} />
         { this.renderCenter() }
       </div>
     );
@@ -149,10 +140,13 @@ export default class Knob extends Component<any, any> {
 
   private coerceToStep = (v) => {
     let val = !this.props.log
-    ? (~~(((v < 0) ? -0.5 : 0.5) + (v / this.props.step))) * this.props.step
-    : Math.pow(this.props.step, ~~(((Math.abs(v) < 1) ? -0.5 : 0.5) + (Math.log(v) / Math.log(this.props.step))));
+      ? (~~(((v < 0) ? -0.5 : 0.5) + (v / this.props.step))) * this.props.step
+      : Math.pow(this.props.step, ~~(((Math.abs(v) < 1) ? -0.5 : 0.5) + (Math.log(v) / Math.log(this.props.step))));
+    
     val = Math.max(Math.min(val, this.props.max), this.props.min);
+    
     if (isNaN(val)) { val = 0; }
+    
     return Math.round(val * 1000) / 1000;
   }
 
@@ -230,17 +224,14 @@ export default class Knob extends Component<any, any> {
 
   private handleWheel = (e) => {
     e.preventDefault();
+
     if (e.deltaX > 0 || e.deltaY > 0) {
       this.props.onChange(this.coerceToStep(
-        !this.props.log
-        ? this.props.value + this.props.step
-        : this.props.value * this.props.step,
+        this.props.log ? this.props.value * this.props.step : this.props.value + this.props.step,
       ));
     } else if (e.deltaX < 0 || e.deltaY < 0) {
       this.props.onChange(this.coerceToStep(
-        !this.props.log
-        ? this.props.value - this.props.step
-        : this.props.value / this.props.step,
+        this.props.log ? this.props.value / this.props.step : this.props.value - this.props.step,
       ));
     }
   }
@@ -249,9 +240,7 @@ export default class Knob extends Component<any, any> {
     if (e.keyCode === 37 || e.keyCode === 40) {
       e.preventDefault();
       this.props.onChange(this.coerceToStep(
-        this.props.log
-          ? this.props.value / this.props.stepthis.props.value - this.props.step
-          : this.props.value - this.props.step,
+        this.props.log ? this.props.value / this.props.step : this.props.value - this.props.step,
       ));
     } else if (e.keyCode === 38 || e.keyCode === 39) {
       e.preventDefault();
@@ -261,21 +250,14 @@ export default class Knob extends Component<any, any> {
     }
   }
 
-  private inputStyle = () => ({
-    WebkitAppearance: 'none',
-    background: 'none',
-    border: 0,
-    color: this.props.inputColor || this.props.fgColor,
-    font: `${this.props.fontWeight} ${(this.w / this.digits) >> 0}px ${this.props.font}`,
-    height: `${(this.w / 3) >> 0}px`,
-    marginLeft: `-${((this.w * 3 / 4) + 2) >> 0}px`,
-    marginTop: `${(this.w / 3) >> 0}px`,
-    padding: '0px',
-    position: 'absolute',
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    width: `${((this.w / 2) + 4) >> 0}px`,
-  })
+  private inputStyle() {
+    return {
+      height: `${(this.w / 3) >> 0}px`,
+      marginLeft: `-${((this.w * 3 / 4) + 2) >> 0}px`,
+      marginTop: `${(this.w / 3) >> 0}px`,
+      width: `${((this.w / 2) + 4) >> 0}px`,
+    };
+  }
 
   private drawCanvas() {
     const ctx = this.canvasRef.getContext('2d');
@@ -321,6 +303,7 @@ export default class Knob extends Component<any, any> {
       displayInput,
       disableTextInput,
       readOnly,
+      name,
       value,
     } = this.props;
 
@@ -329,7 +312,7 @@ export default class Knob extends Component<any, any> {
         <input
           style={ this.inputStyle() }
           type='text'
-          value={ value }
+          value={ name } // TODO: swap out on hover
           onChange={ this.handleTextInput }
           onKeyDown={this.handleArrowKey}
           readOnly={readOnly || disableTextInput}

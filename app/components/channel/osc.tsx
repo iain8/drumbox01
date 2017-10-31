@@ -34,30 +34,35 @@ export default class Osc extends Component<any, any> {
           display='block'
           max={ 2000 }
           min={ 20 }
+          name='freq'
           onChange={ this.handleFreqChange }
           value={ data.options.frequency } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
+          name='attack'
           onChange={ this.handleOscAttackChange }
           value={ data.options.oscAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
+          name='decay'
           onChange={ this.handleOscDecayChange }
           value={ data.options.oscDecay * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
+          name='attack'
           onChange={ this.handlePitchAttackChange }
           value={ data.options.pitchAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
+          name='decay'
           onChange={ this.handlePitchDecayChange }
           value={ data.options.pitchDecay * 1000 } />
       </div>

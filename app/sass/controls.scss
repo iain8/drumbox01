@@ -1,0 +1,66 @@
+.knob {
+  canvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  input {
+    -webkit-appearance: none;
+    background: 0;
+    border: 0;
+    color: $black;
+    font-family: $font;
+    font-size: 12px;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+.selector {
+  position: relative;
+  height: 66px;
+  width: 60px;
+
+  li {
+    font-size: 10px;
+    font-weight: bold;
+  
+    position: absolute;
+    top: 25px;
+    left: 19px;
+  
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .prev {
+    cursor: pointer;
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent; 
+    border-right:10px solid $white;
+  
+    position: absolute;
+    top: 20px;
+    left: -3px;
+  }
+
+  .next {
+    cursor: pointer;
+    width: 0; 
+    height: 0; 
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid $white;
+  
+    position: absolute;
+    top: 20px;
+    right: -3px;
+  }
+}
