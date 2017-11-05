@@ -23,12 +23,12 @@ export default class Osc extends Component<any, any> {
     const { data } = this.props;
 
     return (
-      <div class="section">
+      <div className='section'>
         <p>osc</p>
         <Selector
           onNext={ () => this.handleWaveChange('next') }
           onPrev={ () => this.handleWaveChange('prev') }
-          options={ this.state.waves } 
+          options={ this.state.waves }
           selected={ this.state.selectedWave } />
         <Knob
           display='block'

@@ -18,7 +18,9 @@ export default class Channels extends Component<any, IChannelsState> {
     };
   }
 
-  public render() {
+  public render(props) {
+    const { channels } = props;
+
     return (
       <div
         id='synth'
@@ -28,7 +30,7 @@ export default class Channels extends Component<any, IChannelsState> {
           data={ data }
           onChange={ this.handleChannelChange } />
         {
-          data.map((channel, i) => { // TODO: can we optimise to only create active channel
+          channels.map((channel, i) => { // TODO: can we optimise to only create active channel
             return (
               <Channel
                 active={ this.state.activeChannelIndex }

@@ -2,6 +2,7 @@ import { Action } from 'redux';
 import { getPresetFSA } from '../actions/preset';
 
 const DEFAULT_STATE = {
+  error: null,
   loading: false,
   preset: null,
 };
@@ -12,26 +13,27 @@ interface PresetState {
   preset: object,
 }
 
-export default (state : PresetState, action: Action) : PresetState => {
+export default (state : PresetState, action: any) : PresetState => {
+  console.log(action);
   switch (action.type) {
-    case getPresetFSA.failed:
+    case 'GET_PRESET_FAILED':
       return {
         ...state,
         error: state.error,
         loading: false,
       };
-    case getPresetFSA.started:
+    case 'GET_PRESET_STARTED':
       return {
         ...state,
         loading: true,
       };
-    case getPresetFSA.done:
+    case 'GET_PRESET_DONE':
       return {
         ...state,
         loading: false,
-        preset: state.preset,
+        preset: action.payload.result.preset,
       };
     default:
-      return state;
+      return DEFAULT_STATE;
   }
 };

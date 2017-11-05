@@ -2,7 +2,7 @@ import { SagaIterator, takeLatest } from 'redux-saga';
 import { call, cancel, fork, put, take } from 'redux-saga/effects';
 import { bindAsyncAction } from 'typescript-fsa-redux-saga';
 import getById from './services/preset';
-import {getPresetFSA} from './actions/preset';
+import { getPresetFSA } from './actions/preset';
 
 const getPreset = bindAsyncAction(getPresetFSA) (
   function* (params): SagaIterator {
@@ -13,10 +13,9 @@ const getPreset = bindAsyncAction(getPresetFSA) (
 );
 
 function* mySaga(action: any): SagaIterator { // TODO action type
-  yield call(getPreset, { id: action.payload }); // how to get id here
+  yield call(getPreset, { id: action.payload });
 }
 
 export default function* watchRequest() {
-  console.log('1');
   yield takeLatest(getPresetFSA.type, mySaga);
 }

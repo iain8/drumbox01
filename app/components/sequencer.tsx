@@ -11,11 +11,13 @@ export default class Sequencer extends Component<any, any> {
     };
   }
 
-  public render() {
+  public render(props) {
+    const { channels } = props;
+
     return (
       <div class='sequencer'>
         {
-          data.map((channel) => 
+          channels.map((channel) => 
             <Sequence
               pattern={ channel.pattern }
               patternLength={ this.state.patternLength } />

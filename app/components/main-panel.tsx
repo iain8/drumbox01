@@ -6,33 +6,36 @@ import Master from './master';
 import Sequencer from './sequencer';
 
 class MainPanel extends Component<any, any> {
-  componentDidMount() {
-    console.log('props', this.props);
+  public componentDidMount() {
     this.props.dispatch(getPreset(1));
   }
 
-  public render() {
+  public render(props: any) {
+    const { preset } = props;
+
     return (
       <div id='main-panel'>
-        <form onSubmit={ () => false } autocomplete='off'>
-          <Channels />
+        {
+          preset
+          ? <form onSubmit={ () => false } autocomplete='off'>
+              <Channels channels={ preset.channels } />
 
-          <div class='container vertical-divider'></div>
+              <div class='container vertical-divider'></div>
 
-          <div class='container' style='padding-left: 0; margin-left: -9px'>
-            <Sequencer />
+              <div class='container' style='padding-left: 0; margin-left: -9px'>
+                <Sequencer channels={ preset.channels } />
 
-            <div class='horizontal-divider'></div>
-              <Master />
-            </div>
-        </form>
+                <div class='horizontal-divider'></div>
+                  <Master preset={ preset } />
+                </div>
+            </form>
+          : ''
+        }
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return { something: 'hi' };
-};
+const mapStateToProps = ({ loading, preset }) => ({ loading, preset });
 
 export default connect(mapStateToProps)(MainPanel);
