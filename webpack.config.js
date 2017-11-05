@@ -5,7 +5,7 @@ const extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
-  devtool: "eval",
+  devtool: "inline-source-map",
   entry: "./app/index.tsx",
   externals: {
     "jquery": "jQuery",
@@ -22,10 +22,10 @@ module.exports = {
       loader: "awesome-typescript-loader",
       test: /\.tsx?$/,
     }, {
-      enforce: "pre",
-      loader: "source-map-loader", 
-      test: /\.js$/,
-    }, {
+    //   enforce: "pre",
+    //   loader: "source-map-loader", 
+    //   test: /\.js$/,
+    // }, {
       test: /\.scss$/,
       loader: extractSass.extract({
         use: [
