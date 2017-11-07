@@ -5,4 +5,4 @@ CREATE TABLE presets (
   master_volume integer NOT NULL
 );
 
-INSERT INTO presets (id) VALUES (1);
+INSERT INTO presets (id, tempo, division, master_volume) VALUES (1, 120.0, 8, 80);

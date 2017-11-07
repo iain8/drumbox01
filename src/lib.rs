@@ -31,15 +31,20 @@ use self::models::*;
 #[derive(Serialize, Debug)]
 pub struct JsonPreset {
     id: i32,
+    tempo: f32,
+    division: i32,
+    master_volume: i32,
     channels: Vec<models::Channel>,
+    sequences: Vec<models::Sequence>,
 }
 
+// TODO: connection pool
 fn establish_connection() -> SqliteConnection {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
-    
+
     SqliteConnection::establish(&database_url)
         .expect(&format!("Error connecting to {}", database_url))
 }
@@ -73,9 +78,17 @@ pub fn get_preset(request_id: i32) -> Json<JsonPreset> {
     let preset_channels = Channel::belonging_to(&preset[0])
         .load::<Channel>(&connection)
         .expect("Error loading channels");
-    
+
+    let preset_sequences = Sequence::belonging_to(&preset[0])
+        .load::<Sequence>(&connection)
+        .expect("Error loading sequences");
+
     Json(JsonPreset {
         id: preset[0].id,
+        tempo: preset[0].tempo,
+        division: preset[0].division,
+        master_volume: preset[0].master_volume,
         channels: preset_channels,
+        sequences: preset_sequences,
     })
 }
