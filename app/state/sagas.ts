@@ -9,7 +9,7 @@ const getPreset = bindAsyncAction(getPresetFSA) (
     const preset = yield call(getById, params.id);
 
     return { preset };
-  },       
+  },
 );
 
 function* mySaga(action: any): SagaIterator { // TODO action type

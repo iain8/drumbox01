@@ -2,19 +2,38 @@ import { Action } from 'redux';
 import { getPresetFSA } from '../actions/preset';
 
 const DEFAULT_STATE = {
+  channels: [],
   error: null,
   loading: false,
   preset: null,
+  sequences: [],
 };
 
 interface PresetState {
+  channels: Array<Object>,
   error: object,
   loading: boolean,
-  preset: object,
+  preset: Object,
+  sequences: Array<Object>,
 }
 
-export default (state : PresetState, action: any) : PresetState => {
-  console.log(action);
+const toggleBeat = (sequences, { beat, seq }) : any => {
+  return sequences.map((sequence, i) => {
+    const newSeq = { ...sequence };
+
+    if (i === seq) {
+      const pattern = newSeq.pattern.split('');
+
+      pattern[beat] = pattern[beat] === '0' ? '1' : '0';
+
+      newSeq.pattern = pattern.join('');
+    }
+
+    return newSeq;
+  });
+};
+
+export default (state = DEFAULT_STATE, action: any) : PresetState => {
   switch (action.type) {
     case 'GET_PRESET_FAILED':
       return {
@@ -28,12 +47,25 @@ export default (state : PresetState, action: any) : PresetState => {
         loading: true,
       };
     case 'GET_PRESET_DONE':
+      const { preset } = action.payload.result;
+
       return {
         ...state,
+        channels: preset.channels,
         loading: false,
-        preset: action.payload.result.preset,
+        preset: {
+          division: preset.division,
+          masterVolume: preset.master_volume,
+          tempo: preset.tempo,
+        },
+        sequences: preset.sequences,
+      };
+    case 'TOGGLE_BEAT':
+      return {
+        ...state,
+        sequences: toggleBeat(state.sequences, action.payload),
       };
     default:
-      return DEFAULT_STATE;
+      return state;
   }
 };

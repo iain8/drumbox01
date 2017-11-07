@@ -1,5 +1,4 @@
 import { Component, h } from 'preact';
-import data from '../data/default';
 import Sequence from './sequencer/sequence';
 
 export default class Sequencer extends Component<any, any> {
@@ -12,14 +11,15 @@ export default class Sequencer extends Component<any, any> {
   }
 
   public render(props) {
-    const { channels } = props;
+    const { sequences } = props;
 
     return (
       <div class='sequencer'>
         {
-          channels.map((channel) => 
+          sequences.map((sequence, i) =>
             <Sequence
-              pattern={ channel.pattern }
+              index={ i }
+              pattern={ sequence.pattern }
               patternLength={ this.state.patternLength } />
           )
         }

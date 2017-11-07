@@ -1,14 +1,20 @@
 import { Component, h } from 'preact';
 
-export default class Beat extends Component<any, any> {
+interface IBeatProps {
+  index: number,
+  on: boolean,
+  onClick: Function,
+};
+
+export default class Beat extends Component<IBeatProps, any> {
   constructor(props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
   }
 
-  public render() {
-    return <li class={ `beat ${this.props.on ? 'on' : ''}` } onClick={ this.handleClick } />;
+  public render(props) {
+    return <li class={ `beat ${props.on ? 'on' : ''}` } onClick={ this.handleClick } />;
   }
 
   private handleClick() {

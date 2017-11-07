@@ -11,19 +11,19 @@ class MainPanel extends Component<any, any> {
   }
 
   public render(props: any) {
-    const { preset } = props;
+    const { channels, preset, sequences } = props;
 
     return (
       <div id='main-panel'>
         {
           preset
           ? <form onSubmit={ () => false } autocomplete='off'>
-              <Channels channels={ preset.channels } />
+              <Channels channels={ channels } />
 
               <div class='container vertical-divider'></div>
 
               <div class='container' style='padding-left: 0; margin-left: -9px'>
-                <Sequencer channels={ preset.channels } />
+                <Sequencer sequences={ sequences } />
 
                 <div class='horizontal-divider'></div>
                   <Master preset={ preset } />
@@ -36,6 +36,8 @@ class MainPanel extends Component<any, any> {
   }
 }
 
-const mapStateToProps = ({ loading, preset }) => ({ loading, preset });
+const mapStateToProps = ({ channels, loading, preset, sequences }) => (
+  { channels, loading, preset, sequences }
+);
 
 export default connect(mapStateToProps)(MainPanel);

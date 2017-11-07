@@ -1,7 +1,17 @@
 import { Component, h } from 'preact';
+import { connect } from 'preact-redux';
+import { toggleBeat } from '../../state/actions/sequencer';
 import Beat from './beat';
 
-export default class Sequence extends Component<any, any> {
+interface ISequenceProps {
+  dispatch?: Function,
+  index: number,
+  pattern: string,
+  patternLength: number,
+  toggleBeat?: Function,
+}
+
+class Sequence extends Component<ISequenceProps, any> {
   constructor(props) {
     super(props);
 
@@ -13,14 +23,16 @@ export default class Sequence extends Component<any, any> {
     this.handleBeatClick = this.handleBeatClick.bind(this);
   }
 
-  public render() {
+  public render(props) {
+    const { pattern, patternLength } = props;
+
     return (
       <ul class="sequence">
         {
-          Array(this.props.patternLength).fill(1).map((x, i) =>
+          Array(patternLength).fill(1).map((x: any, i: number) =>
             <Beat
               index={ i }
-              on={ this.state.pattern.charAt(i) === '1' }
+              on={ pattern.charAt(i) === '1' }
               onClick={ this.handleBeatClick } />
           )
         }
@@ -29,16 +41,24 @@ export default class Sequence extends Component<any, any> {
     );
   }
 
-  private handleBeatClick(index: number) {
-    const pattern = this.state.pattern.split('');
-    pattern[index] = pattern[index] === '0' ? '1' : '0';
-
-    this.setState({ pattern: pattern.join('') });
+  private handleBeatClick(beatIndex: number) {
+    this.props.dispatch(toggleBeat({
+      beat: beatIndex,
+      seq: this.props.index,
+    }));
   }
 
-  private clearSequence() {
+  private clearSequence() { // TODO: move to reducer
     this.setState({
       pattern: Array(this.props.patternLength).fill(0).join(''),
     });
   }
 }
+
+const mapStateToProps = (state: any, props: ISequenceProps) => ({
+  index: props.index,
+  pattern: props.pattern,
+  patternLength: props.patternLength,
+});
+
+export default connect(mapStateToProps)(Sequence);
