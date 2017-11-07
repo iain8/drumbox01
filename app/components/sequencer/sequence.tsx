@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import { connect } from 'preact-redux';
-import { toggleBeat } from '../../state/actions/sequencer';
+import { clearSequence, toggleBeat } from '../../state/actions/sequencer';
 import Beat from './beat';
 
 interface ISequenceProps {
@@ -48,10 +48,10 @@ class Sequence extends Component<ISequenceProps, any> {
     }));
   }
 
-  private clearSequence() { // TODO: move to reducer
-    this.setState({
-      pattern: Array(this.props.patternLength).fill(0).join(''),
-    });
+  private clearSequence() {
+    this.props.dispatch(clearSequence({
+      seq: this.props.index,
+    }));
   }
 }
 

@@ -6,6 +6,7 @@ pub struct Preset {
     pub tempo: f32,
     pub division: i32,
     pub master_volume: i32,
+    pub sequence_length: i32,
 }
 
 #[derive(Identifiable, Queryable, Associations, Serialize, Debug)]

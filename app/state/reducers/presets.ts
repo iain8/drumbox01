@@ -33,6 +33,18 @@ const toggleBeat = (sequences, { beat, seq }) : any => {
   });
 };
 
+const clearSequence = (sequences, sequenceLength, { seq }) : any => {
+  return sequences.map((sequence, i) => {
+    const newSeq = { ...sequence };
+
+    if (i === seq) {
+      newSeq.pattern = Array(sequenceLength).fill(0).join('');
+    }
+
+    return newSeq;
+  });
+};
+
 export default (state = DEFAULT_STATE, action: any) : PresetState => {
   switch (action.type) {
     case 'GET_PRESET_FAILED':
@@ -56,6 +68,7 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
         preset: {
           division: preset.division,
           masterVolume: preset.master_volume,
+          sequenceLength: preset.sequence_length,
           tempo: preset.tempo,
         },
         sequences: preset.sequences,
@@ -64,6 +77,11 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
       return {
         ...state,
         sequences: toggleBeat(state.sequences, action.payload),
+      };
+    case 'CLEAR_SEQUENCE':
+      return {
+        ...state,
+        sequences: clearSequence(state.sequences, state.preset.sequenceLength, action.payload),
       };
     default:
       return state;

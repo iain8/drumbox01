@@ -34,6 +34,7 @@ pub struct JsonPreset {
     tempo: f32,
     division: i32,
     master_volume: i32,
+    sequence_length: i32,
     channels: Vec<models::Channel>,
     sequences: Vec<models::Sequence>,
 }
@@ -88,6 +89,7 @@ pub fn get_preset(request_id: i32) -> Json<JsonPreset> {
         tempo: preset[0].tempo,
         division: preset[0].division,
         master_volume: preset[0].master_volume,
+        sequence_length: preset[0].sequence_length,
         channels: preset_channels,
         sequences: preset_sequences,
     })
