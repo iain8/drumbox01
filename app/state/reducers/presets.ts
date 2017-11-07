@@ -46,6 +46,8 @@ const clearSequence = (sequences, sequenceLength, { seq }) : any => {
 };
 
 export default (state = DEFAULT_STATE, action: any) : PresetState => {
+  console.log('reducer!', state, action);
+
   switch (action.type) {
     case 'GET_PRESET_FAILED':
       return {
@@ -72,6 +74,30 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
           tempo: preset.tempo,
         },
         sequences: preset.sequences,
+      };
+    case 'CHANGE_TEMPO':
+      return {
+        ...state,
+        preset: {
+          ...state.preset,
+          tempo: action.payload.tempo,
+        },
+      };
+    case 'CHANGE_DIVISION':
+      return {
+        ...state,
+        preset: {
+          ...state.preset,
+          division: action.payload.division,
+        },
+      };
+    case 'CHANGE_MASTER_VOLUME':
+      return {
+        ...state,
+        preset: {
+          ...state.preset,
+          masterVolume: action.payload.volume,
+        }
       };
     case 'TOGGLE_BEAT':
       return {

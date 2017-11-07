@@ -142,11 +142,11 @@ export default class Knob extends Component<any, any> {
     let val = !this.props.log
       ? (~~(((v < 0) ? -0.5 : 0.5) + (v / this.props.step))) * this.props.step
       : Math.pow(this.props.step, ~~(((Math.abs(v) < 1) ? -0.5 : 0.5) + (Math.log(v) / Math.log(this.props.step))));
-    
+
     val = Math.max(Math.min(val, this.props.max), this.props.min);
-    
+
     if (isNaN(val)) { val = 0; }
-    
+
     return Math.round(val * 1000) / 1000;
   }
 
@@ -312,7 +312,7 @@ export default class Knob extends Component<any, any> {
         <input
           style={ this.inputStyle() }
           type='text'
-          value={ name } // TODO: swap out on hover
+          value={ value } // TODO: swap out on hover
           onChange={ this.handleTextInput }
           onKeyDown={this.handleArrowKey}
           readOnly={readOnly || disableTextInput}

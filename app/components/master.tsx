@@ -1,36 +1,47 @@
 import { Component, h } from 'preact';
+import { connect } from 'preact-redux';
 import Division from './controls/division';
 import Knob from './controls/knob';
 import Speaker from './speaker';
+import * as masterActions from '../state/actions/master';
 
-export default class Sequencer extends Component<any, any> {
+interface IMasterProps {
+  dispatch?: any,
+  preset: any,
+};
+
+class Master extends Component<IMasterProps, any> {
   constructor() {
     super();
 
-    this.state = {
-      division: 4,
+    this.state = { // TODO: put in a config or something
       divisions: {
         2: '1/4',
         4: '1/8',
         8: '1/16',
       },
-      masterVolume: 100,
-      playing: false,
-      tempo: 120,
+      playing: false, // TODO: into state
     };
+
+    this.handleDivisionChange = this.handleDivisionChange.bind(this);
+    this.handleTempoChange = this.handleTempoChange.bind(this);
+    this.handleVolumeChange = this.handleVolumeChange.bind(this);
   }
 
-  public render() {
+  public render(props) {
+    const { division, masterVolume, tempo } = props.preset;
+
     return (
       <div class='master'>
-        <input 
-          type='number' 
-          class='tempo' 
-          value={ this.state.tempo } />
+        <input
+          type='number'
+          class='tempo'
+          onChange={ this.handleTempoChange }
+          value={ tempo } />
         <Division
-          division={ this.state.division }
+          division={ division }
           divisions={ this.state.divisions }
-          onChange={ this.handleDivisionChange.bind(this) } />
+          onChange={ this.handleDivisionChange } />
         <button
           class={ `sequencer-control start ${ this.state.playing ? 'active' : '' }` }
           onClick={ this.handleStartButton.bind(this) } />
@@ -39,8 +50,8 @@ export default class Sequencer extends Component<any, any> {
           onClick={ this.handleStopButton.bind(this) } />
         <Knob
           name='vol'
-          onChange={ this.handleVolumeChange.bind(this) }
-          value={ this.state.masterVolume } />
+          onChange={ this.handleVolumeChange }
+          value={ masterVolume } />
 
         <h2>drumbox<small>01</small></h2>
 
@@ -49,12 +60,18 @@ export default class Sequencer extends Component<any, any> {
     );
   }
 
-  private handleVolumeChange(value: number) {
-    this.setState({ masterVolume: value });
+  private handleTempoChange(event: any) { // TODO: event type
+    event.preventDefault();
+
+    this.props.dispatch(masterActions.changeTempo({ tempo: event.target.value }));
   }
 
-  private handleDivisionChange(value: number) {
-    this.setState({ division: value });
+  private handleVolumeChange(volume: number) {
+    this.props.dispatch(masterActions.changeMasterVolume({ volume }));
+  }
+
+  private handleDivisionChange(division: number) {
+    this.props.dispatch(masterActions.changeDivision({ division }));
   }
 
   private handleStartButton(e: Event) {
@@ -69,3 +86,7 @@ export default class Sequencer extends Component<any, any> {
     this.setState({ playing: false });
   }
 }
+
+const mapStateToProps = (state, { preset }) => ({ preset });
+
+export default connect(mapStateToProps)(Master);

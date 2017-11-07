@@ -1,17 +1,9 @@
 import { Component, h } from 'preact';
 import Sequence from './sequencer/sequence';
 
-export default class Sequencer extends Component<any, any> {
-  constructor() {
-    super();
-
-    this.state = {
-      patternLength: 16,
-    };
-  }
-
+export default class Sequencer extends Component<any, any> { // TODO: stateless component
   public render(props) {
-    const { sequences } = props;
+    const { patternLength, sequences } = props;
 
     return (
       <div class='sequencer'>
@@ -20,12 +12,12 @@ export default class Sequencer extends Component<any, any> {
             <Sequence
               index={ i }
               pattern={ sequence.pattern }
-              patternLength={ this.state.patternLength } />
+              patternLength={ patternLength } />
           )
         }
         <ul class="sequence indicator">
           {
-            Array(this.state.patternLength).fill(1).map((x, i) =>
+            Array(patternLength).fill(1).map((x, i) =>
               <li class={ `beat ${i === 0 ? 'on' : ''}` } />
             )
           }

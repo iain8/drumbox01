@@ -23,7 +23,7 @@ class MainPanel extends Component<any, any> {
               <div class='container vertical-divider'></div>
 
               <div class='container' style='padding-left: 0; margin-left: -9px'>
-                <Sequencer sequences={ sequences } />
+                <Sequencer sequences={ sequences } patternLength={ preset.sequenceLength } />
 
                 <div class='horizontal-divider'></div>
                   <Master preset={ preset } />
