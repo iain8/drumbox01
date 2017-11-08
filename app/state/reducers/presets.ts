@@ -2,17 +2,21 @@ import { Action } from 'redux';
 import { getPresetFSA } from '../actions/preset';
 
 const DEFAULT_STATE = {
+  beat: 0,
   channels: [],
   error: null,
   loading: false,
+  playing: false,
   preset: null,
   sequences: [],
 };
 
 interface PresetState {
+  beat: number,
   channels: Array<Object>,
   error: object,
   loading: boolean,
+  playing: boolean,
   preset: Object,
   sequences: Array<Object>,
 }
@@ -45,8 +49,12 @@ const clearSequence = (sequences, sequenceLength, { seq }) : any => {
   });
 };
 
+const nextBeat = (current, sequenceLength) : number => {
+  return current === sequenceLength - 1 ? 0 : current + 1;
+};
+
 export default (state = DEFAULT_STATE, action: any) : PresetState => {
-  console.log('reducer!', state, action);
+  // console.log('reducer!', state, action);
 
   switch (action.type) {
     case 'GET_PRESET_FAILED':
@@ -108,6 +116,16 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
       return {
         ...state,
         sequences: clearSequence(state.sequences, state.preset.sequenceLength, action.payload),
+      };
+    case 'CHANGE_PLAYING_STATE':
+      return {
+        ...state,
+        playing: action.payload.playing,
+      };
+    case 'NEXT_BEAT':
+      return {
+        ...state,
+        beat: nextBeat(state.beat, state.preset.sequenceLength),
       };
     default:
       return state;

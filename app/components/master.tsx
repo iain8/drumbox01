@@ -7,29 +7,30 @@ import * as masterActions from '../state/actions/master';
 
 interface IMasterProps {
   dispatch?: any,
+  playing: boolean,
   preset: any,
 };
 
 class Master extends Component<IMasterProps, any> {
-  constructor() {
-    super();
-
-    this.state = { // TODO: put in a config or something
-      divisions: {
-        2: '1/4',
-        4: '1/8',
-        8: '1/16',
-      },
-      playing: false, // TODO: into state
-    };
+  constructor(props) {
+    super(props);
 
     this.handleDivisionChange = this.handleDivisionChange.bind(this);
+    this.handleStartButton = this.handleStartButton.bind(this);
+    this.handleStopButton = this.handleStopButton.bind(this);
     this.handleTempoChange = this.handleTempoChange.bind(this);
     this.handleVolumeChange = this.handleVolumeChange.bind(this);
   }
 
   public render(props) {
     const { division, masterVolume, tempo } = props.preset;
+    const divisions = { // TODO: move me
+      2: '1/4',
+      4: '1/8',
+      8: '1/16',
+    };
+
+    console.log('he', Object.keys(divisions), division);
 
     return (
       <div class='master'>
@@ -40,14 +41,14 @@ class Master extends Component<IMasterProps, any> {
           value={ tempo } />
         <Division
           division={ division }
-          divisions={ this.state.divisions }
+          divisions={ divisions }
           onChange={ this.handleDivisionChange } />
         <button
-          class={ `sequencer-control start ${ this.state.playing ? 'active' : '' }` }
-          onClick={ this.handleStartButton.bind(this) } />
+          class={ `sequencer-control start ${ props.playing ? 'active' : '' }` }
+          onClick={ this.handleStartButton } />
         <button
-          class={ `sequencer-control stop ${ this.state.playing ? '' : 'active' }` }
-          onClick={ this.handleStopButton.bind(this) } />
+          class={ `sequencer-control stop ${ props.playing ? '' : 'active' }` }
+          onClick={ this.handleStopButton } />
         <Knob
           name='vol'
           onChange={ this.handleVolumeChange }
@@ -70,23 +71,23 @@ class Master extends Component<IMasterProps, any> {
     this.props.dispatch(masterActions.changeMasterVolume({ volume }));
   }
 
-  private handleDivisionChange(division: number) {
-    this.props.dispatch(masterActions.changeDivision({ division }));
+  private handleDivisionChange(event: any) {
+    this.props.dispatch(masterActions.changeDivision({ division: event.target.value }));
   }
 
   private handleStartButton(e: Event) {
     e.preventDefault();
 
-    this.setState({ playing: true });
+    this.props.dispatch(masterActions.changePlayingState({ playing: true }));
   }
 
   private handleStopButton(e: Event) {
     e.preventDefault();
 
-    this.setState({ playing: false });
+    this.props.dispatch(masterActions.changePlayingState({ playing: false }));
   }
 }
 
-const mapStateToProps = (state, { preset }) => ({ preset });
+const mapStateToProps = (state, { playing, preset }) => ({ playing, preset });
 
 export default connect(mapStateToProps)(Master);

@@ -1,15 +1,21 @@
 import { Component, h } from 'preact';
 
 export default class Division extends Component<any, any> {
-  render() {
+  render(props) {
+    const { division, divisions, onChange } = props;
+
+    console.log(props);
+
     return (
-      <select class='division' onChange={ this.props.onChange }>
+      <select
+        class='division'
+        onChange={ onChange }
+        value={ division }>
         {
-          Object.keys(this.props.divisions).map((val) => {
+          Object.keys(divisions).map((val) => {
             return (
-              // TODO: fix selected
-              <option value={ val } selected={ val === this.props.division }>
-                { this.props.divisions[val] }
+              <option value={ val }>
+                { divisions[val] }
               </option>
             );
           })

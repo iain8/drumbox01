@@ -11,7 +11,7 @@ class MainPanel extends Component<any, any> {
   }
 
   public render(props: any) {
-    const { channels, preset, sequences } = props;
+    const { beat, channels, playing, preset, sequences } = props;
 
     return (
       <div id='main-panel'>
@@ -23,10 +23,15 @@ class MainPanel extends Component<any, any> {
               <div class='container vertical-divider'></div>
 
               <div class='container' style='padding-left: 0; margin-left: -9px'>
-                <Sequencer sequences={ sequences } patternLength={ preset.sequenceLength } />
+                <Sequencer
+                  beat={ beat }
+                  patternLength={ preset.sequenceLength }
+                  playing={ playing }
+                  preset={ preset }
+                  sequences={ sequences } />
 
                 <div class='horizontal-divider'></div>
-                  <Master preset={ preset } />
+                  <Master playing={ playing } preset={ preset } />
                 </div>
             </form>
           : ''
@@ -36,8 +41,8 @@ class MainPanel extends Component<any, any> {
   }
 }
 
-const mapStateToProps = ({ channels, loading, preset, sequences }) => (
-  { channels, loading, preset, sequences }
+const mapStateToProps = ({ beat, channels, loading, playing, preset, sequences }) => (
+  { beat, channels, loading, playing, preset, sequences }
 );
 
 export default connect(mapStateToProps)(MainPanel);
