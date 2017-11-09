@@ -30,14 +30,17 @@ export default class Channel extends Component<any, any> {
     };
   }
 
-  render() {
-    return (
-      <div class={ `channel ${ this.props.active === this.props.index ? 'active' : '' }` }>
-        <Mixer data={ this.props.data } />
+  render(props) {
+    const { active, context, data, index } = props;
+
+    return ( // TODO: move active === index to parent
+      <div class={ `channel ${ active === index ? 'active' : '' }` }>
+        <Mixer data={ data } />
         <Osc
-          data={ this.props.data }
+          context={ context }
+          data={ data }
           waves={ this.state.waves } />
-        <Noise data={ this.props.data } />
+        <Noise data={ data } />
       </div>
     );
   }

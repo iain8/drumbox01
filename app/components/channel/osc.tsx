@@ -1,10 +1,25 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
+import BaseModule from './base';
 import Knob from '../controls/knob';
 import Selector from '../controls/selector';
 
-export default class Osc extends Component<any, any> {
+export default class Osc extends BaseModule {
+  public input: OscillatorNode;
+  public output: OscillatorNode;
+  public frequency: AudioParam;
+  private oscillator: any;	// due to iOS noteOn()
+
   constructor(props) {
     super(props);
+
+    const { frequency, wave } = props.data.options;
+
+    this.oscillator = props.context.createOscillator();
+    this.oscillator.type = wave;
+    this.oscillator.frequency.value = frequency;
+    this.input = this.oscillator;
+    this.output = this.oscillator;
+    this.frequency = this.oscillator.frequency;
 
     this.handleFreqChange = this.handleFreqChange.bind(this);
     this.handleWaveChange = this.handleWaveChange.bind(this);
@@ -14,13 +29,20 @@ export default class Osc extends Component<any, any> {
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
 
     this.state = {
-      selectedWave: props.data.options.wave,
+      selectedWave: wave,
       waves: props.waves,
     };
   }
 
-  public render() {
-    const { data } = this.props;
+  public render(props) {
+    const {
+      frequency,
+      oscAttack,
+      oscDecay,
+      pitchAttack,
+      pitchDecay,
+      wave,
+    } = this.props.data.options;
 
     return (
       <div className='section'>
@@ -29,42 +51,42 @@ export default class Osc extends Component<any, any> {
           onNext={ () => this.handleWaveChange('next') }
           onPrev={ () => this.handleWaveChange('prev') }
           options={ this.state.waves }
-          selected={ this.state.selectedWave } />
+          selected={ wave } />
         <Knob
           display='block'
           max={ 2000 }
           min={ 20 }
           name='freq'
           onChange={ this.handleFreqChange }
-          value={ data.options.frequency } />
+          value={ frequency } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
           name='attack'
           onChange={ this.handleOscAttackChange }
-          value={ data.options.oscAttack * 1000 } />
+          value={ oscAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
           name='decay'
           onChange={ this.handleOscDecayChange }
-          value={ data.options.oscDecay * 1000 } />
+          value={ oscDecay * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
           name='attack'
           onChange={ this.handlePitchAttackChange }
-          value={ data.options.pitchAttack * 1000 } />
+          value={ pitchAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
           name='decay'
           onChange={ this.handlePitchDecayChange }
-          value={ data.options.pitchDecay * 1000 } />
+          value={ pitchDecay * 1000 } />
       </div>
     );
   }
@@ -78,6 +100,8 @@ export default class Osc extends Component<any, any> {
     } else if (newIndex === this.state.waves.length) {
       newIndex = 0;
     }
+
+    // TODO: dispatch
 
     this.setState({
       selectedWave: this.state.waves[newIndex],

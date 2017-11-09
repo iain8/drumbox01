@@ -19,7 +19,7 @@ export default class Channels extends Component<any, IChannelsState> {
   }
 
   public render(props) {
-    const { channels } = props;
+    const { channels, context } = props;
 
     return (
       <div
@@ -34,6 +34,7 @@ export default class Channels extends Component<any, IChannelsState> {
             return (
               <Channel
                 active={ this.state.activeChannelIndex }
+                context={ context }
                 data={ channel }
                 index={ i } />
             );

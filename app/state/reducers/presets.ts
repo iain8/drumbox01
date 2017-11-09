@@ -1,5 +1,14 @@
-import { Action } from 'redux';
+import { Action, combineReducers } from 'redux';
+import sequencerReducer from './sequencer';
 import { getPresetFSA } from '../actions/preset';
+
+/*
+You may call combineReducers at any level of the reducer hierarchy. It doesn't have
+to happen at the top. In fact you may use it again to split the child reducers that
+get too complicated into independent grandchildren, and so on.
+*/
+const rootReducer = combineReducers({ sequencerReducer });
+
 
 const DEFAULT_STATE = {
   beat: 0,
@@ -20,6 +29,13 @@ interface PresetState {
   preset: Object,
   sequences: Array<Object>,
 }
+
+const unserializeChannel = (channel) => {
+  return {
+    ...channel,
+    options: JSON.parse(channel.options),
+  };
+};
 
 const toggleBeat = (sequences, { beat, seq }) : any => {
   return sequences.map((sequence, i) => {
@@ -73,7 +89,7 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
 
       return {
         ...state,
-        channels: preset.channels,
+        channels: preset.channels.map((channel) => unserializeChannel(channel)),
         loading: false,
         preset: {
           division: preset.division,
@@ -128,6 +144,6 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
         beat: nextBeat(state.beat, state.preset.sequenceLength),
       };
     default:
-      return state;
+      return <PresetState> rootReducer(state, action);
   }
 };

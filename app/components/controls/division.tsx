@@ -4,8 +4,6 @@ export default class Division extends Component<any, any> {
   render(props) {
     const { division, divisions, onChange } = props;
 
-    console.log(props);
-
     return (
       <select
         class='division'

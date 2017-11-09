@@ -11,7 +11,7 @@ const configureStore = () => {
       presetReducer,
       applyMiddleware(sagaMiddleware)),
     run: sagaMiddleware.run(watchRequest),
-  };
+  }; // TODO: pass initial state here
 };
 
 export default configureStore;

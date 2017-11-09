@@ -8,8 +8,7 @@ class Sequencer extends Component<any, any> {
     super(props);
 
     this.state = {
-      current: 0,
-      interval: null,
+      interval: null, // TODO: maybe make this a class property instead
       playing: false,
     };
   }
@@ -57,7 +56,6 @@ class Sequencer extends Component<any, any> {
   }
 
   private bpmToMs(bpm: number, division: number) : number {
-    console.log(bpm, division, (60000 / bpm) / division);
     return (60000 / bpm) / division;
   }
 }

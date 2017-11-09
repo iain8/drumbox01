@@ -30,8 +30,6 @@ class Master extends Component<IMasterProps, any> {
       8: '1/16',
     };
 
-    console.log('he', Object.keys(divisions), division);
-
     return (
       <div class='master'>
         <input
