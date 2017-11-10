@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import presetReducer from './reducers/presets';
+import rootReducer from './reducers/index';
 import watchRequest from './sagas';
 
 const configureStore = () => {
@@ -8,10 +8,10 @@ const configureStore = () => {
 
   return {
     ...createStore(
-      presetReducer,
+      rootReducer,
       applyMiddleware(sagaMiddleware)),
     run: sagaMiddleware.run(watchRequest),
-  }; // TODO: pass initial state here
+  };
 };
 
 export default configureStore;

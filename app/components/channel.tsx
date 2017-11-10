@@ -24,10 +24,6 @@ export default class Channel extends Component<any, any> {
 
   constructor(props) {
     super();
-
-    this.state = {
-      waves: ['sine', 'sqr', 'saw', 'tri'],
-    };
   }
 
   render(props) {
@@ -39,7 +35,7 @@ export default class Channel extends Component<any, any> {
         <Osc
           context={ context }
           data={ data }
-          waves={ this.state.waves } />
+          index={ index } />
         <Noise data={ data } />
       </div>
     );

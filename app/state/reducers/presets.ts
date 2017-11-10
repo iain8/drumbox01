@@ -1,14 +1,5 @@
-import { Action, combineReducers } from 'redux';
-import sequencerReducer from './sequencer';
+import { Action } from 'redux';
 import { getPresetFSA } from '../actions/preset';
-
-/*
-You may call combineReducers at any level of the reducer hierarchy. It doesn't have
-to happen at the top. In fact you may use it again to split the child reducers that
-get too complicated into independent grandchildren, and so on.
-*/
-const rootReducer = combineReducers({ sequencerReducer });
-
 
 const DEFAULT_STATE = {
   beat: 0,
@@ -37,41 +28,7 @@ const unserializeChannel = (channel) => {
   };
 };
 
-const toggleBeat = (sequences, { beat, seq }) : any => {
-  return sequences.map((sequence, i) => {
-    const newSeq = { ...sequence };
-
-    if (i === seq) {
-      const pattern = newSeq.pattern.split('');
-
-      pattern[beat] = pattern[beat] === '0' ? '1' : '0';
-
-      newSeq.pattern = pattern.join('');
-    }
-
-    return newSeq;
-  });
-};
-
-const clearSequence = (sequences, sequenceLength, { seq }) : any => {
-  return sequences.map((sequence, i) => {
-    const newSeq = { ...sequence };
-
-    if (i === seq) {
-      newSeq.pattern = Array(sequenceLength).fill(0).join('');
-    }
-
-    return newSeq;
-  });
-};
-
-const nextBeat = (current, sequenceLength) : number => {
-  return current === sequenceLength - 1 ? 0 : current + 1;
-};
-
 export default (state = DEFAULT_STATE, action: any) : PresetState => {
-  // console.log('reducer!', state, action);
-
   switch (action.type) {
     case 'GET_PRESET_FAILED':
       return {
@@ -99,51 +56,7 @@ export default (state = DEFAULT_STATE, action: any) : PresetState => {
         },
         sequences: preset.sequences,
       };
-    case 'CHANGE_TEMPO':
-      return {
-        ...state,
-        preset: {
-          ...state.preset,
-          tempo: action.payload.tempo,
-        },
-      };
-    case 'CHANGE_DIVISION':
-      return {
-        ...state,
-        preset: {
-          ...state.preset,
-          division: action.payload.division,
-        },
-      };
-    case 'CHANGE_MASTER_VOLUME':
-      return {
-        ...state,
-        preset: {
-          ...state.preset,
-          masterVolume: action.payload.volume,
-        }
-      };
-    case 'TOGGLE_BEAT':
-      return {
-        ...state,
-        sequences: toggleBeat(state.sequences, action.payload),
-      };
-    case 'CLEAR_SEQUENCE':
-      return {
-        ...state,
-        sequences: clearSequence(state.sequences, state.preset.sequenceLength, action.payload),
-      };
-    case 'CHANGE_PLAYING_STATE':
-      return {
-        ...state,
-        playing: action.payload.playing,
-      };
-    case 'NEXT_BEAT':
-      return {
-        ...state,
-        beat: nextBeat(state.beat, state.preset.sequenceLength),
-      };
     default:
-      return <PresetState> rootReducer(state, action);
+      return state;
   }
 };

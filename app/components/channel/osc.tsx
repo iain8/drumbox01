@@ -1,9 +1,11 @@
 import { h } from 'preact';
+import { connect } from 'preact-redux';
 import BaseModule from './base';
 import Knob from '../controls/knob';
 import Selector from '../controls/selector';
+import { changeWave } from '../../state/actions/channel';
 
-export default class Osc extends BaseModule {
+class Osc extends BaseModule {
   public input: OscillatorNode;
   public output: OscillatorNode;
   public frequency: AudioParam;
@@ -27,11 +29,6 @@ export default class Osc extends BaseModule {
     this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
-
-    this.state = {
-      selectedWave: wave,
-      waves: props.waves,
-    };
   }
 
   public render(props) {
@@ -44,14 +41,16 @@ export default class Osc extends BaseModule {
       wave,
     } = this.props.data.options;
 
+    const waves = ['sine', 'sqr', 'saw', 'tri']; // TODO: omg
+
     return (
       <div className='section'>
         <p>osc</p>
         <Selector
           onNext={ () => this.handleWaveChange('next') }
           onPrev={ () => this.handleWaveChange('prev') }
-          options={ this.state.waves }
-          selected={ wave } />
+          options={ waves }
+          selected={ wave || 'sine' /* TODO: update db */ } />
         <Knob
           display='block'
           max={ 2000 }
@@ -92,20 +91,11 @@ export default class Osc extends BaseModule {
   }
 
   private handleWaveChange(direction: string) {
-    const currentIndex = this.state.waves.indexOf(this.state.selectedWave);
-    let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-
-    if (newIndex === -1) {
-      newIndex = this.state.waves.length - 1;
-    } else if (newIndex === this.state.waves.length) {
-      newIndex = 0;
-    }
-
-    // TODO: dispatch
-
-    this.setState({
-      selectedWave: this.state.waves[newIndex],
-    });
+    this.props.dispatch(changeWave({
+      direction,
+      index: this.props.index,
+      wave: this.props.data.options.wave,
+    }));
   }
 
   private handleFreqChange(value: number) {
@@ -128,3 +118,11 @@ export default class Osc extends BaseModule {
     console.log(value / 1000);
   }
 }
+
+const mapStateToProps = (state, { context, data, index }) => ({
+  context,
+  data,
+  index,
+});
+
+export default connect(mapStateToProps)(Osc);
