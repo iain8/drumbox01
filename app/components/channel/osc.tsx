@@ -3,7 +3,7 @@ import { connect } from 'preact-redux';
 import BaseModule from './base';
 import Knob from '../controls/knob';
 import Selector from '../controls/selector';
-import { changeWave } from '../../state/actions/channel';
+import * as channelActions from '../../state/actions/channel';
 
 class Osc extends BaseModule {
   public input: OscillatorNode;
@@ -15,6 +15,8 @@ class Osc extends BaseModule {
     super(props);
 
     const { frequency, wave } = props.data.options;
+
+    // TODO: where is my oscamp?
 
     this.oscillator = props.context.createOscillator();
     this.oscillator.type = wave;
@@ -34,10 +36,10 @@ class Osc extends BaseModule {
   public render(props) {
     const {
       frequency,
-      oscAttack,
-      oscDecay,
-      pitchAttack,
-      pitchDecay,
+      oscAmpAttack,
+      oscAmpDecay,
+      oscPitchAttack,
+      oscPitchDecay,
       wave,
     } = this.props.data.options;
 
@@ -50,7 +52,7 @@ class Osc extends BaseModule {
           onNext={ () => this.handleWaveChange('next') }
           onPrev={ () => this.handleWaveChange('prev') }
           options={ waves }
-          selected={ wave || 'sine' /* TODO: update db */ } />
+          selected={ wave } />
         <Knob
           display='block'
           max={ 2000 }
@@ -64,58 +66,78 @@ class Osc extends BaseModule {
           min={ 0 }
           name='attack'
           onChange={ this.handleOscAttackChange }
-          value={ oscAttack * 1000 } />
+          value={ oscAmpAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
           name='decay'
           onChange={ this.handleOscDecayChange }
-          value={ oscDecay * 1000 } />
+          value={ oscAmpDecay * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
           name='attack'
           onChange={ this.handlePitchAttackChange }
-          value={ pitchAttack * 1000 } />
+          value={ oscPitchAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
           name='decay'
           onChange={ this.handlePitchDecayChange }
-          value={ pitchDecay * 1000 } />
+          value={ oscPitchDecay * 1000 } />
       </div>
     );
   }
 
   private handleWaveChange(direction: string) {
-    this.props.dispatch(changeWave({
+    this.props.dispatch(channelActions.changeWave({
       direction,
       index: this.props.index,
       wave: this.props.data.options.wave,
     }));
   }
 
-  private handleFreqChange(value: number) {
-    console.log(value);
+  private handleFreqChange(frequency: number) {
+    this.props.dispatch(channelActions.changeOscParam({
+      index: this.props.index,
+      param: 'frequency',
+      value: frequency,
+    }));
   }
 
-  private handleOscAttackChange(value: number) {
-    console.log(value / 1000);
+  private handleOscAttackChange(attack: number) {
+    this.props.dispatch(channelActions.changeOscParam({
+      index: this.props.index,
+      param: 'oscAmpAttack',
+      value: attack / 1000,
+    }));
   }
 
-  private handleOscDecayChange(value: number) {
-    console.log(value / 1000);
+  private handleOscDecayChange(decay: number) {
+    this.props.dispatch(channelActions.changeOscParam({
+      index: this.props.index,
+      param: 'oscAmpDecay',
+      value: decay / 1000,
+    }));
   }
 
-  private handlePitchAttackChange(value: number) {
-    console.log(value / 1000);
+  private handlePitchAttackChange(attack: number) {
+    this.props.dispatch(channelActions.changeOscParam({
+      index: this.props.index,
+      param: 'oscPitchAttack',
+      value: attack / 1000,
+    }));
   }
 
-  private handlePitchDecayChange(value: number) {
-    console.log(value / 1000);
+  private handlePitchDecayChange(decay: number) {
+    this.props.dispatch(channelActions.changeOscParam({
+      index: this.props.index,
+      param: 'oscPitchDecay',
+      value: decay / 1000,
+    }));
   }
 }
 

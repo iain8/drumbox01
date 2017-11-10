@@ -4,28 +4,7 @@ import Mixer from './channel/mixer';
 import Noise from './channel/noise';
 import Osc from './channel/osc';
 
-export default class Channel extends Component<any, any> {
-  private defaults = {
-    active: true,
-    filterFreq: 100,
-    filterGain: 100,
-    frequency: 100,
-    level: 100,
-    noiseAttack: 100,
-    noiseDecay: 100,
-    noiseLevel: 100,
-    oscAttack: 100,
-    oscDecay: 100,
-    oscLevel: 100,
-    pitchAttack: 100,
-    pitchDecay: 100,
-    wave: 'sine',
-  };
-
-  constructor(props) {
-    super();
-  }
-
+export default class Channel extends Component<any, any> { // TODO: SFC
   render(props) {
     const { active, context, data, index } = props;
 

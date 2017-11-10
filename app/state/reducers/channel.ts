@@ -1,6 +1,6 @@
 const waves = ['sine', 'sqr', 'saw', 'tri'];
 
-const changeWave = (current, direction: string) => {
+const changeWave = (current: string, direction: string): string => {
   const currentIndex = waves.indexOf(current);
   let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
 
@@ -14,18 +14,26 @@ const changeWave = (current, direction: string) => {
 };
 
 export default (state, action) => {
-  switch (action.type) {
-    case 'CHANGE_WAVE':
-      const channels = [...state.channels];
+  const channels = [...state.channels];
+  const { index } = action.payload || 0;
 
-      channels[action.payload.index].options.wave = changeWave(
+  switch (action.type) {
+    case 'CHANGE_OSC_PARAM':
+      channels[index].options[action.payload.param] = action.payload.value;
+
+      return {
+        ...state,
+        channels,
+      };
+    case 'CHANGE_WAVE':
+      channels[index].options.wave = changeWave(
         action.payload.wave,
         action.payload.direction,
       );
 
       return {
         ...state,
-        channels: channels,
+        channels,
       };
     default:
       return state;
