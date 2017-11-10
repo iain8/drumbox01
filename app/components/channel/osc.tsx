@@ -33,6 +33,26 @@ class Osc extends BaseModule {
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
   }
 
+  public start() {
+    this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
+  }
+
+  get type(): string {
+    return this.oscillator.type;
+  }
+
+  set type(type: string) {
+    this.oscillator.type = type;
+  }
+
+  get frequencyValue() {
+    return this.frequency.value;
+  }
+
+  set frequencyValue(frequency: number) {
+    this.frequency.value = frequency;
+  }
+
   public render(props) {
     const {
       frequency,
