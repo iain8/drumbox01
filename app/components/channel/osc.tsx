@@ -33,7 +33,7 @@ class Osc extends Component<any, any> {
 
     this.oscillator = context.createOscillator();
     this.oscillator.type = wave;
-    this.oscillator.frequency.value = frequency;
+    this.oscillator.frequency.value = frequency || 440;
     this.input = this.oscillator;
     this.output = this.oscillator;
     this.frequency = this.oscillator.frequency;
@@ -42,14 +42,14 @@ class Osc extends Component<any, any> {
     this.amp.connect(output);
 
     this.pitchEnvelope = new Env(context);
-    this.pitchEnvelope.attack = oscPitchAttack;
-    this.pitchEnvelope.decay = oscPitchDecay;
-    this.pitchEnvelope.max = frequency;
+    this.pitchEnvelope.attack = oscPitchAttack || 0.1;
+    this.pitchEnvelope.decay = oscPitchDecay|| 0.5;
+    this.pitchEnvelope.max = frequency || 440;
 
     this.ampEnvelope = new Env(context);
-    this.ampEnvelope.attack = oscAmpAttack;
-    this.ampEnvelope.decay = oscAmpDecay;
-    this.ampEnvelope.max = oscLevel;
+    this.ampEnvelope.attack = oscAmpAttack || 0.2;
+    this.ampEnvelope.decay = oscAmpDecay|| 0.8;
+    this.ampEnvelope.max = oscLevel || 1.0;
 
     this.oscillator.connect(this.amp.input);
     this.pitchEnvelope.connect(this.oscillator.frequency);
@@ -61,6 +61,8 @@ class Osc extends Component<any, any> {
     this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
+
+    this.state = { beat: -1, playing: false };
   }
 
   public connect(node: any) {
@@ -69,10 +71,6 @@ class Osc extends Component<any, any> {
     } else {
       this.output.connect(node);
     }
-  }
-
-  public start() {
-    this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
   }
 
   get type(): string {
@@ -89,6 +87,22 @@ class Osc extends Component<any, any> {
 
   set frequencyValue(frequency: number) {
     this.frequency.value = frequency;
+  }
+
+  public componentWillReceiveProps(props) {
+    if (props.playing && !this.state.playing) {
+      this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
+
+      this.setState({ playing: true });
+    } else if (!props.playing && this.state.playing) {
+      // TODO: do a stop
+      this.setState({ beat: -1, playing: false });
+    }
+
+    if (props.beat !== this.state.beat) {
+      this.ampEnvelope.trigger();
+      this.pitchEnvelope.trigger();
+    }
   }
 
   public render(props) {
@@ -199,11 +213,6 @@ class Osc extends Component<any, any> {
   }
 }
 
-const mapStateToProps = (state, { context, data, index, output }) => ({
-  context,
-  data,
-  index,
-  output,
-});
+const mapStateToProps = (state, props) => props;
 
 export default connect(mapStateToProps)(Osc);

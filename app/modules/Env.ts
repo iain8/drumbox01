@@ -26,6 +26,7 @@ export default class Env {
 
     this.param.cancelScheduledValues(now);
     this.param.setValueAtTime(this.minValue, now);
+    console.log('he attak', this.attack);
     this.param.linearRampToValueAtTime(this.maxValue, now + this.attack);
 
     this.param.exponentialRampToValueAtTime(this.minValue, now + this.attack + this.decay);

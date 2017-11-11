@@ -38,9 +38,11 @@ class MainPanel extends Component<any, any> {
           preset
           ? <form onSubmit={ () => false } autocomplete='off'>
               <Channels
+                beat={ beat }
                 channels={ channels }
                 context={ this.audioContext }
-                master={ this.masterOutput } />
+                master={ this.masterOutput }
+                playing={ playing } />
 
               <div class='container vertical-divider'></div>
 

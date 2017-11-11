@@ -29,10 +29,6 @@ export default class Channel extends Component<any, any> {
   }
 
   public componentDidMount() {
-    // this.noise.connect(this.noiseAmp);
-    // this.noiseAmpEnv.connect(this.noiseAmp.amplitude);
-    // this.noiseAmp.connect(this.preOutput);
-
     this.preOutput.connect(this.filter);
     this.filter.connect(this.postOutput);
 
@@ -40,17 +36,26 @@ export default class Channel extends Component<any, any> {
   }
 
   public render(props) {
-    const { active, context, data, index } = props;
+    const { active, beat, context, data, index, playing, start } = props;
 
     return ( // TODO: move active === index to parent
       <div class={ `channel ${ active === index ? 'active' : '' }` }>
         <Mixer data={ data } />
         <Osc
+          beat={ beat }
           context={ context }
           data={ data }
           index={ index }
-          output={ this.preOutput } />
-        <Noise data={ data } />
+          output={ this.preOutput }
+          playing={ playing }
+          start={ start } />
+        <Noise
+        beat={ beat }
+          context={ context }
+          data={ data }
+          output={ this.preOutput }
+          playing={ playing }
+          start={ start } />
       </div>
     );
   }

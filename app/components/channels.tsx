@@ -19,7 +19,7 @@ export default class Channels extends Component<any, IChannelsState> {
   }
 
   public render(props) {
-    const { channels, context } = props;
+    const { beat, channels, context, playing } = props;
 
     return (
       <div
@@ -34,10 +34,12 @@ export default class Channels extends Component<any, IChannelsState> {
             return (
               <Channel
                 active={ this.state.activeChannelIndex }
+                beat={ beat }
                 context={ context }
                 data={ channel }
                 index={ i }
-                master={ props.master } />
+                master={ props.master }
+                playing={ playing } />
             );
           })
         }
