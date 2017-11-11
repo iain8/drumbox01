@@ -2,14 +2,14 @@ import Amp from './modules/Amp';
 import Env from './modules/Env';
 import Filter from './modules/Filter';
 import Noise from './modules/Noise';
-import Osc from './modules/Osc';
+// import Osc from './modules/Osc';
 
 /**
  * Giant bastard channel class, wraps a lot of things to try and make an
  * easier public API, possibly fails
  */
 export default class Channel {
-  private osc: Osc;
+  // private osc: Osc;
   private oscAmp: Amp;
   private oscPitchEnv: Env;
   private oscAmpEnv: Env;
@@ -42,27 +42,27 @@ export default class Channel {
    * }
    */
   constructor(context: AudioContext, output: Amp, options: any = {}) {
-    this.preOutput = new Amp(context);
-    this.preOutput.level = 1.0;
+    // this.preOutput = new Amp(context);
+    // this.preOutput.level = 1.0;
 
-    this.postOutput = new Amp(context);
-    this.postOutput.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
+    // this.postOutput = new Amp(context);
+    // this.postOutput.level = options.hasOwnProperty('outputLevel') ? options.outputLevel : 1.0;
 
-    this.osc = new Osc(context);
-    this.osc.type = options.hasOwnProperty('wave') ? options.wave : 'sine';
-    this.osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
+    // this.osc = new Osc(context);
+    // this.osc.type = options.hasOwnProperty('wave') ? options.wave : 'sine';
+    // this.osc.frequencyValue = options.hasOwnProperty('frequency') ? options.frequency : 440;
 
-    this.oscAmp = new Amp(context);
+    // this.oscAmp = new Amp(context);
 
-    this.oscPitchEnv = new Env(context);
-    this.oscPitchEnv.attack = options.hasOwnProperty('oscPitchAttack') ? options.oscPitchAttack : 0.1;
-    this.oscPitchEnv.decay = options.hasOwnProperty('oscPitchDecay') ? options.oscPitchDecay : 0.5;
-    this.oscPitchEnv.max = options.hasOwnProperty('frequency') ? options.frequency : 440;
+    // this.oscPitchEnv = new Env(context);
+    // this.oscPitchEnv.attack = options.hasOwnProperty('oscPitchAttack') ? options.oscPitchAttack : 0.1;
+    // this.oscPitchEnv.decay = options.hasOwnProperty('oscPitchDecay') ? options.oscPitchDecay : 0.5;
+    // this.oscPitchEnv.max = options.hasOwnProperty('frequency') ? options.frequency : 440;
 
-    this.oscAmpEnv = new Env(context);
-    this.oscAmpEnv.attack = options.hasOwnProperty('oscAmpAttack') ? options.oscAmpAttack : 0.2;
-    this.oscAmpEnv.decay = options.hasOwnProperty('oscAmpDecay') ? options.oscAmpDecay : 0.8;
-    this.oscAmpEnv.max = options.hasOwnProperty('oscLevel') ? options.oscLevel : 1.0;
+    // this.oscAmpEnv = new Env(context);
+    // this.oscAmpEnv.attack = options.hasOwnProperty('oscAmpAttack') ? options.oscAmpAttack : 0.2;
+    // this.oscAmpEnv.decay = options.hasOwnProperty('oscAmpDecay') ? options.oscAmpDecay : 0.8;
+    // this.oscAmpEnv.max = options.hasOwnProperty('oscLevel') ? options.oscLevel : 1.0;
 
     this.noise = new Noise(context);
 
@@ -74,24 +74,24 @@ export default class Channel {
     this.noiseAmpEnv.max = options.hasOwnProperty('noiseLevel') ? options.noiseLevel : 1.0;
 
     // single peak filter for channel
-    this.channelFilter = new Filter(context);
-    this.channelFilter.frequency = options.hasOwnProperty('channelFilterFreq') ? options.channelFilterFreq : 500;
-    this.channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
-    this.channelFilter.type = 'peaking';
+    // this.channelFilter = new Filter(context);
+    // this.channelFilter.frequency = options.hasOwnProperty('channelFilterFreq') ? options.channelFilterFreq : 500;
+    // this.channelFilter.gain = options.hasOwnProperty('channelFilterGain') ? options.channelFilterGain : 0;
+    // this.channelFilter.type = 'peaking';
 
     // wiring!
-    this.osc.connect(this.oscAmp);
-    this.oscPitchEnv.connect(this.osc.frequency);
-    this.oscAmpEnv.connect(this.oscAmp.amplitude);
-    this.oscAmp.connect(this.preOutput);
-    this.noise.connect(this.noiseAmp);
-    this.noiseAmpEnv.connect(this.noiseAmp.amplitude);
-    this.noiseAmp.connect(this.preOutput);
+    // this.osc.connect(this.oscAmp);
+    // this.oscPitchEnv.connect(this.osc.frequency);
+    // this.oscAmpEnv.connect(this.oscAmp.amplitude);
+    // this.oscAmp.connect(this.preOutput);
+    // this.noise.connect(this.noiseAmp);
+    // this.noiseAmpEnv.connect(this.noiseAmp.amplitude);
+    // this.noiseAmp.connect(this.preOutput);
 
-    this.preOutput.connect(this.channelFilter);
-    this.channelFilter.connect(this.postOutput);
+    // this.preOutput.connect(this.channelFilter);
+    // this.channelFilter.connect(this.postOutput);
 
-    this.postOutput.connect(output);
+    // this.postOutput.connect(output);
   }
 
   /**
@@ -99,7 +99,7 @@ export default class Channel {
    */
   public start(): void {
     if (!this.started) {
-      this.osc.start();
+      // this.osc.start();
       this.noise.start();
     }
 
@@ -133,13 +133,13 @@ export default class Channel {
     this.channelFilter.frequency = value;
   }
 
-  get frequency() {
-    return this.osc.frequencyValue;
-  }
+  // get frequency() {
+  //   return this.osc.frequencyValue;
+  // }
 
   // frequency determined by maximum of pitch envelope
   set frequency(frequency: number) {
-    this.osc.frequencyValue = frequency;
+    // this.osc.frequencyValue = frequency;
     this.oscPitchEnv.max = frequency;
   }
 
@@ -215,11 +215,11 @@ export default class Channel {
     this.oscPitchEnv.decay = value;
   }
 
-  get wave(): string {
-    return this.osc.type;
-  }
+  // get wave(): string {
+  //   return this.osc.type;
+  // }
 
-  set wave(type: string) {
-    this.osc.type = type;
-  }
+  // set wave(type: string) {
+  //   this.osc.type = type;
+  // }
 }

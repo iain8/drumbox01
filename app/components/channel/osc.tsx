@@ -1,29 +1,59 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { connect } from 'preact-redux';
 import BaseModule from './base';
 import Knob from '../controls/knob';
 import Selector from '../controls/selector';
 import * as channelActions from '../../state/actions/channel';
+import Amp from '../../modules/amp';
+import Env from '../../modules/env';
 
-class Osc extends BaseModule {
+class Osc extends Component<any, any> {
   public input: OscillatorNode;
   public output: OscillatorNode;
   public frequency: AudioParam;
   private oscillator: any;	// due to iOS noteOn()
+  private amp: Amp;
+  private pitchEnvelope: Env;
+  private ampEnvelope: Env;
 
   constructor(props) {
     super(props);
 
-    const { frequency, wave } = props.data.options;
+    const {
+      frequency,
+      oscAmpAttack,
+      oscAmpDecay,
+      oscLevel,
+      oscPitchAttack,
+      oscPitchDecay,
+      wave
+    } = props.data.options;
 
-    // TODO: where is my oscamp?
+    const { context, output } = props;
 
-    this.oscillator = props.context.createOscillator();
+    this.oscillator = context.createOscillator();
     this.oscillator.type = wave;
     this.oscillator.frequency.value = frequency;
     this.input = this.oscillator;
     this.output = this.oscillator;
     this.frequency = this.oscillator.frequency;
+
+    this.amp = new Amp(context);
+    this.amp.connect(output);
+
+    this.pitchEnvelope = new Env(context);
+    this.pitchEnvelope.attack = oscPitchAttack;
+    this.pitchEnvelope.decay = oscPitchDecay;
+    this.pitchEnvelope.max = frequency;
+
+    this.ampEnvelope = new Env(context);
+    this.ampEnvelope.attack = oscAmpAttack;
+    this.ampEnvelope.decay = oscAmpDecay;
+    this.ampEnvelope.max = oscLevel;
+
+    this.oscillator.connect(this.amp.input);
+    this.pitchEnvelope.connect(this.oscillator.frequency);
+    this.ampEnvelope.connect(this.amp.amplitude);
 
     this.handleFreqChange = this.handleFreqChange.bind(this);
     this.handleWaveChange = this.handleWaveChange.bind(this);
@@ -31,6 +61,14 @@ class Osc extends BaseModule {
     this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
+  }
+
+  public connect(node: any) {
+    if (node.hasOwnProperty('input')) {
+      this.output.connect(node.input);
+    } else {
+      this.output.connect(node);
+    }
   }
 
   public start() {
@@ -161,10 +199,11 @@ class Osc extends BaseModule {
   }
 }
 
-const mapStateToProps = (state, { context, data, index }) => ({
+const mapStateToProps = (state, { context, data, index, output }) => ({
   context,
   data,
   index,
+  output,
 });
 
 export default connect(mapStateToProps)(Osc);

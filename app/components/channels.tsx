@@ -36,7 +36,8 @@ export default class Channels extends Component<any, IChannelsState> {
                 active={ this.state.activeChannelIndex }
                 context={ context }
                 data={ channel }
-                index={ i } />
+                index={ i }
+                master={ props.master } />
             );
           })
         }

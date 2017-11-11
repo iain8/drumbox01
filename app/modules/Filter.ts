@@ -1,20 +1,24 @@
-import BaseModule from './BaseModule';
-
 /**
  * Filter module, wraps BiquadFilterNode
  */
-export default class Filter extends BaseModule {
+export default class Filter {
   public input: BiquadFilterNode;
   public output: BiquadFilterNode;
   private filter: BiquadFilterNode;
 
   constructor(context: AudioContext) {
-    super();
-
     this.filter = context.createBiquadFilter();
 
     this.input = this.filter;
     this.output = this.filter;
+  }
+
+  public connect(node: any) {
+    if (node.hasOwnProperty('input')) {
+      this.output.connect(node.input);
+    } else {
+      this.output.connect(node);
+    }
   }
 
   get gain(): number {

@@ -4,6 +4,7 @@ import { getPreset } from '../state/actions/preset';
 import Channels from './channels';
 import Master from './master';
 import Sequencer from './sequencer';
+import Amp from '../modules/amp';
 
 // TODO: put this somewhere
 declare const webkitAudioContext: {
@@ -11,13 +12,25 @@ declare const webkitAudioContext: {
 };
 
 class MainPanel extends Component<any, any> {
+  private audioContext: AudioContext;
+  private masterOutput: Amp;
+
+  constructor(props) {
+    super(props);
+
+    this.audioContext = this.getContext();
+
+    this.masterOutput = new Amp(this.audioContext);
+    this.masterOutput.level = 1.0;
+    this.masterOutput.connect(this.audioContext.destination);
+  }
+
   public componentDidMount() {
     this.props.dispatch(getPreset(1));
   }
 
   public render(props: any) {
     const { beat, channels, playing, preset, sequences } = props;
-    const context = this.getContext();
 
     return (
       <div id='main-panel'>
@@ -26,7 +39,8 @@ class MainPanel extends Component<any, any> {
           ? <form onSubmit={ () => false } autocomplete='off'>
               <Channels
                 channels={ channels }
-                context={ context }/>
+                context={ this.audioContext }
+                master={ this.masterOutput } />
 
               <div class='container vertical-divider'></div>
 
