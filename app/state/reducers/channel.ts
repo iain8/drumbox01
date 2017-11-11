@@ -18,7 +18,7 @@ export default (state, action) => {
   const { index } = action.payload || 0;
 
   switch (action.type) {
-    case 'CHANGE_OSC_PARAM':
+    case 'CHANGE_CHANNEL_PARAM':
       channels[index].options[action.payload.param] = action.payload.value;
 
       return {

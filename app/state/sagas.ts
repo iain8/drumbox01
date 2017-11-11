@@ -1,11 +1,11 @@
 import { SagaIterator, takeLatest } from 'redux-saga';
 import { call, cancel, fork, put, take } from 'redux-saga/effects';
 import { bindAsyncAction } from 'typescript-fsa-redux-saga';
-import getById from './services/preset';
 import { getPresetFSA } from './actions/preset';
+import getById from './services/preset';
 
 const getPreset = bindAsyncAction(getPresetFSA) (
-  function* (params): SagaIterator {
+  function*(params): SagaIterator {
     const preset = yield call(getById, params.id);
 
     return { preset };

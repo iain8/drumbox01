@@ -1,10 +1,10 @@
 import { Component, h } from 'preact';
+import Amp from '../modules/amp';
+import Filter from '../modules/filter';
 import Knob from './controls/knob';
 import Mixer from './channel/mixer';
 import Noise from './channel/noise';
 import Osc from './channel/osc';
-import Amp from '../modules/amp';
-import Filter from '../modules/filter';
 
 export default class Channel extends Component<any, any> {
   private filter: Filter;
@@ -36,7 +36,7 @@ export default class Channel extends Component<any, any> {
   }
 
   public render(props) {
-    const { active, beat, context, data, index, playing, start } = props;
+    const { active, beat, context, data, index, pattern, playing, start } = props;
 
     return ( // TODO: move active === index to parent
       <div class={ `channel ${ active === index ? 'active' : '' }` }>
@@ -47,13 +47,15 @@ export default class Channel extends Component<any, any> {
           data={ data }
           index={ index }
           output={ this.preOutput }
+          pattern={ pattern }
           playing={ playing }
           start={ start } />
         <Noise
-        beat={ beat }
+          beat={ beat }
           context={ context }
           data={ data }
           output={ this.preOutput }
+          pattern={ pattern }
           playing={ playing }
           start={ start } />
       </div>

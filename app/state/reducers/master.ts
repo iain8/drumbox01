@@ -16,7 +16,7 @@ export default (state, action) => {
         preset: {
           ...state.preset,
           masterVolume: action.payload.volume,
-        }
+        },
       };
     case 'CHANGE_PLAYING_STATE':
       return {

@@ -1,11 +1,10 @@
-import { h, Component } from 'preact';
+import { Component, h } from 'preact';
 import { connect } from 'preact-redux';
-import BaseModule from './base';
-import Knob from '../controls/knob';
-import Selector from '../controls/selector';
 import * as channelActions from '../../state/actions/channel';
 import Amp from '../../modules/amp';
 import Env from '../../modules/env';
+import Knob from '../controls/knob';
+import Selector from '../controls/selector';
 
 class Osc extends Component<any, any> {
   public input: OscillatorNode;
@@ -26,7 +25,7 @@ class Osc extends Component<any, any> {
       oscLevel,
       oscPitchAttack,
       oscPitchDecay,
-      wave
+      wave,
     } = props.data.options;
 
     const { context, output } = props;
@@ -43,12 +42,12 @@ class Osc extends Component<any, any> {
 
     this.pitchEnvelope = new Env(context);
     this.pitchEnvelope.attack = oscPitchAttack || 0.1;
-    this.pitchEnvelope.decay = oscPitchDecay|| 0.5;
+    this.pitchEnvelope.decay = oscPitchDecay || 0.5;
     this.pitchEnvelope.max = frequency || 440;
 
     this.ampEnvelope = new Env(context);
     this.ampEnvelope.attack = oscAmpAttack || 0.2;
-    this.ampEnvelope.decay = oscAmpDecay|| 0.8;
+    this.ampEnvelope.decay = oscAmpDecay || 0.8;
     this.ampEnvelope.max = oscLevel || 1.0;
 
     this.oscillator.connect(this.amp.input);
@@ -62,7 +61,7 @@ class Osc extends Component<any, any> {
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
 
-    this.state = { beat: -1, playing: false };
+    this.state = { playing: false };
   }
 
   public connect(node: any) {
@@ -96,10 +95,10 @@ class Osc extends Component<any, any> {
       this.setState({ playing: true });
     } else if (!props.playing && this.state.playing) {
       // TODO: do a stop
-      this.setState({ beat: -1, playing: false });
+      this.setState({ playing: false });
     }
 
-    if (props.beat !== this.state.beat) {
+    if (props.playing && props.pattern.charAt(props.beat) === '1') {
       this.ampEnvelope.trigger();
       this.pitchEnvelope.trigger();
     }
@@ -173,7 +172,7 @@ class Osc extends Component<any, any> {
   }
 
   private handleFreqChange(frequency: number) {
-    this.props.dispatch(channelActions.changeOscParam({
+    this.props.dispatch(channelActions.changeChannelParam({
       index: this.props.index,
       param: 'frequency',
       value: frequency,
@@ -181,7 +180,7 @@ class Osc extends Component<any, any> {
   }
 
   private handleOscAttackChange(attack: number) {
-    this.props.dispatch(channelActions.changeOscParam({
+    this.props.dispatch(channelActions.changeChannelParam({
       index: this.props.index,
       param: 'oscAmpAttack',
       value: attack / 1000,
@@ -189,7 +188,7 @@ class Osc extends Component<any, any> {
   }
 
   private handleOscDecayChange(decay: number) {
-    this.props.dispatch(channelActions.changeOscParam({
+    this.props.dispatch(channelActions.changeChannelParam({
       index: this.props.index,
       param: 'oscAmpDecay',
       value: decay / 1000,
@@ -197,7 +196,7 @@ class Osc extends Component<any, any> {
   }
 
   private handlePitchAttackChange(attack: number) {
-    this.props.dispatch(channelActions.changeOscParam({
+    this.props.dispatch(channelActions.changeChannelParam({
       index: this.props.index,
       param: 'oscPitchAttack',
       value: attack / 1000,
@@ -205,7 +204,7 @@ class Osc extends Component<any, any> {
   }
 
   private handlePitchDecayChange(decay: number) {
-    this.props.dispatch(channelActions.changeOscParam({
+    this.props.dispatch(channelActions.changeChannelParam({
       index: this.props.index,
       param: 'oscPitchDecay',
       value: decay / 1000,

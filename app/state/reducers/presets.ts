@@ -11,14 +11,14 @@ const DEFAULT_STATE = {
   sequences: [],
 };
 
-interface PresetState {
-  beat: number,
-  channels: Array<Object>,
-  error: object,
-  loading: boolean,
-  playing: boolean,
-  preset: Object,
-  sequences: Array<Object>,
+interface IPresetState {
+  beat: number;
+  channels: object[];
+  error: object;
+  loading: boolean;
+  playing: boolean;
+  preset: object;
+  sequences: object[];
 }
 
 const unserializeChannel = (channel) => {
@@ -28,7 +28,7 @@ const unserializeChannel = (channel) => {
   };
 };
 
-export default (state = DEFAULT_STATE, action: any) : PresetState => {
+export default (state = DEFAULT_STATE, action: any): IPresetState => {
   switch (action.type) {
     case 'GET_PRESET_FAILED':
       return {

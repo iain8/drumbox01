@@ -7,5 +7,5 @@ export default function combineReducers(...reducers) {
     });
 
     return newState;
-  }
-};
+  };
+}

@@ -4,11 +4,10 @@ import { clearSequence, toggleBeat } from '../../state/actions/sequencer';
 import Beat from './beat';
 
 interface ISequenceProps {
-  dispatch?: Function,
-  index: number,
-  pattern: string,
-  patternLength: number,
-  toggleBeat?: Function,
+  dispatch?: ({}) => void;
+  index: number;
+  pattern: string;
+  patternLength: number;
 }
 
 class Sequence extends Component<ISequenceProps, any> {
@@ -27,16 +26,18 @@ class Sequence extends Component<ISequenceProps, any> {
     const { pattern, patternLength } = props;
 
     return (
-      <ul class="sequence">
+      <ul className='sequence'>
         {
           Array(patternLength).fill(1).map((x: any, i: number) =>
             <Beat
               index={ i }
               on={ pattern.charAt(i) === '1' }
-              onClick={ this.handleBeatClick } />
+              onClick={ this.handleBeatClick } />,
           )
         }
-        <li><a onClick={ this.clearSequence } class="clear-sequence"></a></li>
+        <li>
+          <a onClick={ this.clearSequence } className='clear-sequence'></a>
+        </li>
       </ul>
     );
   }

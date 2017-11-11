@@ -1,7 +1,6 @@
 import { Component, h } from 'preact';
 import Channel from './channel';
 import ChannelHeaders from './channel/headers';
-import data from '../data/default';
 
 interface IChannelsState {
   activeChannelIndex: number;
@@ -19,7 +18,7 @@ export default class Channels extends Component<any, IChannelsState> {
   }
 
   public render(props) {
-    const { beat, channels, context, playing } = props;
+    const { beat, channels, context, playing, sequences } = props;
 
     return (
       <div
@@ -27,7 +26,7 @@ export default class Channels extends Component<any, IChannelsState> {
         class='container'>
         <ChannelHeaders
           active={ this.state.activeChannelIndex }
-          data={ data }
+          data={ channels }
           onChange={ this.handleChannelChange } />
         {
           channels.map((channel, i) => { // TODO: can we optimise to only create active channel
@@ -39,8 +38,10 @@ export default class Channels extends Component<any, IChannelsState> {
                 data={ channel }
                 index={ i }
                 master={ props.master }
+                pattern={ sequences[i].pattern }
                 playing={ playing } />
             );
+            // TODO: sequences order not guaranteed!
           })
         }
       </div>

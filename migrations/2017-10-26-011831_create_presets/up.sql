@@ -7,4 +7,4 @@ CREATE TABLE presets (
 );
 
 INSERT INTO presets (id, tempo, division, master_volume, sequence_length)
-VALUES (1, 120.0, 8, 80, 16);
+VALUES (1, 120.0, 4, 80, 16);

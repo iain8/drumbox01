@@ -4,12 +4,12 @@ import { PresetRequest } from '../action-types';
 const actionCreator = actionCreatorFactory();
 
 export const getPreset = (payload) => ({
-  type: 'GET_PRESET',
   payload,
+  type: 'GET_PRESET',
 });
 
 export const getPresetFSA = actionCreator.async<{
   id: number,
 }, {
-  preset: any 
+  preset: any,
 }>('GET_PRESET');

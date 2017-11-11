@@ -1,10 +1,10 @@
 import { Component, h } from 'preact';
 import { connect } from 'preact-redux';
 import { getPreset } from '../state/actions/preset';
+import Amp from '../modules/amp';
 import Channels from './channels';
 import Master from './master';
 import Sequencer from './sequencer';
-import Amp from '../modules/amp';
 
 // TODO: put this somewhere
 declare const webkitAudioContext: {
@@ -42,7 +42,8 @@ class MainPanel extends Component<any, any> {
                 channels={ channels }
                 context={ this.audioContext }
                 master={ this.masterOutput }
-                playing={ playing } />
+                playing={ playing }
+                sequences={ sequences } />
 
               <div class='container vertical-divider'></div>
 
@@ -64,7 +65,7 @@ class MainPanel extends Component<any, any> {
     );
   }
 
-  private getContext() : AudioContext {
+  private getContext(): AudioContext {
     return 'webkitAudioContext' in window ? new webkitAudioContext() : new AudioContext();
   }
 }

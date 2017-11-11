@@ -1,15 +1,15 @@
 import { Component, h } from 'preact';
 import { connect } from 'preact-redux';
+import * as masterActions from '../state/actions/master';
 import Division from './controls/division';
 import Knob from './controls/knob';
 import Speaker from './speaker';
-import * as masterActions from '../state/actions/master';
 
 interface IMasterProps {
-  dispatch?: any,
-  playing: boolean,
-  preset: any,
-};
+  dispatch?: any;
+  playing: boolean;
+  preset: any;
+}
 
 class Master extends Component<IMasterProps, any> {
   constructor(props) {

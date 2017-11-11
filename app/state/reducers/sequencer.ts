@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-const toggleBeat = (sequences, { beat, seq }) : any => {
+const toggleBeat = (sequences, { beat, seq }): any => {
   return sequences.map((sequence, i) => {
     const newSeq = { ...sequence };
 
@@ -16,7 +16,7 @@ const toggleBeat = (sequences, { beat, seq }) : any => {
   });
 };
 
-const clearSequence = (sequences, sequenceLength, { seq }) : any => {
+const clearSequence = (sequences, sequenceLength, { seq }): any => {
   return sequences.map((sequence, i) => {
     const newSeq = { ...sequence };
 
@@ -28,7 +28,7 @@ const clearSequence = (sequences, sequenceLength, { seq }) : any => {
   });
 };
 
-const nextBeat = (current, sequenceLength) : number => {
+const nextBeat = (current, sequenceLength): number => {
   return current === sequenceLength - 1 ? 0 : current + 1;
 };
 

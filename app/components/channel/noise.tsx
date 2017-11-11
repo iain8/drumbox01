@@ -1,9 +1,18 @@
 import { Component, h } from 'preact';
-import Knob from '../controls/knob';
+import { connect } from 'preact-redux';
+import { changeChannelParam } from '../../state/actions/channel';
 import Amp from '../../modules/amp';
 import Env from '../../modules/env';
+import Knob from '../controls/knob';
 
-export default class Noise extends Component<any, any> {
+interface INoiseProps {
+  context: AudioContext;
+  data: any;
+  dispatch: ({}) => void;
+  index: number;
+}
+
+class Noise extends Component<INoiseProps, any> {
   public input: AudioBufferSourceNode;
   public output: AudioBufferSourceNode;
   private amp: Amp;
@@ -59,7 +68,7 @@ export default class Noise extends Component<any, any> {
       this.setState({ playing: false });
     }
 
-    if (props.beat !== this.state.beat) {
+    if (props.playing && props.pattern.charAt(props.beat) === '1') {
       this.env.trigger();
     }
   }
@@ -68,7 +77,7 @@ export default class Noise extends Component<any, any> {
     const { data } = this.props;
 
     return (
-      <div class="section">
+      <div className='section'>
         <p>noise</p>
         <Knob
           display='block'
@@ -88,11 +97,23 @@ export default class Noise extends Component<any, any> {
     );
   }
 
-  private handleNoiseAttackChange(value: number) {
-    console.log(value / 1000);
+  private handleNoiseAttackChange(attack: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'noiseAttack',
+      value: attack / 1000,
+    }));
   }
 
-  private handleNoiseDecayChange(value: number) {
-    console.log(value / 1000);
+  private handleNoiseDecayChange(decay: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'noiseDecay',
+      value: decay / 1000,
+    }));
   }
 }
+
+const mapStateToProps = (state, props) => props;
+
+export default connect(mapStateToProps)(Noise);

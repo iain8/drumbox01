@@ -1,7 +1,9 @@
 import { Component, h } from 'preact';
+import { connect } from 'preact-redux';
+import { changeChannelParam } from '../../state/actions/channel';
 import Knob from '../controls/knob';
 
-export default class Mixer extends Component<any, any> {
+class Mixer extends Component<any, any> {
   constructor(props) {
     super(props);
 
@@ -16,7 +18,7 @@ export default class Mixer extends Component<any, any> {
     const { data } = this.props;
 
     return (
-      <div class="section">
+      <div className='section'>
         <p>mixer</p>
         <Knob
           display='block'
@@ -57,23 +59,47 @@ export default class Mixer extends Component<any, any> {
     );
   }
 
-  private handleLevelChange(value: number) {
-    console.log(value / 100);
+  private handleLevelChange(level: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'level',
+      value: level / 100,
+    }));
   }
 
-  private handleOscLevelChange(value: number) {
-    console.log(value / 100);
+  private handleOscLevelChange(level: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'oscLevel',
+      value: level / 100,
+    }));
   }
 
-  private handleNoiseLevelChange(value: number) {
-    console.log(value / 100);
+  private handleNoiseLevelChange(level: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'noiseLevel',
+      value: level / 100,
+    }));
   }
 
-  private handleFilterFreqChange(value: number) {
-    console.log(value);
+  private handleFilterFreqChange(freq: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'channelFilterFreq',
+      value: freq,
+    }));
   }
 
-  private handleFilterGainChange(value: number) {
-    console.log(value);
+  private handleFilterGainChange(gain: number) {
+    this.props.dispatch(changeChannelParam({
+      index: this.props.index,
+      param: 'channelFilterGain',
+      value: gain,
+    }));
   }
 }
+
+const mapStateToProps = (state, props) => props;
+
+export default connect(mapStateToProps)(Mixer);

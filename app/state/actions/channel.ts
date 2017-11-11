@@ -2,11 +2,11 @@ import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory();
 
-export const changeOscParam = actionCreator<{
+export const changeChannelParam = actionCreator<{
   index: number,
   param: string,
   value: number,
-}>('CHANGE_OSC_PARAM');
+}>('CHANGE_CHANNEL_PARAM');
 
 export const changeWave = actionCreator<{
   direction: string,

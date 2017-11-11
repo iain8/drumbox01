@@ -10,7 +10,7 @@ const rootReducer = combineReducers(
   channelReducer,
   masterReducer,
   presetReducer,
-  sequencerReducer
+  sequencerReducer,
 );
 
 const DEFAULT_STATE = {
@@ -23,16 +23,16 @@ const DEFAULT_STATE = {
   sequences: [],
 };
 
-interface PresetState {
-  beat: number,
-  channels: Array<Object>,
-  error: object,
-  loading: boolean,
-  playing: boolean,
-  preset: Object,
-  sequences: Array<Object>,
+interface IPresetState {
+  beat: number;
+  channels: object[];
+  error: object;
+  loading: boolean;
+  playing: boolean;
+  preset: object;
+  sequences: object[];
 }
 
-export default (state = DEFAULT_STATE, action: any) : PresetState => {
-    return <PresetState> rootReducer(state, action);
-};
+export default (state = DEFAULT_STATE, action: any): IPresetState => (
+  rootReducer(state, action) as IPresetState
+);

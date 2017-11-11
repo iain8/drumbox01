@@ -18,7 +18,7 @@ class Sequencer extends Component<any, any> {
       this.setState({
         interval: setInterval(
           () => ({ current: props.dispatch(nextBeat({})) }),
-          this.bpmToMs(props.preset.tempo, props.preset.division)
+          this.bpmToMs(props.preset.tempo, props.preset.division),
         ),
         playing: true,
       });
@@ -35,19 +35,19 @@ class Sequencer extends Component<any, any> {
     const { beat, patternLength, sequences } = props;
 
     return (
-      <div class='sequencer'>
+      <div className='sequencer'>
         {
           sequences.map((sequence, i) =>
             <Sequence
               index={ i }
               pattern={ sequence.pattern }
-              patternLength={ patternLength } />
+              patternLength={ patternLength } />,
           )
         }
-        <ul class="sequence indicator">
+        <ul className='sequence indicator'>
           {
             Array(patternLength).fill(1).map((x, i) =>
-              <li class={ `beat ${i === beat ? 'on' : ''}` } />
+              <li class={ `beat ${i === beat ? 'on' : ''}` } />,
             )
           }
         </ul>
@@ -55,7 +55,7 @@ class Sequencer extends Component<any, any> {
     );
   }
 
-  private bpmToMs(bpm: number, division: number) : number {
+  private bpmToMs(bpm: number, division: number): number {
     return (60000 / bpm) / division;
   }
 }

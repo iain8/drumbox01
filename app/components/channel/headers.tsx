@@ -2,9 +2,9 @@ import { Component, h } from 'preact';
 import ChannelHeader from './header';
 
 interface IChannelHeadersProps {
-  active: number,
-  data: any[], // TODO: channel def
-  onChange: (index: number) => void,
+  active: number;
+  data: any[]; // TODO: channel def
+  onChange: (index: number) => void;
 }
 
 export default class ChannelHeaders extends Component<IChannelHeadersProps, any> {

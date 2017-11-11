@@ -1,24 +1,16 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
 
-export default class Division extends Component<any, any> {
-  render(props) {
-    const { division, divisions, onChange } = props;
-
-    return (
-      <select
-        class='division'
-        onChange={ onChange }
-        value={ division }>
-        {
-          Object.keys(divisions).map((val) => {
-            return (
-              <option value={ val }>
-                { divisions[val] }
-              </option>
-            );
-          })
-        }
-      </select>
-    );
-  }
-}
+export default ({ ...props }) => (
+  <select
+    className='division'
+    onChange={ props.onChange }
+    value={ props.division }>
+    {
+      Object.keys(props.divisions).map((val) => (
+        <option value={ val }>
+          { props.divisions[val] }
+        </option>
+      ))
+    }
+  </select>
+);

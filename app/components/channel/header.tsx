@@ -14,13 +14,15 @@ export default class ChannelHeader extends Component<IChannelHeaderProps, any> {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  public render() {
+  public render(props) {
+    const { active, handleChange, index, name } = props;
+
     return (
       <li
-        class={ this.props.index === this.props.active ? 'active' : '' }
-        key={ this.props.name }>
-        <a onClick={ this.handleChange }>
-          { this.props.name }
+        class={ index === active ? 'active' : '' }
+        key={ name }>
+        <a onClick={ handleChange }>
+          { name }
         </a>
       </li>
     );

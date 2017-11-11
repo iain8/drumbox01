@@ -1,10 +1,10 @@
 import { Component, h } from 'preact';
 
 interface IBeatProps {
-  index: number,
-  on: boolean,
-  onClick: Function,
-};
+  index: number;
+  on: boolean;
+  onClick: (beatIndex: number) => void;
+}
 
 export default class Beat extends Component<IBeatProps, any> {
   constructor(props) {
