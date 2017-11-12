@@ -4,12 +4,12 @@ import ChannelHeader from './header';
 export default ({ ...props }) => (
   <ul className='channel-headers'>
     {
-      props.data.map((channel, i) => {
+      props.channels.map((name, i) => {
         return (
           <ChannelHeader
             active={ props.active }
             index={ i }
-            name={ channel.name }
+            name={ name }
             onChange={ props.onChange } />
         );
       })

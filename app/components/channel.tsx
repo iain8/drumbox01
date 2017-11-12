@@ -1,4 +1,5 @@
 import { Component, h } from 'preact';
+import { connect } from 'preact-redux';
 import Amp from '../modules/amp';
 import Filter from '../modules/filter';
 import Knob from './controls/knob';
@@ -6,25 +7,23 @@ import Mixer from './channel/mixer';
 import Noise from './channel/noise';
 import Osc from './channel/osc';
 
-export default class Channel extends Component<any, any> {
+class Channel extends Component<any, any> {
   private filter: Filter;
   private preOutput: Amp;
   private postOutput: Amp;
 
-  constructor(props) {
-    super(props);
-
-    const { context } = props;
+  public componentWillMount() {
+    const { context } = this.props;
 
     this.preOutput = new Amp(context);
     this.preOutput.level = 1.0;
 
     this.postOutput = new Amp(context);
-    this.postOutput.level = props.level || 1.0; // TODO: yeah
+    this.postOutput.level = this.props.level || 1.0; // TODO: yeah
 
     this.filter = new Filter(context);
-    this.filter.frequency = props.data.channelFilterFreq || 500;
-    this.filter.gain = props.data.channelFilterGain || 0;
+    this.filter.frequency = this.props.channelFilterFreq || 500;
+    this.filter.gain = this.props.channelFilterGain || 0;
     this.filter.type = 'peaking'; // TODO: uh
   }
 
@@ -36,26 +35,26 @@ export default class Channel extends Component<any, any> {
   }
 
   public render(props) {
-    const { active, beat, context, data, index, pattern, playing } = props;
+    const { active, beat, channel, context, pattern, playing, name } = props;
 
     return ( // TODO: move active === index to parent
-      <div class={ `channel ${ active === index ? 'active' : '' }` }>
+      <div class={ `channel ${ active ? 'active' : '' }` }>
         <Mixer
-          data={ data }
-          index={ index } />
+          data={ channel }
+          index={ name } />
         <Osc
           beat={ beat }
           context={ context }
-          data={ data }
-          index={ index }
+          data={ channel }
+          index={ name }
           output={ this.preOutput }
           pattern={ pattern }
           playing={ playing } />
         <Noise
           beat={ beat }
           context={ context }
-          data={ data }
-          index={ index }
+          data={ channel }
+          index={ name }
           output={ this.preOutput }
           pattern={ pattern }
           playing={ playing } />
@@ -63,3 +62,10 @@ export default class Channel extends Component<any, any> {
     );
   }
 }
+
+const mapStateToProps = (initialState, props) =>
+  (state) => ({
+    channel: state.channels[props.name],
+  });
+
+export default connect(mapStateToProps)(Channel);

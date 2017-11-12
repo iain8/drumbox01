@@ -26,18 +26,17 @@ export default class Channels extends Component<any, IChannelsState> {
         class='container'>
         <ChannelHeaders
           active={ this.state.activeChannelIndex }
-          data={ channels }
+          channels={ Object.keys(channels) }
           onChange={ this.handleChannelChange } />
         {
-          channels.map((channel, i) => {
+          Object.keys(channels).map((name, i) => {
             return (
               <Channel
-                active={ this.state.activeChannelIndex }
+                active={ this.state.activeChannelIndex === i }
                 beat={ beat }
                 context={ context }
-                data={ channel.options }
-                index={ i }
                 master={ props.master }
+                name={ name }
                 pattern={ sequences[i].pattern }
                 playing={ playing } />
             );

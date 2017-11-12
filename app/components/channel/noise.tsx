@@ -53,8 +53,7 @@ class Noise extends Component<INoiseProps, any> {
     this.env.connect(this.amp.amplitude);
     this.amp.connect(props.output);
 
-    this.handleNoiseAttackChange = this.handleNoiseAttackChange.bind(this);
-    this.handleNoiseDecayChange = this.handleNoiseDecayChange.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
   }
 
   public componentWillReceiveProps(props) {
@@ -77,33 +76,25 @@ class Noise extends Component<INoiseProps, any> {
           display='block'
           max={ 10000 }
           min={ 0 }
-          name='attack'
-          onChange={ this.handleNoiseAttackChange }
+          name='noiseAttack'
+          onChange={ (val) => this.handleParamChange(val / 1000, 'noiseAttack') }
           value={ data.noiseAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
-          name='decay'
-          onChange={ this.handleNoiseDecayChange }
+          name='noiseDecay'
+          onChange={ (val) => this.handleParamChange(val / 1000, 'noiseDecay') }
           value={ data.noiseDecay * 1000 } />
       </div>
     );
   }
 
-  private handleNoiseAttackChange(attack: number) {
+  private handleParamChange(value: number, param: string) {
     this.props.dispatch(changeChannelParam({
       index: this.props.index,
-      param: 'noiseAttack',
-      value: attack / 1000,
-    }));
-  }
-
-  private handleNoiseDecayChange(decay: number) {
-    this.props.dispatch(changeChannelParam({
-      index: this.props.index,
-      param: 'noiseDecay',
-      value: decay / 1000,
+      param,
+      value,
     }));
   }
 }

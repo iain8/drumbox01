@@ -47,12 +47,8 @@ class Osc extends Component<IOscProps, any> {
     this.pitchEnvelope.connect(this.oscillator.frequency);
     this.ampEnvelope.connect(this.amp.amplitude);
 
-    this.handleFreqChange = this.handleFreqChange.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
     this.handleWaveChange = this.handleWaveChange.bind(this);
-    this.handleOscAttackChange = this.handleOscAttackChange.bind(this);
-    this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
-    this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
-    this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
   }
 
   public connect(node: any) {
@@ -100,36 +96,36 @@ class Osc extends Component<IOscProps, any> {
           display='block'
           max={ 2000 }
           min={ 20 }
-          name='freq'
-          onChange={ this.handleFreqChange }
+          name='frequency'
+          onChange={ (value) => this.handleParamChange(value, 'frequency') }
           value={ frequency } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
-          name='attack'
-          onChange={ this.handleOscAttackChange }
+          name='ampAttack'
+          onChange={ (value) => this.handleParamChange(value / 1000, 'oscAmpAttack') }
           value={ oscAmpAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
-          name='decay'
-          onChange={ this.handleOscDecayChange }
+          name='ampDecay'
+          onChange={ (value) => this.handleParamChange(value / 1000, 'oscAmpDecay') }
           value={ oscAmpDecay * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 0 }
-          name='attack'
-          onChange={ this.handlePitchAttackChange }
+          name='pitchAttack'
+          onChange={ (value) => this.handleParamChange(value / 1000, 'oscPitchAttack') }
           value={ oscPitchAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
-          name='decay'
-          onChange={ this.handlePitchDecayChange }
+          name='pitchDecay'
+          onChange={ (value) => this.handleParamChange(value / 1000, 'oscPitchAttack') }
           value={ oscPitchDecay * 1000 } />
       </div>
     );
@@ -168,43 +164,11 @@ class Osc extends Component<IOscProps, any> {
     }));
   }
 
-  private handleFreqChange(frequency: number) {
+  private handleParamChange(value: number, param: string) {
     this.props.dispatch(channelActions.changeChannelParam({
-      index: this.props.index,
-      param: 'frequency',
-      value: frequency,
-    }));
-  }
-
-  private handleOscAttackChange(attack: number) {
-    this.props.dispatch(channelActions.changeChannelParam({
-      index: this.props.index,
-      param: 'oscAmpAttack',
-      value: attack / 1000,
-    }));
-  }
-
-  private handleOscDecayChange(decay: number) {
-    this.props.dispatch(channelActions.changeChannelParam({
-      index: this.props.index,
-      param: 'oscAmpDecay',
-      value: decay / 1000,
-    }));
-  }
-
-  private handlePitchAttackChange(attack: number) {
-    this.props.dispatch(channelActions.changeChannelParam({
-      index: this.props.index,
-      param: 'oscPitchAttack',
-      value: attack / 1000,
-    }));
-  }
-
-  private handlePitchDecayChange(decay: number) {
-    this.props.dispatch(channelActions.changeChannelParam({
-      index: this.props.index,
-      param: 'oscPitchDecay',
-      value: decay / 1000,
+      index: this.props.data.name,
+      param,
+      value,
     }));
   }
 }

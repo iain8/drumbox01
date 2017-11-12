@@ -13,7 +13,7 @@ const DEFAULT_STATE = {
 
 interface IPresetState {
   beat: number;
-  channels: object[];
+  channels: object;
   error: object;
   loading: boolean;
   playing: boolean;
@@ -21,11 +21,23 @@ interface IPresetState {
   sequences: object[];
 }
 
-const unserializeChannel = (channel) => {
-  return {
-    ...channel,
-    options: JSON.parse(channel.options),
-  };
+/**
+ * Unserialize channel and flatten it
+ * @param channel
+ */
+const parseChannels = (channels) => {
+  const parsed = {};
+
+  channels.forEach((channel) => {
+    parsed[channel.name] = {
+      ...channel,
+      ...JSON.parse(channel.options),
+    };
+
+    delete parsed[channel.name].options;
+  });
+
+  return parsed;
 };
 
 export default (state = DEFAULT_STATE, action: any): IPresetState => {
@@ -46,7 +58,7 @@ export default (state = DEFAULT_STATE, action: any): IPresetState => {
 
       return {
         ...state,
-        channels: preset.channels.map((channel) => unserializeChannel(channel)),
+        channels: parseChannels(preset.channels),
         loading: false,
         preset: {
           division: preset.division,

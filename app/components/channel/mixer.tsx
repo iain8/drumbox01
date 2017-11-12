@@ -7,17 +7,11 @@ class Mixer extends Component<any, any> {
   constructor(props) {
     super(props);
 
-    this.handleFilterFreqChange = this.handleFilterFreqChange.bind(this);
-    this.handleFilterGainChange = this.handleFilterGainChange.bind(this);
-    this.handleLevelChange = this.handleLevelChange.bind(this);
-    this.handleNoiseLevelChange = this.handleNoiseLevelChange.bind(this);
-    this.handleOscLevelChange = this.handleOscLevelChange.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
   }
 
   public render(props) {
     const { data } = props;
-
-    console.log(data.level, props);
 
     return (
       <div className='section'>
@@ -27,81 +21,49 @@ class Mixer extends Component<any, any> {
           max={ 100 }
           min={ 0 }
           name='level'
-          onChange={ this.handleLevelChange }
+          onChange={ (val) => this.handleParamChange(val / 100, 'level') }
           value={ data.level * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
-          name='osc'
-          onChange={ this.handleOscLevelChange }
+          name='oscLevel'
+          onChange={ (val) => this.handleParamChange(val / 100, 'oscLevel') }
           value={ data.oscLevel * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
-          name='noise'
-          onChange={ this.handleNoiseLevelChange }
+          name='noiseLevel'
+          onChange={ (val) => this.handleParamChange(val / 100, 'noiseLevel') }
           value={ data.noiseLevel * 100 } />
         <Knob
           display='block'
           max={ 22500 }
           min={ 10 }
-          name='freq'
-          onChange={ this.handleFilterFreqChange }
+          name='channelFilterFreq'
+          onChange={ (val) => this.handleParamChange(val, 'channelFilterFreq') }
           value={ data.channelFilterFreq } />
         <Knob
           display='block'
           max={ 40 }
           min={ -40 }
-          name='gain'
-          onChange={ this.handleFilterGainChange }
+          name='channelFilterGain'
+          onChange={ (val) => this.handleParamChange(val, 'channelFilterGain') }
           value={ data.channelFilterGain } />
       </div>
     );
   }
 
-  private handleLevelChange(level: number) {
+  private handleParamChange(value: number, param: string) {
     this.props.dispatch(changeChannelParam({
       index: this.props.index,
-      param: 'level',
-      value: level / 100,
-    }));
-  }
-
-  private handleOscLevelChange(level: number) {
-    this.props.dispatch(changeChannelParam({
-      index: this.props.index,
-      param: 'oscLevel',
-      value: level / 100,
-    }));
-  }
-
-  private handleNoiseLevelChange(level: number) {
-    this.props.dispatch(changeChannelParam({
-      index: this.props.index,
-      param: 'noiseLevel',
-      value: level / 100,
-    }));
-  }
-
-  private handleFilterFreqChange(freq: number) {
-    this.props.dispatch(changeChannelParam({
-      index: this.props.index,
-      param: 'channelFilterFreq',
-      value: freq,
-    }));
-  }
-
-  private handleFilterGainChange(gain: number) {
-    this.props.dispatch(changeChannelParam({
-      index: this.props.index,
-      param: 'channelFilterGain',
-      value: gain,
+      param,
+      value,
     }));
   }
 }
 
-const mapStateToProps = (state, props) => props;
+const mapStateToProps = (state, props) => props; // TODO: make better... pass up to channel instead?
 
 export default connect(mapStateToProps)(Mixer);
