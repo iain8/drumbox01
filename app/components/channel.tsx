@@ -40,7 +40,9 @@ export default class Channel extends Component<any, any> {
 
     return ( // TODO: move active === index to parent
       <div class={ `channel ${ active === index ? 'active' : '' }` }>
-        <Mixer data={ data } />
+        <Mixer
+          data={ data }
+          index={ index } />
         <Osc
           beat={ beat }
           context={ context }
@@ -54,6 +56,7 @@ export default class Channel extends Component<any, any> {
           beat={ beat }
           context={ context }
           data={ data }
+          index={ index }
           output={ this.preOutput }
           pattern={ pattern }
           playing={ playing }

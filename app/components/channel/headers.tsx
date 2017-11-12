@@ -1,38 +1,18 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
 import ChannelHeader from './header';
 
-interface IChannelHeadersProps {
-  active: number;
-  data: any[]; // TODO: channel def
-  onChange: (index: number) => void;
-}
-
-export default class ChannelHeaders extends Component<IChannelHeadersProps, any> {
-  constructor(props) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  public render() {
-    return (
-      <ul class='channel-headers'>
-        {
-          this.props.data.map((channel, i) => {
-            return (
-              <ChannelHeader
-                active={ this.props.active }
-                index={ i }
-                name={ channel.name }
-                onChange={ this.handleChange } />
-            );
-          })
-        }
-      </ul>
-    );
-  }
-
-  private handleChange(index: number) {
-    this.props.onChange(index);
-  }
-}
+export default ({ ...props }) => (
+  <ul className='channel-headers'>
+    {
+      props.data.map((channel, i) => {
+        return (
+          <ChannelHeader
+            active={ props.active }
+            index={ i }
+            name={ channel.name }
+            onChange={ props.onChange } />
+        );
+      })
+    }
+  </ul>
+);

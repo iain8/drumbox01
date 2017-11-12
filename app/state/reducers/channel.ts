@@ -17,6 +17,8 @@ export default (state, action) => {
   const channels = [...state.channels];
   const { index } = action.payload || 0;
 
+  console.log(state, action);
+
   switch (action.type) {
     case 'CHANGE_CHANNEL_PARAM':
       channels[index].options[action.payload.param] = action.payload.value;

@@ -14,8 +14,10 @@ class Mixer extends Component<any, any> {
     this.handleOscLevelChange = this.handleOscLevelChange.bind(this);
   }
 
-  public render() {
-    const { data } = this.props;
+  public render(props) {
+    const { data } = props;
+
+    console.log(data.options.level, props);
 
     return (
       <div className='section'>
