@@ -23,8 +23,8 @@ export default class Channel extends Component<any, any> {
     this.postOutput.level = props.outputLevel || 1.0; // TODO: yeah
 
     this.filter = new Filter(context);
-    this.filter.frequency = props.channelFilterFreq || 500;
-    this.filter.gain = props.channelFilterGain || 0;
+    this.filter.frequency = props.data.channelFilterFreq || 500;
+    this.filter.gain = props.data.channelFilterGain || 0;
     this.filter.type = 'peaking'; // TODO: uh
   }
 
@@ -36,7 +36,7 @@ export default class Channel extends Component<any, any> {
   }
 
   public render(props) {
-    const { active, beat, context, data, index, pattern, playing, start } = props;
+    const { active, beat, context, data, index, pattern, playing } = props;
 
     return ( // TODO: move active === index to parent
       <div class={ `channel ${ active === index ? 'active' : '' }` }>
@@ -50,8 +50,7 @@ export default class Channel extends Component<any, any> {
           index={ index }
           output={ this.preOutput }
           pattern={ pattern }
-          playing={ playing }
-          start={ start } />
+          playing={ playing } />
         <Noise
           beat={ beat }
           context={ context }
@@ -59,8 +58,7 @@ export default class Channel extends Component<any, any> {
           index={ index }
           output={ this.preOutput }
           pattern={ pattern }
-          playing={ playing }
-          start={ start } />
+          playing={ playing } />
       </div>
     );
   }

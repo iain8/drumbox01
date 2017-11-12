@@ -6,7 +6,18 @@ import Env from '../../modules/env';
 import Knob from '../controls/knob';
 import Selector from '../controls/selector';
 
-class Osc extends Component<any, any> {
+interface IOscProps {
+  beat: number;
+  context: AudioContext;
+  data: any; // TODO: definition
+  dispatch?: ({}) => void;
+  index: number;
+  output: Amp;
+  pattern: string;
+  playing: boolean;
+}
+
+class Osc extends Component<IOscProps, any> {
   public input: OscillatorNode;
   public output: OscillatorNode;
   public frequency: AudioParam;
@@ -18,38 +29,20 @@ class Osc extends Component<any, any> {
   constructor(props) {
     super(props);
 
-    const {
-      frequency,
-      oscAmpAttack,
-      oscAmpDecay,
-      oscLevel,
-      oscPitchAttack,
-      oscPitchDecay,
-      wave,
-    } = props.data.options;
-
     const { context, output } = props;
 
     this.oscillator = context.createOscillator();
-    this.oscillator.type = wave;
-    this.oscillator.frequency.value = frequency || 440;
+
     this.input = this.oscillator;
     this.output = this.oscillator;
-    this.frequency = this.oscillator.frequency;
 
     this.amp = new Amp(context);
-    this.amp.connect(output);
-
     this.pitchEnvelope = new Env(context);
-    this.pitchEnvelope.attack = oscPitchAttack || 0.1;
-    this.pitchEnvelope.decay = oscPitchDecay || 0.5;
-    this.pitchEnvelope.max = frequency || 440;
-
     this.ampEnvelope = new Env(context);
-    this.ampEnvelope.attack = oscAmpAttack || 0.2;
-    this.ampEnvelope.decay = oscAmpDecay || 0.8;
-    this.ampEnvelope.max = oscLevel || 1.0;
 
+    this.updateNodes(props);
+
+    this.amp.connect(output);
     this.oscillator.connect(this.amp.input);
     this.pitchEnvelope.connect(this.oscillator.frequency);
     this.ampEnvelope.connect(this.amp.amplitude);
@@ -60,8 +53,6 @@ class Osc extends Component<any, any> {
     this.handleOscDecayChange = this.handleOscDecayChange.bind(this);
     this.handlePitchAttackChange = this.handlePitchAttackChange.bind(this);
     this.handlePitchDecayChange = this.handlePitchDecayChange.bind(this);
-
-    this.state = { playing: false };
   }
 
   public connect(node: any) {
@@ -72,30 +63,11 @@ class Osc extends Component<any, any> {
     }
   }
 
-  get type(): string {
-    return this.oscillator.type;
-  }
-
-  set type(type: string) {
-    this.oscillator.type = type;
-  }
-
-  get frequencyValue() {
-    return this.frequency.value;
-  }
-
-  set frequencyValue(frequency: number) {
-    this.frequency.value = frequency;
-  }
-
   public componentWillReceiveProps(props) {
-    if (props.playing && !this.state.playing) {
-      this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
+    this.updateNodes(props);
 
-      this.setState({ playing: true });
-    } else if (!props.playing && this.state.playing) {
-      // TODO: do a stop
-      this.setState({ playing: false });
+    if (props.playing && !this.props.playing) {
+      this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
     }
 
     if (props.playing && props.pattern.charAt(props.beat) === '1') {
@@ -112,7 +84,7 @@ class Osc extends Component<any, any> {
       oscPitchAttack,
       oscPitchDecay,
       wave,
-    } = this.props.data.options;
+    } = props.data;
 
     const waves = ['sine', 'sqr', 'saw', 'tri']; // TODO: omg
 
@@ -163,11 +135,36 @@ class Osc extends Component<any, any> {
     );
   }
 
+  private updateNodes(props) {
+    const {
+      frequency,
+      oscAmpAttack,
+      oscAmpDecay,
+      oscLevel,
+      oscPitchAttack,
+      oscPitchDecay,
+      wave,
+    } = props.data;
+
+    this.oscillator.frequency.value = frequency || 440;
+    this.frequency = this.oscillator.frequency;
+
+    this.pitchEnvelope.attack = oscPitchAttack || 0.1;
+    this.pitchEnvelope.decay = oscPitchDecay || 0.5;
+    this.pitchEnvelope.max = frequency || 440;
+
+    this.ampEnvelope.attack = oscAmpAttack || 0.2;
+    this.ampEnvelope.decay = oscAmpDecay || 0.8;
+    this.ampEnvelope.max = oscLevel || 1.0;
+
+    this.oscillator.type = wave;
+  }
+
   private handleWaveChange(direction: string) {
     this.props.dispatch(channelActions.changeWave({
       direction,
       index: this.props.index,
-      wave: this.props.data.options.wave,
+      wave: this.props.data.wave,
     }));
   }
 
@@ -212,6 +209,6 @@ class Osc extends Component<any, any> {
   }
 }
 
-const mapStateToProps = (state, props) => props;
+const mapStateToProps = (state, props: IOscProps) => props;
 
 export default connect(mapStateToProps)(Osc);

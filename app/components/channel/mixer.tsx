@@ -17,7 +17,7 @@ class Mixer extends Component<any, any> {
   public render(props) {
     const { data } = props;
 
-    console.log(data.options.level, props);
+    console.log(data.level, props);
 
     return (
       <div className='section'>
@@ -28,35 +28,35 @@ class Mixer extends Component<any, any> {
           min={ 0 }
           name='level'
           onChange={ this.handleLevelChange }
-          value={ data.options.level * 100 } />
+          value={ data.level * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
           name='osc'
           onChange={ this.handleOscLevelChange }
-          value={ data.options.oscLevel * 100 } />
+          value={ data.oscLevel * 100 } />
         <Knob
           display='block'
           max={ 100 }
           min={ 0 }
           name='noise'
           onChange={ this.handleNoiseLevelChange }
-          value={ data.options.noiseLevel } />
+          value={ data.noiseLevel } />
         <Knob
           display='block'
           max={ 22500 }
           min={ 10 }
           name='freq'
           onChange={ this.handleFilterFreqChange }
-          value={ data.options.channelFilterFreq } />
+          value={ data.channelFilterFreq } />
         <Knob
           display='block'
           max={ 40 }
           min={ -40 }
           name='gain'
           onChange={ this.handleFilterGainChange }
-          value={ data.options.channelFilterGain } />
+          value={ data.channelFilterGain } />
       </div>
     );
   }

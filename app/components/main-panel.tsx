@@ -21,7 +21,7 @@ class MainPanel extends Component<any, any> {
     this.audioContext = this.getContext();
 
     this.masterOutput = new Amp(this.audioContext);
-    this.masterOutput.level = 1.0;
+    this.masterOutput.level = 1.0; // TODO: config
     this.masterOutput.connect(this.audioContext.destination);
   }
 
@@ -70,8 +70,6 @@ class MainPanel extends Component<any, any> {
   }
 }
 
-const mapStateToProps = ({ beat, channels, loading, playing, preset, sequences }) => (
-  { beat, channels, loading, playing, preset, sequences }
-);
+const mapStateToProps = (props) => props;
 
 export default connect(mapStateToProps)(MainPanel);

@@ -14,28 +14,34 @@ const changeWave = (current: string, direction: string): string => {
 };
 
 export default (state, action) => {
-  const channels = [...state.channels];
-  const { index } = action.payload || 0;
+  const newChannels = state.channels.map((channel) => {
+    return {
+      id: channel.id,
+      name: channel.name,
+      options: { ...channel.options },
+      preset_id: channel.preset_id,
+    };
+  });
 
-  console.log(state, action);
+  const { index } = action.payload || 0;
 
   switch (action.type) {
     case 'CHANGE_CHANNEL_PARAM':
-      channels[index].options[action.payload.param] = action.payload.value;
+      newChannels[index].options[action.payload.param] = action.payload.value;
 
       return {
         ...state,
-        channels,
+        channels: newChannels,
       };
     case 'CHANGE_WAVE':
-      channels[index].options.wave = changeWave(
+      newChannels[index].options.wave = changeWave(
         action.payload.wave,
         action.payload.direction,
       );
 
       return {
         ...state,
-        channels,
+        newChannels,
       };
     default:
       return state;

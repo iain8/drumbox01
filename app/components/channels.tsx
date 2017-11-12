@@ -29,13 +29,13 @@ export default class Channels extends Component<any, IChannelsState> {
           data={ channels }
           onChange={ this.handleChannelChange } />
         {
-          channels.map((channel, i) => { // TODO: can we optimise to only create active channel
+          channels.map((channel, i) => {
             return (
               <Channel
                 active={ this.state.activeChannelIndex }
                 beat={ beat }
                 context={ context }
-                data={ channel }
+                data={ channel.options }
                 index={ i }
                 master={ props.master }
                 pattern={ sequences[i].pattern }

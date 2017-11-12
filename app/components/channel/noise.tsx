@@ -10,6 +10,7 @@ interface INoiseProps {
   data: any;
   dispatch: ({}) => void;
   index: number;
+  playing: boolean;
 }
 
 class Noise extends Component<INoiseProps, any> {
@@ -44,9 +45,9 @@ class Noise extends Component<INoiseProps, any> {
     this.amp = new Amp(context);
 
     this.env = new Env(context);
-    this.env.attack = props.data.options.noiseAttack || 0.1; // TODO: all of this
-    this.env.decay = props.data.options.noiseDecay || 0.5;
-    this.env.max = props.data.options.noiseLevel || 1.0;
+    this.env.attack = props.data.noiseAttack || 0.1; // TODO: all of this
+    this.env.decay = props.data.noiseDecay || 0.5;
+    this.env.max = props.data.noiseLevel || 1.0;
 
     this.noise.connect(this.amp.input);
     this.env.connect(this.amp.amplitude);
@@ -54,18 +55,11 @@ class Noise extends Component<INoiseProps, any> {
 
     this.handleNoiseAttackChange = this.handleNoiseAttackChange.bind(this);
     this.handleNoiseDecayChange = this.handleNoiseDecayChange.bind(this);
-
-    this.state = { playing: false };
   }
 
   public componentWillReceiveProps(props) {
-    if (props.playing && !this.state.playing) {
+    if (props.playing && !this.props.playing) {
       this.noise.start(0);
-
-      this.setState({ playing: true });
-    } else if (!props.playing && this.state.playing) {
-      // TODO: do a stop
-      this.setState({ playing: false });
     }
 
     if (props.playing && props.pattern.charAt(props.beat) === '1') {
@@ -85,14 +79,14 @@ class Noise extends Component<INoiseProps, any> {
           min={ 0 }
           name='attack'
           onChange={ this.handleNoiseAttackChange }
-          value={ data.options.noiseAttack * 1000 } />
+          value={ data.noiseAttack * 1000 } />
         <Knob
           display='block'
           max={ 10000 }
           min={ 10 }
           name='decay'
           onChange={ this.handleNoiseDecayChange }
-          value={ data.options.noiseDecay * 1000 } />
+          value={ data.noiseDecay * 1000 } />
       </div>
     );
   }
