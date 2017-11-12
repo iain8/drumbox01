@@ -47,7 +47,7 @@ class Noise extends Component<INoiseProps, any> {
     this.env = new Env(context);
     this.env.attack = props.data.noiseAttack || 0.1; // TODO: all of this
     this.env.decay = props.data.noiseDecay || 0.5;
-    this.env.max = props.data.noiseLevel || 1.0;
+    this.env.max = props.data.noiseLevel || 0;
 
     this.noise.connect(this.amp.input);
     this.env.connect(this.amp.amplitude);

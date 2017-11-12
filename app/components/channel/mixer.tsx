@@ -42,7 +42,7 @@ class Mixer extends Component<any, any> {
           min={ 0 }
           name='noise'
           onChange={ this.handleNoiseLevelChange }
-          value={ data.noiseLevel } />
+          value={ data.noiseLevel * 100 } />
         <Knob
           display='block'
           max={ 22500 }

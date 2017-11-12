@@ -20,7 +20,7 @@ export default class Channel extends Component<any, any> {
     this.preOutput.level = 1.0;
 
     this.postOutput = new Amp(context);
-    this.postOutput.level = props.outputLevel || 1.0; // TODO: yeah
+    this.postOutput.level = props.level || 1.0; // TODO: yeah
 
     this.filter = new Filter(context);
     this.filter.frequency = props.data.channelFilterFreq || 500;

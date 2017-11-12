@@ -70,7 +70,7 @@ class Osc extends Component<IOscProps, any> {
       this.oscillator.start ? this.oscillator.start(0) : this.oscillator.noteOn(0);
     }
 
-    if (props.playing && props.pattern.charAt(props.beat) === '1') {
+    if (props.playing && props.pattern.charAt(props.beat) === '1' && props.beat !== this.props.beat) {
       this.ampEnvelope.trigger();
       this.pitchEnvelope.trigger();
     }
