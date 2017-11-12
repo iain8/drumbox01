@@ -31,30 +31,46 @@ class Master extends Component<IMasterProps, any> {
     };
 
     return (
-      <div class='master'>
-        <input
-          type='number'
-          class='tempo'
-          onChange={ this.handleTempoChange }
-          value={ tempo } />
-        <Division
-          division={ division }
-          divisions={ divisions }
-          onChange={ this.handleDivisionChange } />
-        <button
-          class={ `sequencer-control start ${ props.playing ? 'active' : '' }` }
-          onClick={ this.handleStartButton } />
-        <button
-          class={ `sequencer-control stop ${ props.playing ? '' : 'active' }` }
-          onClick={ this.handleStopButton } />
-        <Knob
-          name='vol'
-          onChange={ this.handleVolumeChange }
-          value={ masterVolume } />
-
-        <h2>drumbox<small>01</small></h2>
-
-        <Speaker grilleCount={ 7 } />
+      <div className='master'>
+        <div className='title'>
+          <h2>DRUMBOX<small>01</small></h2>
+        </div>
+        <div className='screen'>
+        </div>
+        <div className='controls'>
+          <div>
+            <button
+              className={ `sequencer-control start ${ props.playing ? 'active' : '' }` }
+              onClick={ this.handleStartButton }>
+              { 'start' }
+            </button>
+            <button
+              className={ `sequencer-control stop ${ props.playing ? '' : 'active' }` }
+              onClick={ this.handleStopButton }>
+              { 'stop' }
+            </button>
+          </div>
+          <div>
+            <input
+              type='number'
+              className='tempo'
+              onChange={ this.handleTempoChange }
+              value={ tempo } />
+          </div>
+          <div>
+            <Division
+              division={ division }
+              divisions={ divisions }
+              onChange={ this.handleDivisionChange } />
+          </div>
+          <div>
+            <Knob
+              name='master'
+              onChange={ this.handleVolumeChange }
+              value={ masterVolume } />
+          </div>
+        </div>
+        {/* <Speaker grilleCount={ 7 } /> */}
       </div>
     );
   }

@@ -37,6 +37,7 @@ class MainPanel extends Component<any, any> {
         {
           preset
           ? <form onSubmit={ () => false } autocomplete='off'>
+              <Master playing={ playing } preset={ preset } />
               <Channels
                 beat={ beat }
                 channels={ channels }
@@ -54,10 +55,7 @@ class MainPanel extends Component<any, any> {
                   playing={ playing }
                   preset={ preset }
                   sequences={ sequences } />
-
-                <div class='horizontal-divider'></div>
-                  <Master playing={ playing } preset={ preset } />
-                </div>
+              </div>
             </form>
           : ''
         }

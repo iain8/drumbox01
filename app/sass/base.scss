@@ -7,12 +7,13 @@
 /* main bits */
 
 body {
-    color: $black;
+    background: $bg;
+    color: $white;
     font-family: $font;
 }
 
 a {
-    color: $black;
+    color: $white;
     text-decoration: none;
     outline: none;
 }
@@ -22,11 +23,10 @@ button {
 }
 
 #main-panel {
-    border: 1px solid $darkfawn;
+    border: 1px solid $white;
     border-radius: 4px;
     background-color: $fawn;
     width: 815px;
-    white-space: nowrap;
     margin-bottom: 10px;
     position: relative;
 }

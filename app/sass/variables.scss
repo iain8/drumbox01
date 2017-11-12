@@ -1,9 +1,11 @@
 // colours
 $black: #363439;
 $white: #FFF;
-$fawn: #ECE5D6;
+$fawn: rgb(56, 111, 204);
 $darkfawn: #EDE0C5;
 $lightblue: #92C8CD;
+
+$bg: darken($fawn, 40%);
 
 // typography
 $font: 'Orbitron', monospace;
