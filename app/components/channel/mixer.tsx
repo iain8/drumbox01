@@ -3,7 +3,7 @@ import { connect } from 'preact-redux';
 import { changeChannelParam } from '../../state/actions/channel';
 import Knob from '../controls/knob';
 
-class Mixer extends Component<any, any> {
+export default class Mixer extends Component<any, any> {
   constructor(props) {
     super(props);
 
@@ -56,14 +56,10 @@ class Mixer extends Component<any, any> {
   }
 
   private handleParamChange(value: number, param: string) {
-    this.props.dispatch(changeChannelParam({
+    this.props.onChange(changeChannelParam({
       index: this.props.index,
       param,
       value,
     }));
   }
 }
-
-const mapStateToProps = (state, props) => props; // TODO: make better... pass up to channel instead?
-
-export default connect(mapStateToProps)(Mixer);

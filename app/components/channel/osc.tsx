@@ -10,14 +10,13 @@ interface IOscProps {
   beat: number;
   context: AudioContext;
   data: any; // TODO: definition
-  dispatch?: ({}) => void;
-  index: number;
+  onChange: ({}) => void;
   output: Amp;
   pattern: string;
   playing: boolean;
 }
 
-class Osc extends Component<IOscProps, any> {
+export default class Osc extends Component<IOscProps, any> {
   public input: OscillatorNode;
   public output: OscillatorNode;
   public frequency: AudioParam;
@@ -157,22 +156,18 @@ class Osc extends Component<IOscProps, any> {
   }
 
   private handleWaveChange(direction: string) {
-    this.props.dispatch(channelActions.changeWave({
+    this.props.onChange(channelActions.changeWave({
       direction,
-      index: this.props.index,
+      index: this.props.data.name,
       wave: this.props.data.wave,
     }));
   }
 
   private handleParamChange(value: number, param: string) {
-    this.props.dispatch(channelActions.changeChannelParam({
+    this.props.onChange(channelActions.changeChannelParam({
       index: this.props.data.name,
       param,
       value,
     }));
   }
 }
-
-const mapStateToProps = (state, props: IOscProps) => props;
-
-export default connect(mapStateToProps)(Osc);

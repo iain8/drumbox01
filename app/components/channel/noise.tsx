@@ -6,14 +6,17 @@ import Env from '../../modules/env';
 import Knob from '../controls/knob';
 
 interface INoiseProps {
+  beat: number;
   context: AudioContext;
   data: any;
-  dispatch: ({}) => void;
   index: number;
+  onChange: ({}) => void;
+  output: Amp;
+  pattern: string;
   playing: boolean;
 }
 
-class Noise extends Component<INoiseProps, any> {
+export default class Noise extends Component<INoiseProps, any> {
   public input: AudioBufferSourceNode;
   public output: AudioBufferSourceNode;
   private amp: Amp;
@@ -91,14 +94,10 @@ class Noise extends Component<INoiseProps, any> {
   }
 
   private handleParamChange(value: number, param: string) {
-    this.props.dispatch(changeChannelParam({
+    this.props.onChange(changeChannelParam({
       index: this.props.index,
       param,
       value,
     }));
   }
 }
-
-const mapStateToProps = (state, props) => props;
-
-export default connect(mapStateToProps)(Noise);

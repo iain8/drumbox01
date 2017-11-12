@@ -12,6 +12,12 @@ class Channel extends Component<any, any> {
   private preOutput: Amp;
   private postOutput: Amp;
 
+  constructor(props) {
+    super(props);
+
+    this.handleParamChange = this.handleParamChange.bind(this);
+  }
+
   public componentWillMount() {
     const { context } = this.props;
 
@@ -41,12 +47,13 @@ class Channel extends Component<any, any> {
       <div class={ `channel ${ active ? 'active' : '' }` }>
         <Mixer
           data={ channel }
-          index={ name } />
+          index={ name }
+          onChange={ this.handleParamChange } />
         <Osc
           beat={ beat }
           context={ context }
           data={ channel }
-          index={ name }
+          onChange={ this.handleParamChange }
           output={ this.preOutput }
           pattern={ pattern }
           playing={ playing } />
@@ -55,11 +62,16 @@ class Channel extends Component<any, any> {
           context={ context }
           data={ channel }
           index={ name }
+          onChange={ this.handleParamChange }
           output={ this.preOutput }
           pattern={ pattern }
           playing={ playing } />
       </div>
     );
+  }
+
+  private handleParamChange(action) {
+    this.props.dispatch(action);
   }
 }
 
