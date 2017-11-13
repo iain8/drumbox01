@@ -3,7 +3,7 @@ import { Component, h } from 'preact';
 export default class Knob extends Component<any, any> {
   public static defaultProps = {
     angleArc: 320,
-    angleOffset: -160,
+    angleOffset: -150,
     bgColor: '#FFF',
     clockwise: true,
     cursor: false,
@@ -11,8 +11,6 @@ export default class Knob extends Component<any, any> {
     disableTextInput: false,
     displayInput: true,
     fgColor: '#92C8CD',
-    font: "'Orbitron', monospace",
-    fontWeight: 'bold',
     height: 60,
     inputColor: '#363439',
     lineCap: 'butt',
@@ -35,11 +33,9 @@ export default class Knob extends Component<any, any> {
   private endAngle: number;
   private h: number;
   private lineWidth: number;
-  private radius: number;
   private startAngle: number;
   private touchIndex: number;
   private w: number;
-  private xy: number;
 
   constructor(props) {
     super(props);
@@ -267,34 +263,57 @@ export default class Knob extends Component<any, any> {
     this.canvasRef.width = this.w * scale; // clears the canvas
     this.canvasRef.height = this.h * scale;
     ctx.scale(scale, scale);
-    this.xy = this.w / 2; // coordinates of canvas center
-    this.lineWidth = this.xy * this.props.thickness;
-    this.radius = this.xy - (this.lineWidth / 2);
+    const centre = this.w / 2; // coordinates of canvas center
+    this.lineWidth = centre * this.props.thickness;
+    const radius = centre - (this.lineWidth / 2);
     ctx.lineWidth = this.lineWidth;
     ctx.lineCap = this.props.lineCap;
+
     // background arc
     ctx.beginPath();
     ctx.strokeStyle = this.props.bgColor;
+    ctx.setLineDash([2, 10]);
     ctx.arc(
-      this.xy,
-      this.xy,
-      this.radius,
-      this.endAngle - 0.00001,
+      centre,
+      centre,
+      radius,
       this.startAngle + 0.00001,
-      true,
+      this.endAngle - 0.00001,
     );
     ctx.stroke();
+
     // foreground arc
     const a = this.getArcToValue(this.props.value);
     ctx.beginPath();
     ctx.strokeStyle = this.props.fgColor;
+    ctx.setLineDash([2, 10]);
     ctx.arc(
-      this.xy,
-      this.xy,
-      this.radius,
+      centre,
+      centre,
+      radius,
       a.startAngle,
       a.endAngle,
-      a.acw,
+    );
+    ctx.stroke();
+
+    // centre knob
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = this.props.bgColor;
+    ctx.setLineDash([]);
+    ctx.ellipse(centre, centre, 15, 15, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // knob indicator
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = this.props.bgColor;
+    ctx.arc(
+      centre,
+      centre,
+      10,
+      a.endAngle - 0.1,
+      a.endAngle + 0.1,
     );
     ctx.stroke();
   }
@@ -310,16 +329,16 @@ export default class Knob extends Component<any, any> {
     } = this.props;
 
     if (displayInput) {
-      return (
-        <input
-          style={ this.inputStyle() }
-          type='text'
-          value={ value }
-          onChange={ this.handleTextInput }
-          onKeyDown={this.handleArrowKey}
-          readOnly={readOnly || disableTextInput}
-        />
-      );
+      // return (
+      //   <input
+      //     style={ this.inputStyle() }
+      //     type='text'
+      //     value={ value }
+      //     onChange={ this.handleTextInput }
+      //     onKeyDown={this.handleArrowKey}
+      //     readOnly={readOnly || disableTextInput}
+      //   />
+      // );
     } else if (displayCustom && typeof displayCustom === 'function') {
       return displayCustom();
     }
