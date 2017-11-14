@@ -51,7 +51,10 @@ class Master extends Component<IMasterProps, any> {
               { 'stop' }
             </button>
           </div>
-          <Tempo onClick={ this.handleTempoChange } tempo={ tempo } />
+          <Tempo
+            down={ () => this.handleTempoChange(tempo - 1) }
+            up={ () => this.handleTempoChange(tempo + 1) }
+            value={ tempo } />
           <div>
             <Division
               division={ division }

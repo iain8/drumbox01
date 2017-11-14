@@ -1,17 +1,13 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
 
-export default class Tempo extends Component<any, any> {
-  public render(props) {
-    return (
-      <div className='tempo'>
-        <div className='value'>{ props.tempo }</div>
-        <div
-          className='control increase'
-          onClick={ () => props.onClick(props.tempo + 1) } />
-        <div
-          className='control decrease'
-          onClick={ () => props.onClick(props.tempo - 1) } />
-      </div>
-    );
-  }
-}
+export default ({ down, up, value }) => (
+  <div className='tempo'>
+    <div className='value'>{ value }</div>
+    <div
+      className='control increase'
+      onClick={ up } />
+    <div
+      className='control decrease'
+      onClick={ down } />
+  </div>
+)
