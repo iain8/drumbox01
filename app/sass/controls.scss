@@ -71,3 +71,32 @@
     right: -3px;
   }
 }
+
+.tempo {
+  border: 1px solid $white;
+  border-radius: 5px;
+  color: $white;
+  font-size: 0.5rem;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+  position: relative;
+
+  .control {
+    border: 0.4rem solid transparent;
+    cursor: pointer;
+    position: absolute;
+
+    &.decrease {
+      border-top-color: $white;
+      border-top-width: 0.5rem;
+      right: 2px;
+      bottom: -3px;
+    }
+
+    &.increase {
+      border-bottom-color: $white;
+      border-bottom-width: 0.5rem;
+      right: 2px;
+      top: -3px;
+    }
+  }
+}

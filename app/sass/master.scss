@@ -25,21 +25,12 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-    width: 40%;
+    width: 45%;
 
     .knob {
       margin: 0.8rem 0.8rem 0 0;
     }
   }
-}
-
-.tempo {
-  width: 36px;
-  color: $white;
-  background: $lightblue;
-  border: none;
-  padding: 3px 0 3px 3px;
-  font-size: 14px;
 }
 
 .division {

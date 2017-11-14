@@ -4,6 +4,7 @@ import * as masterActions from '../state/actions/master';
 import Division from './controls/division';
 import Knob from './controls/knob';
 import Speaker from './speaker';
+import Tempo from './controls/tempo';
 
 interface IMasterProps {
   dispatch?: any;
@@ -50,13 +51,7 @@ class Master extends Component<IMasterProps, any> {
               { 'stop' }
             </button>
           </div>
-          <div>
-            <input
-              type='number'
-              className='tempo'
-              onChange={ this.handleTempoChange }
-              value={ tempo } />
-          </div>
+          <Tempo onClick={ this.handleTempoChange } tempo={ tempo } />
           <div>
             <Division
               division={ division }
@@ -70,15 +65,12 @@ class Master extends Component<IMasterProps, any> {
               value={ masterVolume } />
           </div>
         </div>
-        {/* <Speaker grilleCount={ 7 } /> */}
       </div>
     );
   }
 
-  private handleTempoChange(event: any) { // TODO: event type
-    event.preventDefault();
-
-    this.props.dispatch(masterActions.changeTempo({ tempo: event.target.value }));
+  private handleTempoChange(tempo: number) {
+    this.props.dispatch(masterActions.changeTempo({ tempo }));
   }
 
   private handleVolumeChange(volume: number) {
