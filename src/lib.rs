@@ -32,7 +32,7 @@ use self::models::*;
 pub struct JsonPreset {
     id: i32,
     tempo: f32,
-    division: i32,
+    division: String,
     master_volume: i32,
     sequence_length: i32,
     channels: Vec<models::Channel>,
@@ -87,7 +87,7 @@ pub fn get_preset(request_id: i32) -> Json<JsonPreset> {
     Json(JsonPreset {
         id: preset[0].id,
         tempo: preset[0].tempo,
-        division: preset[0].division,
+        division: preset[0].division.to_string(),
         master_volume: preset[0].master_volume,
         sequence_length: preset[0].sequence_length,
         channels: preset_channels,

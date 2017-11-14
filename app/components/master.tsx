@@ -4,7 +4,7 @@ import * as masterActions from '../state/actions/master';
 import Division from './controls/division';
 import Knob from './controls/knob';
 import Speaker from './speaker';
-import Tempo from './controls/tempo';
+import Selector from './controls/selector';
 
 interface IMasterProps {
   dispatch?: any;
@@ -25,11 +25,6 @@ class Master extends Component<IMasterProps, any> {
 
   public render(props) {
     const { division, masterVolume, tempo } = props.preset;
-    const divisions = { // TODO: move me
-      2: '1/4',
-      4: '1/8',
-      8: '1/16',
-    };
 
     return (
       <div className='master'>
@@ -51,16 +46,14 @@ class Master extends Component<IMasterProps, any> {
               { 'stop' }
             </button>
           </div>
-          <Tempo
+          <Selector
             down={ () => this.handleTempoChange(tempo - 1) }
             up={ () => this.handleTempoChange(tempo + 1) }
             value={ tempo } />
-          <div>
-            <Division
-              division={ division }
-              divisions={ divisions }
-              onChange={ this.handleDivisionChange } />
-          </div>
+          <Selector
+            down={ () => this.handleDivisionChange('prev') }
+            up={ () => this.handleDivisionChange('next') }
+            value={ division } />
           <div>
             <Knob
               name='master'
@@ -80,8 +73,8 @@ class Master extends Component<IMasterProps, any> {
     this.props.dispatch(masterActions.changeMasterVolume({ volume }));
   }
 
-  private handleDivisionChange(event: any) {
-    this.props.dispatch(masterActions.changeDivision({ division: event.target.value }));
+  private handleDivisionChange(direction: any) {
+    this.props.dispatch(masterActions.changeDivision({ direction }));
   }
 
   private handleStartButton(e: Event) {

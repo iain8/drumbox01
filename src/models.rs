@@ -4,7 +4,7 @@ use schema::{presets, channels, sequences};
 pub struct Preset {
     pub id: i32,
     pub tempo: f32,
-    pub division: i32,
+    pub division: String,
     pub master_volume: i32,
     pub sequence_length: i32,
 }

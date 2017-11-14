@@ -4,7 +4,7 @@ import * as channelActions from '../../state/actions/channel';
 import Amp from '../../modules/amp';
 import Env from '../../modules/env';
 import Knob from '../controls/knob';
-import Tempo from '../controls/tempo';
+import Selector from '../controls/selector';
 
 interface IOscProps {
   beat: number;
@@ -86,7 +86,7 @@ export default class Osc extends Component<IOscProps, any> {
     return (
       <div className='section'>
         <p>osc</p>
-        <Tempo
+        <Selector
           down={ () => this.handleWaveChange('next') }
           up={ () => this.handleWaveChange('prev') }
           value={ wave } />
