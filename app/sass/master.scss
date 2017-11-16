@@ -42,56 +42,6 @@
   font-size: 14px;
 }
 
-.sequencer-control {
-  background: $fawn;
-  color: $white;
-  border: 1px solid $white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: $font;
-  font-size: 0.5rem;
-  margin-left: 0.5rem;
-  padding: 0.6rem 0.5rem 0.5rem 1.5rem;
-  position: relative;
-  text-transform: uppercase;
-
-  &.start {
-    &:before {
-      border: 0.4rem solid transparent;
-      border-left-color: $white;
-      border-left-width: 0.5rem;
-      content: " ";
-      left: 0.65rem;
-      height: 0;
-      position: absolute;
-      top: 0.5rem;
-      width: 0;
-      z-index: 2;
-    }
-
-    &.active:before {
-      border-left-color: $lightblue;
-    }
-  }
-
-  &.stop {
-    &:before {
-      background: $white;
-      content: " ";
-      height: 0.75rem;
-      left: 0.5rem;
-      position: absolute;
-      top: 0.5rem;
-      width: 0.75rem;
-      z-index: 2;
-    }
-
-    &.active:before {
-      background: $lightblue;
-    }
-  }
-}
-
 #speaker {
   width: 100px;
   position: absolute;

@@ -46,14 +46,16 @@ class Master extends Component<IMasterProps, any> {
               { 'stop' }
             </button>
           </div>
-          <Selector
-            down={ () => this.handleTempoChange(tempo - 1) }
-            up={ () => this.handleTempoChange(tempo + 1) }
-            value={ tempo } />
-          <Selector
-            down={ () => this.handleDivisionChange('prev') }
-            up={ () => this.handleDivisionChange('next') }
-            value={ division } />
+
+            <Selector
+              down={ () => this.handleTempoChange(tempo - 1) }
+              up={ () => this.handleTempoChange(tempo + 1) }
+              value={ tempo } />
+            <Selector
+              down={ () => this.handleDivisionChange('prev') }
+              up={ () => this.handleDivisionChange('next') }
+              value={ division } />
+
           <div>
             <Knob
               name='master'
